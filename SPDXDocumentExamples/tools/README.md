@@ -1,0 +1,1 @@
+copied from https://github.com/spdx/tools/tree/master/TestFiles (commit 1a0086d on Oct 25, 2020)
