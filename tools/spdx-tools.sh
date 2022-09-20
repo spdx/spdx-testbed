@@ -8,17 +8,15 @@ cachedir="$script_dir/spdx-tools.sh-cache"
 jar="$cachedir/spdx-tools-$version-jar-with-dependencies.jar"
 
 getJarIfNotInCache() (
-    if [ -f "$jar" ]; then
-        >&2 echo "$jar already downloaded"
-    else
+    if ! [[ -f "$jar" ]]; then
         local url="https://github.com/spdx/tools/releases/download/v$version/spdx-tools-$version.zip"
         tmpdir="$(mktemp -d)"
         cd "$tmpdir"
         wget \
-            -nc \
+            -nc -q \
             -O "$tmpdir/spdx-tools-$version.zip" \
             "$url" || echo "already existing"
-        7z x -y "$tmpdir/spdx-tools-$version.zip"
+        7z x -y "$tmpdir/spdx-tools-$version.zip" > NUL:
 
         mkdir -p "$cachedir"
         cp "$tmpdir/$(basename "$jar")" "$jar"
@@ -28,5 +26,4 @@ getJarIfNotInCache() (
 
 getJarIfNotInCache
 
-set -x
 exec java -jar "$jar" "$@"
