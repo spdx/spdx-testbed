@@ -2,6 +2,8 @@
 import os
 import sys
 from subprocess import Popen, PIPE
+from pathlib import Path
+
 
 def call_process_and_get_output(args):
     new_line_character = '\n'.encode()
@@ -15,8 +17,13 @@ def call_process_and_get_output(args):
 
     return [byte.decode('UTF-8') for byte in script_output if byte != b'']
 
+
 def erase_unnecessary_warnings_in_output(output):
-    output.remove("WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.")
+    try:
+        output.remove("WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.")
+    except ValueError:
+        pass
+
 
 def validate_file(path_of_file_to_validate, tools_with_arguments_intern):
     print('\nStarting validation for file ' + path_of_file_to_validate)
@@ -39,4 +46,7 @@ if __name__ == '__main__':
                             'old java-tools': [os.path.join(scriptPath, 'spdx-tools.sh'), 'Verify']}
 
     for filepath in sys.argv[1:]:
-        validate_file(filepath, tools_with_arguments)
+        if Path(filepath).is_file():
+            validate_file(filepath, tools_with_arguments)
+        else:
+            print(filepath + " is not a file.")
