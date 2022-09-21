@@ -16,7 +16,7 @@ getJarIfNotInCache() (
             -nc -q\
             -O "$tmpdir/tools-java-$version.zip" \
             "$url" || echo "already existing"
-        7z x -y "$tmpdir/tools-java-$version.zip" > NUL:
+        7z x -y "$tmpdir/tools-java-$version.zip" > /dev/null
 
         mkdir -p "$cachedir"
         cp "$tmpdir/$(basename "$jar")" "$jar"
