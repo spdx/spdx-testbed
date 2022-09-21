@@ -18,6 +18,7 @@ def call_process_and_get_output(args):
     return [byte.decode('UTF-8') for byte in script_output if byte != b'']
 
 
+#Is this warning something we should fix? See Issue#5
 def erase_unnecessary_warnings_in_output(output):
     try:
         output.remove("WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.")
