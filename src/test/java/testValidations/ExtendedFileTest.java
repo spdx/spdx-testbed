@@ -80,8 +80,9 @@ public class ExtendedFileTest {
         return document;
     }
 
+    //the test below gets too large, use the testbed equivalent method instead or check manually for correct output for now
     @Test
-    public void generatedExtendedExample() throws InvalidSPDXAnalysisException, IOException {
+    public void generateExtendedExample() throws InvalidSPDXAnalysisException, IOException {
         var doc = buildExtendedFileExample();
         assertThat(doc.verify()).isEmpty();
 

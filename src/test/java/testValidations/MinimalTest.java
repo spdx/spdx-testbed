@@ -50,7 +50,7 @@ public class MinimalTest {
 
     @Test
     public void correctMinimalExample() throws IOException, InvalidFileNameException {
-        //String filepath = "/home/armin/IdeaProjects/spdx-testbed/SPDXDocumentExamples/playgroundFiles/SPDXXML_minimalExample-v2.2.spdx.xml";
+        //String filepath = "SPDXDocumentExamples/playgroundFiles/SPDXXML_minimalExample-v2.2.spdx.xml";
         //File spdxDocument = new File(filepath);
 
         try {
