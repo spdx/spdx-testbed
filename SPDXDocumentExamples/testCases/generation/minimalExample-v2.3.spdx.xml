@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document>
+  <SPDXID>SPDXRef-DOCUMENT</SPDXID>
+  <spdxVersion>SPDX-2.3</spdxVersion>
+  <creationInfo>
+    <created>2022-01-01T00:00:00Z</created>
+    <creators>Tool: test-tool</creators>
+  </creationInfo>
+  <name>SPDX-tool-test</name>
+  <dataLicense>CC0-1.0</dataLicense>
+  <documentNamespace>some_namespace</documentNamespace>
+  <documentDescribes>SPDXRef-somefile</documentDescribes>
+  <files>
+    <SPDXID>SPDXRef-somefile</SPDXID>
+    <checksums>
+      <algorithm>SHA1</algorithm>
+      <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
+    </checksums>
+    <copyrightText>Copyright 2022 some guy</copyrightText>
+    <fileName>./foo.txt</fileName>
+    <licenseConcluded>LGPL-3.0-only</licenseConcluded>
+  </files>
+</Document>
