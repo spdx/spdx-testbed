@@ -1,4 +1,4 @@
-package testValidations;
+package generation;
 
 import org.junit.jupiter.api.Test;
 import org.spdx.jacksonstore.MultiFormatStore;
@@ -24,12 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PackageTest {
 
-    public SpdxDocument buildPackageExample() throws InvalidSPDXAnalysisException {
+    private SpdxDocument buildPackageExample() throws InvalidSPDXAnalysisException {
         ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
         String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
 
-        //createSpdxDocument already sets creationInfo, dataLicense and specVersion to default values
         SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
 
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
@@ -66,7 +65,6 @@ public class PackageTest {
                 "acmecorp/acmenator/4.1.3-alpha", "This is the external ref for Acme");
 
         SpdxPackageVerificationCode spdxPackageVerificationCode = document.createPackageVerificationCode("d6a770ba38583ed4bb4525bd96e50461655d2758", List.of("./package.spdx"));
-
 
         SpdxPackage spdxPackage = document.createPackage("SPDXRef-somepackage", "glibc", lgpl2_0onlyORLicenseRef_2,
                         "Copyright 2008-2010 John Smith", lgpl2_0onlyANDLicenseRef_2)

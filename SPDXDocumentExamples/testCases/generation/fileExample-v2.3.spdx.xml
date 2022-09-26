@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document>
+  <SPDXID>SPDXRef-DOCUMENT</SPDXID>
+  <spdxVersion>SPDX-2.3</spdxVersion>
+  <creationInfo>
+    <created>2022-01-01T00:00:00Z</created>
+    <creators>Tool: test-tool</creators>
+  </creationInfo>
+  <name>SPDX-tool-test</name>
+  <dataLicense>CC0-1.0</dataLicense>
+  <documentNamespace>some_namespace</documentNamespace>
+  <documentDescribes>SPDXRef-somefile</documentDescribes>
+  <files>
+    <SPDXID>SPDXRef-somefile</SPDXID>
+    <annotations>
+      <annotationDate>2011-01-29T18:30:22Z</annotationDate>
+      <annotationType>OTHER</annotationType>
+      <annotator>Person: File Commenter</annotator>
+      <comment>File level annotation</comment>
+    </annotations>
+    <checksums>
+      <algorithm>SHA1</algorithm>
+      <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
+    </checksums>
+    <checksums>
+      <algorithm>MD5</algorithm>
+      <checksumValue>624c1abb3664f4b35547e7c73864ad24</checksumValue>
+    </checksums>
+    <comment>The concluded license was taken from the package level that the file was included in.
+      This information was found in the COPYING.txt file in the xyz directory.</comment>
+    <copyrightText>Copyright 2008-2010 John Smith</copyrightText>
+    <fileContributors>The Regents of the University of California</fileContributors>
+    <fileContributors>Modified by Paul Mundt lethal@linux-sh.org</fileContributors>
+    <fileContributors>IBM Corporation</fileContributors>
+    <fileName>./package/foo.c</fileName>
+    <fileTypes>SOURCE</fileTypes>
+    <licenseComments>The concluded license was taken from the package level that the file was included in.</licenseComments>
+    <licenseConcluded>(LGPL-2.0-only OR LicenseRef-2)</licenseConcluded>
+    <licenseInfoInFiles>GPL-2.0-only</licenseInfoInFiles>
+    <licenseInfoInFiles>LicenseRef-2</licenseInfoInFiles>
+    <noticeText>Copyright (c) 2001 Aaron Lehmann aaroni@vitelus.com
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the �Software�), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+      The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED �AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</noticeText>
+  </files>
+</Document>
