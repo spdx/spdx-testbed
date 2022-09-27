@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Comparisons {
     private static final String CLASS_KEY = "class";
@@ -40,6 +41,8 @@ public class Comparisons {
             return differences;
         }
 
+        // TODO: It should be okay to filter out properties equivalent to null at this point. 
+        //  That might simplify logic later on.
         var firstObjectProperties = ignoreRelatedElements ?
                 getNonEmptyPropertiesExceptRelatedElement(firstObject) :
                 getNonEmptyProperties(firstObject);
@@ -84,18 +87,27 @@ public class Comparisons {
             }
         }
 
-        addExlusivePropertyDifferences(firstObject, firstObjectExclusiveProperties, differences);
-        addExlusivePropertyDifferences(secondObject, secondObjectExclusiveProperties, differences);
+        var firstObjectExclusivePropertyDifferences = getPropertiesNotEquivalentToNull(firstObject
+                , firstObjectExclusiveProperties)
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        entry -> new Tuple<>(entry.getValue(), null)));
+        differences.putAll(firstObjectExclusivePropertyDifferences);
+        var secondObjectExclusivePropertyDifferences = getPropertiesNotEquivalentToNull(secondObject
+                , secondObjectExclusiveProperties)
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        entry -> new Tuple<>(null, entry.getValue())));
+        differences.putAll(secondObjectExclusivePropertyDifferences);
 
         return differences;
     }
 
-    private static void addExlusivePropertyDifferences(ModelObject modelObject,
-                                                       Set<String> firstObjectExclusiveProperties
-            , HashMap<String,
-            Tuple<?>> differences) throws InvalidSPDXAnalysisException {
-        for (var property : firstObjectExclusiveProperties) {
-            var valueOptional = getObjectPropertyValue(modelObject, property);
+    private static Map<String, Object> getPropertiesNotEquivalentToNull(ModelObject modelObject,
+                                                                        Set<String> propertyNames) throws InvalidSPDXAnalysisException {
+        var propertyMap = new HashMap<String, Object>();
+        for (var propertyName : propertyNames) {
+            var valueOptional = getObjectPropertyValue(modelObject, propertyName);
             if (valueOptional.isEmpty()) {
                 continue;
             }
@@ -103,8 +115,9 @@ public class Comparisons {
             if (isEquivalentToNull(value)) {
                 continue;
             }
-            differences.put(property, new Tuple<>(value, null));
+            propertyMap.put(propertyName, value);
         }
+        return propertyMap;
     }
 
     private static boolean propertyValuesEquivalent(String propertyName, Object firstValue,
