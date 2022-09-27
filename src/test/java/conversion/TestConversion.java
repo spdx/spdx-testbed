@@ -10,6 +10,7 @@ import org.spdx.tools.SpdxConverterException;
 import org.spdx.tools.SpdxToolsHelper;
 import org.spdx.tools.SpdxVerificationException;
 import org.spdx.tools.Verify;
+import util.Comparisons;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,12 +56,12 @@ public class TestConversion {
 
     /**
      * Test that conversion from tag to json format works.
-     * The converted file is expected
+     * The converted file is expected to be provided by the user
      */
     @Test
-    public void convertTagToJson() throws IOException, InvalidSPDXAnalysisException,
+    public void convertXmlToJson() throws IOException, InvalidSPDXAnalysisException,
             InvalidFileNameException, SpdxConverterException {
-        var inputFile = new File("SPDXDocumentExamples/tools-java/SPDXTagExample-v2.3.spdx");
+        var inputFile = new File("SPDXDocumentExamples/tools-java/SPDXXMLExample-v2.3.spdx.xml");
 
         /*
          This should be handled by the user script
@@ -79,7 +80,6 @@ public class TestConversion {
         // Covers documentUri and id
         assertThat(inputDocument).isEqualTo(outputDocument);
         // Covers all other properties (hopefully...)
-        assertThat(inputDocument.equivalent(outputDocument)).isTrue();
-
+        assertThat(Comparisons.findDifferences(inputDocument, outputDocument, true)).isEmpty();
     }
 }
