@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestConversion {
     /**
-     * Test that conversion from tag to json format works.
+     * Test that conversion between all the supported formats works.
      * The converted file is expected to be provided by the user
      */
     @ParameterizedTest
@@ -29,14 +29,18 @@ public class TestConversion {
             InvalidFileNameException, SpdxConverterException {
         var inputFile = new File(inputFilePath);
 
-        /*
-         This should be handled by the user script
-         */
         var convertedFile = new File(outputFilePath);
-        // Just some convenient cleanup
+        
+        /*
+         This is temporary; in the final version, the output file should be provided by a user 
+         script running as part of the CI pipeline.
+         */
         convertedFile.delete();
         convertedFile.getParentFile().mkdirs();
         SpdxConverter.convert(inputFile.getPath(), convertedFile.getPath());
+        /*
+         End of temporary conversion code
+         */
 
 
         var inputDocument = SpdxToolsHelper.deserializeDocument(inputFile);
