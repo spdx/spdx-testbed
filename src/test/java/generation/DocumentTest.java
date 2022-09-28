@@ -24,9 +24,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SnippetTest {
+public class DocumentTest {
 
-    private SpdxDocument buildSnippetExample() throws InvalidSPDXAnalysisException {
+    private SpdxDocument buildDocumentExample() throws InvalidSPDXAnalysisException {
         ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
         String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
@@ -35,42 +35,42 @@ public class SnippetTest {
 
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
         document.setDataLicense(LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0"));
-        document.setCreationInfo(document.createCreationInfo(
-                List.of("Tool: test-tool"), "2022-01-01T00:00:00Z"));
+
+
+        SpdxCreatorInformation creationInfo = document.createCreationInfo(
+                        List.of("Tool: test-tool"), "2022-01-01T00:00:00Z")
+                .setComment("some creation comment")
+                .setLicenseListVersion("3.7");
+
+        document.setCreationInfo(creationInfo);
         document.setName("SPDX-tool-test");
+        document.setComment("a document comment");
 
         Annotation annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
-                .setAnnotator("Person: Snippet Annotator")
+                .setAnnotator("Person: Document Commenter (mail@mail.com)")
                 .setAnnotationDate("2011-01-29T18:30:22Z")
-                .setComment("Snippet level annotation")
-                .setAnnotationType(AnnotationType.OTHER);
+                .setComment("File level annotation")
+                .setAnnotationType(AnnotationType.REVIEW);
 
-        Checksum sha1Checksum = document.createChecksum(ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        document.addAnnotation(annotation);
 
-        AnyLicenseInfo lgpl2_0onlyANDLicenseRef_2 = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only AND LicenseRef-3");
-        AnyLicenseInfo gpl2_0only = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
+        Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        var externalDocumentRef = document.createExternalDocumentRef("DocumentRef-externaldocumentid", "some-external-uri", sha1Checksum);
 
-        SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", gpl2_0only,
+
+        AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
+        SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", concludedLicense,
                         List.of(), "Copyright 2022 some guy", sha1Checksum)
                 .build();
 
-        SpdxSnippet spdxSnippet = document.createSpdxSnippet("SPDXRef-somesnippet", "from linux kernel", gpl2_0only,
-                        List.of(lgpl2_0onlyANDLicenseRef_2), "Copyright 2008-2010 John Smith", file, 100, 400)
-                .addAnnotation(annotation)
-                .setLineRange(30, 40)
-                .setLicenseComments("snippy license comment")
-                .setComment("snippy comment")
-//                .addAttributionText("The GNU C Library is free software.  See the file COPYING.LIB for copying conditions, and LICENSES for notices about a few contributions that require these additional notices to be distributed.  License copyright years may be listed using range notation, e.g., 1996-2015, indicating that every year in the range, inclusive, is a copyrightable year that would otherwise be listed individually.")
-                .build();
-
-        document.getDocumentDescribes().add(spdxSnippet);
+        document.getDocumentDescribes().add(file);
 
         return document;
     }
 
     @Test
-    public void generateSnippetExample() throws InvalidSPDXAnalysisException, IOException {
-        var doc = buildSnippetExample();
+    public void generateDocumentExample() throws InvalidSPDXAnalysisException, IOException {
+        var doc = buildDocumentExample();
         assertThat(doc.verify()).isEmpty();
 
         var modelStore = (ISerializableModelStore) doc.getModelStore();
@@ -78,8 +78,8 @@ public class SnippetTest {
     }
 
     @Test
-    public void compareSnippetExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
-        var referenceDoc = buildSnippetExample();
+    public void compareDocumentExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
+        var referenceDoc = buildDocumentExample();
 
         File inputFile = new File("testOutput/generated/test.xml");
         var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
