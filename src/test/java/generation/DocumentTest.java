@@ -74,14 +74,14 @@ public class DocumentTest {
         assertThat(doc.verify()).isEmpty();
 
         var modelStore = (ISerializableModelStore) doc.getModelStore();
-        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testOutput/generated/test.xml"));
+        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testInput/generation/DocumentTest.xml"));
     }
 
     @Test
     public void compareDocumentExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
         var referenceDoc = buildDocumentExample();
 
-        File inputFile = new File("testOutput/generated/test.xml");
+        File inputFile = new File("testInput/generation/DocumentTest.xml");
         var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
 
         assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();

@@ -10,7 +10,6 @@ import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.enumerations.RelationshipType;
 import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.ISerializableModelStore;
@@ -26,11 +25,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RelationshipTest {
+public class LicenseTest {
     
-    private SpdxDocument buildRelationshipExample() throws InvalidSPDXAnalysisException {
+    private SpdxDocument buildLicenseExample() throws InvalidSPDXAnalysisException {
         ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
-        String documentUri = "https://some.namespace";
+        String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
         
         SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
@@ -42,46 +41,34 @@ public class RelationshipTest {
         
         Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
         
-        AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only");
+        AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only OR LicenseRef-2");
+        AnyLicenseInfo firstLicense = LicenseInfoFactory.parseSPDXLicenseString("GPL-3.0-only WITH GPL-3.0-linking-exception AND LicenseRef-1");
+        AnyLicenseInfo secondLicense = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-1 AND LicenseRef-2 OR LicenseRef-1 WITH another-exception");
+        AnyLicenseInfo thirdLicense = LicenseInfoFactory.parseSPDXLicenseString("CERN-OHL-1.2 WITH u-boot-exception-2.0 AND LicenseRef-2 OR LicenseRef-1 WITH another-exception");
         
-        SpdxFile fileA = document.createSpdxFile("SPDXRef-fileA", "./fileA.c", concludedLicense,
-                        List.of(), "Copyright 2022 some person", sha1Checksum)
+        SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./package/foo.c", concludedLicense,
+                        List.of(firstLicense, secondLicense, thirdLicense), "Copyright 2008-2010 John Smith", sha1Checksum)
                 .build();
         
-        SpdxFile fileB = document.createSpdxFile("SPDXRef-fileB", "./fileB.c", concludedLicense,
-                        List.of(), "Copyright 2022 some person", sha1Checksum)
-                .build();
-        
-        document.getDocumentDescribes().add(fileA);
-        document.getDocumentDescribes().add(fileB);
-        
-        for (RelationshipType relationshipType : RelationshipType.values()) {
-            if (relationshipType == RelationshipType.MISSING) {
-                continue;
-            }
-            fileB.addRelationship(
-                    document.createRelationship(
-                            fileA, relationshipType, String.format("comment on %s", relationshipType.name())));
-            
-        }
+        document.getDocumentDescribes().add(file);
         
         return document;
     }
     
     @Test
-    public void generateRelationshipExample() throws InvalidSPDXAnalysisException, IOException {
-        var doc = buildRelationshipExample();
+    public void generateLicenseExample() throws InvalidSPDXAnalysisException, IOException {
+        var doc = buildLicenseExample();
         assertThat(doc.verify()).isEmpty();
         
         var modelStore = (ISerializableModelStore) doc.getModelStore();
-        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testInput/generation/RelationshipTest.xml"));
+        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testInput/generation/LicenseTest.xml"));
     }
     
     @Test
-    public void compareRelationshipExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
-        var referenceDoc = buildRelationshipExample();
+    public void compareLicenseExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
+        var referenceDoc = buildLicenseExample();
         
-        File inputFile = new File("testInput/generation/RelationshipTest.xml");
+        File inputFile = new File("testInput/generation/LicenseTest.xml");
         var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
         
         assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();
