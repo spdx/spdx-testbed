@@ -16,7 +16,11 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.storage.simple.StoredTypedItem;
+import org.spdx.tools.InvalidFileNameException;
+import org.spdx.tools.SpdxToolsHelper;
+import util.Comparisons;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,6 +89,16 @@ public class FileTest {
 
         var modelStore = (ISerializableModelStore) doc.getModelStore();
         modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testOutput/generated/test.xml"));
+    }
+
+    @Test
+    public void compareFileExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
+        var referenceDoc = buildFileExample();
+
+        File inputFile = new File("testOutput/generated/test.xml");
+        var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
+
+        assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();
     }
 
     @Test

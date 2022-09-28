@@ -15,9 +15,12 @@ import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
+import org.spdx.tagvaluestore.TagValueStore;
+import org.spdx.tools.InvalidFileNameException;
+import org.spdx.tools.SpdxToolsHelper;
+import util.Comparisons;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,11 +28,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PackageTest {
 
     private SpdxDocument buildPackageExample() throws InvalidSPDXAnalysisException {
-        ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
+        ISerializableModelStore modelStore2 = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
+        ISerializableModelStore modelStore = new TagValueStore(modelStore2);
         String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
 
         SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
+
+//        modelStore.setValue(documentUri, "SPDXRef-DOCUMENT", "documentNamespace", documentUri);
 
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
         document.setDataLicense(LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0"));
@@ -105,5 +111,15 @@ public class PackageTest {
 
         var modelStore = (ISerializableModelStore) doc.getModelStore();
         modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testOutput/generated/test.xml"));
+    }
+
+    @Test
+    public void comparePackageExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
+        var referenceDoc = buildPackageExample();
+
+        File inputFile = new File("testOutput/generated/test.spdx");
+        var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
+
+        assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();
     }
 }
