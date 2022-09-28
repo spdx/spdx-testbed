@@ -15,63 +15,60 @@ import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
-import org.spdx.tagvaluestore.TagValueStore;
 import org.spdx.tools.InvalidFileNameException;
 import org.spdx.tools.SpdxToolsHelper;
 import util.Comparisons;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PackageTest {
-
+    
     private SpdxDocument buildPackageExample() throws InvalidSPDXAnalysisException {
-        ISerializableModelStore modelStore2 = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
-        ISerializableModelStore modelStore = new TagValueStore(modelStore2);
+        ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
         String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
-
+        
         SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
-
-//        modelStore.setValue(documentUri, "SPDXRef-DOCUMENT", "documentNamespace", documentUri);
-
+        
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setDataLicense(LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0"));
         document.setCreationInfo(document.createCreationInfo(
                 List.of("Tool: test-tool"), "2022-01-01T00:00:00Z"));
         document.setName("SPDX-tool-test");
-
+        
         Annotation annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: Package Commenter")
                 .setAnnotationDate("2011-01-29T18:30:22Z")
                 .setComment("Package level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
-
+        
         Checksum sha1Checksum = document.createChecksum(ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
         Checksum md5Checksum = document.createChecksum(ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
         Checksum sha256Checksum = document.createChecksum(ChecksumAlgorithm.SHA256, "11b6d3ee554eedf79299905a98f9b9a04e498210b59f15094c916c91d150efcd");
-
+        
         AnyLicenseInfo lgpl2_0onlyORLicenseRef_2 = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only OR LicenseRef-2");
         AnyLicenseInfo lgpl2_0onlyANDLicenseRef_2 = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only AND LicenseRef-3");
         AnyLicenseInfo gpl2_0only = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
         AnyLicenseInfo licenseRef_2 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-2");
         AnyLicenseInfo licenseRef_3 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-3");
-
+        
         SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", gpl2_0only,
                         List.of(), "Copyright 2022 some guy", sha1Checksum)
                 .build();
-
+        
         ExternalRef externalRef1 = document.createExternalRef(ReferenceCategory.SECURITY,
                 new ReferenceType(new SimpleUriValue("cpe23Type")),
                 "cpe:2.3:a:pivotal_software:spring_framework:4.1.0:*:*:*:*:*:*:*", null);
         ExternalRef externalRef2 = document.createExternalRef(ReferenceCategory.OTHER,
                 new ReferenceType(new SimpleUriValue("http://spdx.org/spdxdocs/spdx-example-444504E0-4F89-41D3-9A0C-0305E82C3301#LocationRef-acmeforge")),
                 "acmecorp/acmenator/4.1.3-alpha", "This is the external ref for Acme");
-
+        
         SpdxPackageVerificationCode spdxPackageVerificationCode = document.createPackageVerificationCode("d6a770ba38583ed4bb4525bd96e50461655d2758", List.of("./package.spdx"));
-
+        
         SpdxPackage spdxPackage = document.createPackage("SPDXRef-somepackage", "glibc", lgpl2_0onlyORLicenseRef_2,
                         "Copyright 2008-2010 John Smith", lgpl2_0onlyANDLicenseRef_2)
                 .addAnnotation(annotation)
@@ -98,28 +95,28 @@ public class PackageTest {
                 .setBuiltDate("2011-01-29T18:30:22Z")
                 .setValidUntilDate("2014-01-29T18:30:22Z")
                 .build();
-
+        
         document.getDocumentDescribes().add(spdxPackage);
-
+        
         return document;
     }
-
+    
     @Test
     public void generatePackageExample() throws InvalidSPDXAnalysisException, IOException {
         var doc = buildPackageExample();
         assertThat(doc.verify()).isEmpty();
-
+        
         var modelStore = (ISerializableModelStore) doc.getModelStore();
-        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testOutput/generated/test.xml"));
+        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testInput/generation/PackageTest.xml"));
     }
-
+    
     @Test
     public void comparePackageExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
         var referenceDoc = buildPackageExample();
-
-        File inputFile = new File("testOutput/generated/test.spdx");
+        
+        File inputFile = new File("testInput/generation/PackageTest.xml");
         var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
-
+        
         assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();
     }
 }

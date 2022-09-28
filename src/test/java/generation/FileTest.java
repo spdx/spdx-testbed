@@ -39,7 +39,6 @@ public class FileTest {
         SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
 
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setDataLicense(LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0"));
         document.setCreationInfo(document.createCreationInfo(
                 List.of("Tool: test-tool"), "2022-01-01T00:00:00Z"));
         document.setName("SPDX-tool-test");
@@ -88,14 +87,14 @@ public class FileTest {
         assertThat(doc.verify()).isEmpty();
 
         var modelStore = (ISerializableModelStore) doc.getModelStore();
-        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testOutput/generated/test.xml"));
+        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testInput/generation/FileTest.xml"));
     }
 
     @Test
     public void compareFileExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
         var referenceDoc = buildFileExample();
 
-        File inputFile = new File("testOutput/generated/test.xml");
+        File inputFile = new File("testInput/generation/FileTest.xml");
         var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
 
         assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();

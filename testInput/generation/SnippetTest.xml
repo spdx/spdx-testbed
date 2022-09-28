@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document>
+  <SPDXID>SPDXRef-DOCUMENT</SPDXID>
+  <spdxVersion>SPDX-2.3</spdxVersion>
+  <creationInfo>
+    <created>2022-01-01T00:00:00Z</created>
+    <creators>Tool: test-tool</creators>
+  </creationInfo>
+  <name>SPDX-tool-test</name>
+  <dataLicense>CC0-1.0</dataLicense>
+  <documentDescribes>SPDXRef-somesnippet</documentDescribes>
+  <documentNamespace>some_namespace</documentNamespace>
+  <files>
+    <SPDXID>SPDXRef-somefile</SPDXID>
+    <checksums>
+      <algorithm>SHA1</algorithm>
+      <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
+    </checksums>
+    <copyrightText>Copyright 2022 some guy</copyrightText>
+    <fileName>./foo.txt</fileName>
+    <licenseConcluded>GPL-2.0-only</licenseConcluded>
+  </files>
+  <snippets>
+    <SPDXID>SPDXRef-somesnippet</SPDXID>
+    <annotations>
+      <annotationDate>2011-01-29T18:30:22Z</annotationDate>
+      <annotationType>OTHER</annotationType>
+      <annotator>Person: Snippet Annotator</annotator>
+      <comment>Snippet level annotation</comment>
+    </annotations>
+    <comment>snippy comment</comment>
+    <copyrightText>Copyright 2008-2010 John Smith</copyrightText>
+    <licenseComments>snippy license comment</licenseComments>
+    <licenseConcluded>GPL-2.0-only</licenseConcluded>
+    <licenseInfoInSnippets>(LGPL-2.0-only AND LicenseRef-3)</licenseInfoInSnippets>
+    <name>from linux kernel</name>
+    <ranges>
+      <endPointer>
+        <offset>400</offset>
+        <reference>SPDXRef-somefile</reference>
+      </endPointer>
+      <startPointer>
+        <offset>100</offset>
+        <reference>SPDXRef-somefile</reference>
+      </startPointer>
+    </ranges>
+    <ranges>
+      <endPointer>
+        <lineNumber>40</lineNumber>
+        <reference>SPDXRef-somefile</reference>
+      </endPointer>
+      <startPointer>
+        <lineNumber>30</lineNumber>
+        <reference>SPDXRef-somefile</reference>
+      </startPointer>
+    </ranges>
+    <snippetFromFile>SPDXRef-somefile</snippetFromFile>
+  </snippets>
+</Document>

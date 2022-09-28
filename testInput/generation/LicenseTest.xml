@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document>
+  <SPDXID>SPDXRef-DOCUMENT</SPDXID>
+  <spdxVersion>SPDX-2.3</spdxVersion>
+  <creationInfo>
+    <created>2022-01-01T00:00:00Z</created>
+    <creators>Tool: test-tool</creators>
+  </creationInfo>
+  <name>SPDX-tool-test</name>
+  <dataLicense>CC0-1.0</dataLicense>
+  <documentDescribes>SPDXRef-somefile</documentDescribes>
+  <documentNamespace>some_namespace</documentNamespace>
+  <files>
+    <SPDXID>SPDXRef-somefile</SPDXID>
+    <checksums>
+      <algorithm>SHA1</algorithm>
+      <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
+    </checksums>
+    <copyrightText>Copyright 2008-2010 John Smith</copyrightText>
+    <fileName>./package/foo.c</fileName>
+    <licenseConcluded>(LGPL-2.0-only OR LicenseRef-2)</licenseConcluded>
+    <licenseInfoInFiles>(GPL-3.0-only WITH GPL-3.0-linking-exception AND LicenseRef-1)</licenseInfoInFiles>
+    <licenseInfoInFiles>((LicenseRef-1 AND LicenseRef-2) OR LicenseRef-1 WITH another-exception)</licenseInfoInFiles>
+    <licenseInfoInFiles>((CERN-OHL-1.2 WITH u-boot-exception-2.0 AND LicenseRef-2) OR LicenseRef-1 WITH another-exception)</licenseInfoInFiles>
+  </files>
+</Document>
