@@ -41,14 +41,14 @@ public class ExtractedLicenseInfoTest {
         Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
         
         ExtractedLicenseInfo extractedLicenseInfo = new ExtractedLicenseInfo(modelStore, documentUri, "LicenseRef-1", copyManager, true);
-        extractedLicenseInfo.setExtractedText("lustiger Text");
-        extractedLicenseInfo.setName("extracted license lustig");
-        extractedLicenseInfo.setComment("lustiger Kommentar");
-        var crossRef = document.createCrossRef("cross Ref lustig").build();
-
-//        var spdxListedLicenseLocalStore = new SpdxListedLicenseLocalStore();
-//        spdxListedLicenseLocalStore.addValueToCollection(documentUri, extractedLicenseInfo.getId(), SpdxConstants.PROP_CROSS_REF, crossRef);
+        extractedLicenseInfo.setExtractedText("some extracted text");
+        extractedLicenseInfo.setName("some extracted license info name");
+        extractedLicenseInfo.setComment("extracted license info comment");
+        extractedLicenseInfo.setSeeAlso(List.of("some (cross reference/see also) url", "another url"));
         
+        //TODO: can you set a crossRef on an extractedLicenseInfo? Currently this is accomplished via seeAlso, a collection of Strings
+        var crossRef = document.createCrossRef("some cross reference url").build();
+
         document.addExtractedLicenseInfos(extractedLicenseInfo);
         
         SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", extractedLicenseInfo,

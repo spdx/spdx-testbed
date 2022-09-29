@@ -34,9 +34,6 @@ public class DocumentTest {
         SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
 
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setDataLicense(LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0"));
-
-
         SpdxCreatorInformation creationInfo = document.createCreationInfo(
                         List.of("Tool: test-tool"), "2022-01-01T00:00:00Z")
                 .setComment("some creation comment")
@@ -57,7 +54,8 @@ public class DocumentTest {
         Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
         var externalDocumentRef = document.createExternalDocumentRef("DocumentRef-externaldocumentid", "some-external-uri", sha1Checksum);
 
-
+        document.setExternalDocumentRefs(List.of(externalDocumentRef));
+        
         AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
         SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", concludedLicense,
                         List.of(), "Copyright 2022 some guy", sha1Checksum)
