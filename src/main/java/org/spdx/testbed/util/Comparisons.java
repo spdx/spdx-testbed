@@ -1,4 +1,4 @@
-package util;
+package org.spdx.testbed.util;
 
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
