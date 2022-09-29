@@ -10,9 +10,11 @@
   <dataLicense>CC0-1.0</dataLicense>
   <hasExtractedLicensingInfos>
     <licenseId>LicenseRef-1</licenseId>
-    <comment>lustiger Kommentar</comment>
-    <extractedText>lustiger Text</extractedText>
-    <name>extracted license lustig</name>
+    <comment>extracted license info comment</comment>
+    <extractedText>some extracted text</extractedText>
+    <name>some extracted license info name</name>
+    <seeAlsos>some (cross reference/see also) url</seeAlsos>
+    <seeAlsos>another url</seeAlsos>
   </hasExtractedLicensingInfos>
   <documentDescribes>SPDXRef-somefile</documentDescribes>
   <documentNamespace>some_namespace</documentNamespace>
