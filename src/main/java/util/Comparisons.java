@@ -17,6 +17,7 @@ import org.spdx.library.model.TypedValue;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -181,6 +182,11 @@ public class Comparisons {
         }
         for (Object item : firstList) {
             if (!containsEquivalentItem(secondList, item)) {
+                return false;
+            }
+        }
+        for (Object item : secondList) {
+            if (!containsEquivalentItem(firstList, item)) {
                 return false;
             }
         }
