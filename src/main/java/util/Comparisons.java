@@ -33,6 +33,15 @@ public class Comparisons {
 
     public static Map<String, Tuple<?>> findDifferences(ModelObject firstObject,
                                                         ModelObject secondObject,
+                                                        boolean ignoreRelatedElements,
+                                                        Collection<String> ignoreProperties) throws InvalidSPDXAnalysisException {
+        var differences = findDifferences(firstObject, secondObject, ignoreRelatedElements);
+        ignoreProperties.forEach(differences::remove);
+        return differences;
+    }
+
+    public static Map<String, Tuple<?>> findDifferences(ModelObject firstObject,
+                                                        ModelObject secondObject,
                                                         boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
         var differences = new HashMap<String, Tuple<?>>();
 
