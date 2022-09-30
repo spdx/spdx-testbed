@@ -1,6 +1,5 @@
-package generation;
+package org.spdx.testbed.generationTestCases;
 
-import org.junit.jupiter.api.Test;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -13,20 +12,12 @@ import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
-import org.spdx.tools.InvalidFileNameException;
-import org.spdx.tools.SpdxToolsHelper;
-import util.Comparisons;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+public class GenerationSnippetTestCase extends GenerationTestCase {
 
-public class SnippetTest {
-
-    private SpdxDocument buildSnippetExample() throws InvalidSPDXAnalysisException {
+    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
         ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
         String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
@@ -65,24 +56,5 @@ public class SnippetTest {
         document.getDocumentDescribes().add(spdxSnippet);
 
         return document;
-    }
-
-    @Test
-    public void generateSnippetExample() throws InvalidSPDXAnalysisException, IOException {
-        var doc = buildSnippetExample();
-        assertThat(doc.verify()).isEmpty();
-
-        var modelStore = (ISerializableModelStore) doc.getModelStore();
-        modelStore.serialize(doc.getDocumentUri(), new FileOutputStream("testInput/generation/SnippetTest.xml"));
-    }
-
-    @Test
-    public void compareSnippetExample() throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException {
-        var referenceDoc = buildSnippetExample();
-
-        File inputFile = new File("testInput/generation/SnippetTest.xml");
-        var inputDoc = SpdxToolsHelper.deserializeDocument(inputFile);
-
-        assertThat(Comparisons.findDifferences(referenceDoc, inputDoc, false)).isEmpty();
     }
 }

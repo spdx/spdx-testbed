@@ -1,7 +1,10 @@
 package org.spdx.testbed;
 
-import java.util.function;
+import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.tools.InvalidFileNameException;
+
+import java.io.IOException;
 
 public interface TestCase {
-    public void test(String[] args);
+    int test(String[] args) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException;
 }

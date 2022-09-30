@@ -1,6 +1,5 @@
-package org.spdx.testbed;
+package org.spdx.testbed.generationTestCases;
 
-import org.junit.jupiter.api.Test;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -16,28 +15,11 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+public class GenerationPackageTestCase extends GenerationTestCase {
 
-public class GenerationTestCase implements TestCase {
-    public void test(String[] args){
-        if (args.length != 1) {
-            // fail
-        }
-        var generated = args[0];
-
-        // code that validates that generated is as expected
-        //
-        // list differences
-        //
-        // exit 1, if there were issues
-    }
-
-
-    protected SpdxDocument buildPackageExample() throws InvalidSPDXAnalysisException {
+    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
         ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
         String documentUri = "some_namespace";
         ModelCopyManager copyManager = new ModelCopyManager();
