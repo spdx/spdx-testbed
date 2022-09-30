@@ -8,7 +8,7 @@ import org.spdx.tools.InvalidFileNameException;
 import org.spdx.tools.SpdxConverter;
 import org.spdx.tools.SpdxConverterException;
 import org.spdx.tools.SpdxToolsHelper;
-import util.Comparisons;
+import org.spdx.testbed.util.Comparisons;
 
 import java.io.File;
 import java.io.IOException;
