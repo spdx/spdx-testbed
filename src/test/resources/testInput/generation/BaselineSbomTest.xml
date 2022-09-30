@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document>
+  <SPDXID>SPDXRef-DOCUMENT</SPDXID>
+  <spdxVersion>SPDX-2.3</spdxVersion>
+  <creationInfo>
+    <created>2022-01-01T00:00:00Z</created>
+    <creators>Tool: test-tool</creators>
+  </creationInfo>
+  <name>SPDX-tool-test</name>
+  <dataLicense>CC0-1.0</dataLicense>
+  <documentDescribes>SPDXRef-somepackage</documentDescribes>
+  <documentNamespace>some_namespace</documentNamespace>
+  <packages>
+    <SPDXID>SPDXRef-somepackage</SPDXID>
+    <checksums>
+      <algorithm>SHA1</algorithm>
+      <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
+    </checksums>
+    <copyrightText>Copyright 2008-2010 John Smith</copyrightText>
+    <filesAnalyzed>true</filesAnalyzed>
+    <licenseConcluded>LGPL-3.0-only</licenseConcluded>
+    <licenseDeclared>LGPL-3.0-only</licenseDeclared>
+    <name>some package</name>
+    <packageVerificationCode>
+      <packageVerificationCodeExcludedFiles>./package.spdx</packageVerificationCodeExcludedFiles>
+      <packageVerificationCodeValue>d6a770ba38583ed4bb4525bd96e50461655d2758</packageVerificationCodeValue>
+    </packageVerificationCode>
+    <supplier>Person: Jane Doe (jane.doe@example.com)</supplier>
+    <versionInfo>2.2.1</versionInfo>
+  </packages>
+</Document>
