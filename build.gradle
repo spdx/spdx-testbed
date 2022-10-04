@@ -23,3 +23,29 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.spdx.testbed.Main'
+        )
+    }
+}
+
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'uber'
+    duplicatesStrategy = 'include'
+
+    manifest {
+        attributes(
+                'Main-Class': 'org.spdx.testbed.Main'
+        )
+    }
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
