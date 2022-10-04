@@ -6,7 +6,7 @@
     <created>2022-01-01T00:00:00Z</created>
     <creators>Tool: test-tool</creators>
   </creationInfo>
-  <name>SPDX-tool-test</name>
+  <name>Extracted license information test document</name>
   <dataLicense>CC0-1.0</dataLicense>
   <hasExtractedLicensingInfos>
     <licenseId>LicenseRef-1</licenseId>
@@ -17,7 +17,7 @@
     <seeAlsos>another url</seeAlsos>
   </hasExtractedLicensingInfos>
   <documentDescribes>SPDXRef-somefile</documentDescribes>
-  <documentNamespace>some_namespace</documentNamespace>
+  <documentNamespace>https://some.namespace</documentNamespace>
   <files>
     <SPDXID>SPDXRef-somefile</SPDXID>
     <checksums>
