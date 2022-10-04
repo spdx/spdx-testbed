@@ -6,10 +6,10 @@
     <created>2022-01-01T00:00:00Z</created>
     <creators>Tool: test-tool</creators>
   </creationInfo>
-  <name>SPDX-tool-test</name>
+  <name>Baseline SBOM test document</name>
   <dataLicense>CC0-1.0</dataLicense>
   <documentDescribes>SPDXRef-somepackage</documentDescribes>
-  <documentNamespace>some_namespace</documentNamespace>
+  <documentNamespace>https://some.namespace</documentNamespace>
   <packages>
     <SPDXID>SPDXRef-somepackage</SPDXID>
     <checksums>

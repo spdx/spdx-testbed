@@ -6,7 +6,7 @@
     <created>2022-01-01T00:00:00Z</created>
     <creators>Tool: test-tool</creators>
   </creationInfo>
-  <name>SPDX-tool-test</name>
+  <name>Relationship test document</name>
   <dataLicense>CC0-1.0</dataLicense>
   <documentDescribes>SPDXRef-fileA</documentDescribes>
   <documentDescribes>SPDXRef-fileA</documentDescribes>

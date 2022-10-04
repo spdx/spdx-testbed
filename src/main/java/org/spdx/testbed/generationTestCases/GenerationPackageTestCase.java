@@ -1,9 +1,6 @@
 package org.spdx.testbed.generationTestCases;
 
-import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.Version;
 import org.spdx.library.model.*;
 import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.library.model.enumerations.ChecksumAlgorithm;
@@ -12,7 +9,6 @@ import org.spdx.library.model.enumerations.ReferenceCategory;
 import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
-import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 
 import java.util.List;
@@ -20,17 +16,10 @@ import java.util.List;
 public class GenerationPackageTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        ISerializableModelStore modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML);
-        String documentUri = "some_namespace";
-        ModelCopyManager copyManager = new ModelCopyManager();
+        SpdxDocument document = createSpdxDocumentWithBasicInfo("Package test document");
 
-        SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
-
-        document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setDataLicense(LicenseInfoFactory.parseSPDXLicenseString("CC0-1.0"));
-        document.setCreationInfo(document.createCreationInfo(
-                List.of("Tool: test-tool"), "2022-01-01T00:00:00Z"));
-        document.setName("SPDX-tool-test");
+        InMemSpdxStore modelStore = (InMemSpdxStore) document.getModelStore();
+        String documentUri = document.getDocumentUri();
 
         Annotation annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: Package Commenter")

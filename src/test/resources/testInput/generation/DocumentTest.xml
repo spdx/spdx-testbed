@@ -8,7 +8,7 @@
     <creators>Tool: test-tool</creators>
     <licenseListVersion>3.7</licenseListVersion>
   </creationInfo>
-  <name>SPDX-tool-test</name>
+  <name>Document test document</name>
   <dataLicense>CC0-1.0</dataLicense>
   <comment>a document comment</comment>
   <externalDocumentRefs>
@@ -23,10 +23,10 @@
     <annotationDate>2011-01-29T18:30:22Z</annotationDate>
     <annotationType>REVIEW</annotationType>
     <annotator>Person: Document Commenter (mail@mail.com)</annotator>
-    <comment>File level annotation</comment>
+    <comment>Document level annotation</comment>
   </annotations>
   <documentDescribes>SPDXRef-somefile</documentDescribes>
-  <documentNamespace>some_namespace</documentNamespace>
+  <documentNamespace>https://some.namespace</documentNamespace>
   <files>
     <SPDXID>SPDXRef-somefile</SPDXID>
     <checksums>
