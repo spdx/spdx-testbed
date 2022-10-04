@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group 'com.tngtech.spdx'
@@ -29,23 +30,5 @@ jar {
         attributes(
                 'Main-Class': 'org.spdx.testbed.Main'
         )
-    }
-}
-
-tasks.register('uberJar', Jar) {
-    archiveClassifier = 'uber'
-    duplicatesStrategy = 'include'
-
-    manifest {
-        attributes(
-                'Main-Class': 'org.spdx.testbed.Main'
-        )
-    }
-
-    from sourceSets.main.output
-
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
     }
 }
