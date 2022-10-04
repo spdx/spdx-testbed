@@ -25,8 +25,9 @@ public abstract class GenerationTestCase implements TestCase {
         }
         else {
             System.out.print("Test failure in "+this.getClass().getName()+". " +
-                    "The input document did not meet the expectations. The following differences were detected:");
+                    "The input document did not meet the expectations. The following differences were detected:\n");
             System.out.print(differences);
+            System.out.print("\n");
             return 1;
         }
     }

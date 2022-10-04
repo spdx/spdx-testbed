@@ -1,4 +1,4 @@
-package util;
+package org.spdx.testbed.util;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -6,11 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
-import org.spdx.library.model.Annotation;
-import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxFile;
-import org.spdx.library.model.SpdxModelFactory;
-import org.spdx.library.model.SpdxSnippet;
+import org.spdx.library.model.*;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
@@ -20,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static util.Comparisons.Tuple;
-import static util.Comparisons.findDifferences;
+import static org.spdx.testbed.util.Comparisons.Tuple;
+import static org.spdx.testbed.util.Comparisons.findDifferences;
 
 public class ComparisonsTest {
 
