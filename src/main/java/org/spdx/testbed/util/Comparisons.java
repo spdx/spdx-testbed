@@ -1,10 +1,17 @@
 package org.spdx.testbed.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.flipkart.zjsonpatch.DiffFlags;
+import com.flipkart.zjsonpatch.JsonDiff;
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.spdx.jacksonstore.JacksonSerializer;
+import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.SpdxConstants;
@@ -17,7 +24,10 @@ import org.spdx.library.model.TypedValue;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,10 +36,77 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Comparisons {
     private static final String CLASS_KEY = "class";
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    public static ArrayNode findDifferencesAsJsonPatch(ModelObject firstObject,
+                                                       ModelObject secondObject
+            , Collection<String> ignoredPaths) throws InvalidSPDXAnalysisException,
+            JsonProcessingException {
+        var firstSerializer = new JacksonSerializer(new ObjectMapper(),
+                MultiFormatStore.Format.JSON_PRETTY, MultiFormatStore.Verbose.COMPACT,
+                firstObject.getModelStore());
+        var secondSerializer = new JacksonSerializer(new ObjectMapper(),
+                MultiFormatStore.Format.JSON_PRETTY, MultiFormatStore.Verbose.COMPACT,
+                secondObject.getModelStore());
+        var firstJson = firstSerializer.docToJsonNode(firstObject.getDocumentUri());
+        var secondJson = secondSerializer.docToJsonNode(secondObject.getDocumentUri());
+        var differences = (ArrayNode) JsonDiff.asJson(firstJson, secondJson,
+                EnumSet.of(DiffFlags.ADD_ORIGINAL_VALUE_ON_REPLACE));
+        omitListReorderingsAndIgnoredPaths(differences, ignoredPaths);
+        return differences;
+    }
+
+    public static ArrayNode findDifferencesAsJsonPatch(ModelObject firstObject,
+                                                       ModelObject secondObject) throws JsonProcessingException, InvalidSPDXAnalysisException {
+        return findDifferencesAsJsonPatch(firstObject, secondObject, Collections.emptySet());
+    }
+
+    private static void omitListReorderingsAndIgnoredPaths(ArrayNode differencesNode,
+                                                           Collection<String> ignoredPaths) throws JsonProcessingException {
+        List<Integer> indicesToRemove = new ArrayList<>();
+        var nodeIterator = differencesNode.iterator();
+        var currentIndex = -1;
+        while (nodeIterator.hasNext()) {
+            currentIndex++;
+            var currentDiff = OBJECT_MAPPER.treeToValue(nodeIterator.next(), JsonPatchDiff.class);
+            if (isMoveOperationWithSameBasePath(currentDiff) || shouldBeIgnored(currentDiff.getPath(), ignoredPaths)) {
+                // list is created in reverse order so the subsequent remove operations are 
+                // executed from largest to smallest index and don't interfere with each other
+                indicesToRemove.add(0, currentIndex);
+            }
+        }
+        indicesToRemove.forEach(differencesNode::remove);
+    }
+
+    private static boolean shouldBeIgnored(String path, Collection<String> ignoredPaths) {
+        return ignoredPaths.stream()
+                .anyMatch(path::startsWith);
+    }
+
+    private static boolean isMoveOperationWithSameBasePath(JsonPatchDiff jsonPatchDiff) {
+        if (!jsonPatchDiff.getOperation().equals("move")) {
+            return false;
+        }
+        return describeElementsOfSameList(jsonPatchDiff.getFrom(), jsonPatchDiff.getPath());
+    }
+
+    private static boolean describeElementsOfSameList(String firstPath, String secondPath) {
+        if (!describesListElement(firstPath) || !describesListElement(secondPath)) {
+            return false;
+        }
+        return firstPath.substring(0, firstPath.length() - 2)
+                .equals(secondPath.substring(0, secondPath.length() - 2));
+    }
+
+    private static boolean describesListElement(String path) {
+        var regex = Pattern.compile(".*/[0-9]$");
+        return regex.matcher(path).matches();
+    }
 
     public static Map<String, Tuple<?>> findDifferences(ModelObject firstObject,
                                                         ModelObject secondObject,
