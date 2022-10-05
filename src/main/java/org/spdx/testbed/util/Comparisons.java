@@ -99,12 +99,14 @@ public class Comparisons {
         if (!describesListElement(firstPath) || !describesListElement(secondPath)) {
             return false;
         }
-        return firstPath.substring(0, firstPath.length() - 2)
-                .equals(secondPath.substring(0, secondPath.length() - 2));
+        // Check that paths agree up to the index in the list
+        return firstPath.substring(0, firstPath.length() - 1)
+                .equals(secondPath.substring(0, secondPath.length() - 1));
     }
 
     private static boolean describesListElement(String path) {
-        var regex = Pattern.compile(".*/[0-9]$");
+        // Check that path ends with "/x", where x is any nonnegative number
+        var regex = Pattern.compile(".*/[0-9]+$");
         return regex.matcher(path).matches();
     }
 
