@@ -15,7 +15,6 @@ import org.spdx.library.Version;
 import org.spdx.library.model.Annotation;
 import org.spdx.library.model.Checksum;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxElement;
 import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.SpdxSnippet;
@@ -94,9 +93,8 @@ public class ComparisonsTest {
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
-        var annotation = new Annotation("annotationId");
         var annotationComment = "Completely new annotation!";
-        annotation.setComment(annotationComment);
+        var annotation = new Annotation("annotationId").setComment(annotationComment);
         firstDoc.addAnnotation(annotation);
 
         var expectedAnnotationsNode = MAPPER.createArrayNode();
@@ -115,9 +113,8 @@ public class ComparisonsTest {
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
-        var annotation = new Annotation("annotationId");
         var annotationComment = "Completely new annotation!";
-        annotation.setComment(annotationComment);
+        var annotation = new Annotation("annotationId").setComment(annotationComment);
         secondDoc.addAnnotation(annotation);
 
         var expectedAnnotationsNode = MAPPER.createArrayNode();
