@@ -15,8 +15,16 @@ jobs:
         with:
           java-version: '11'
           
-      - name: Build fat jar
+      - name: Build fat jar of testbed
         run: ./gradlew shadowJar
         
-      - name: Run test case
-        run: java -jar build/libs/spdx-testbed-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f src/test/resources/testInput/generation/MinimalTest.xml
+      - name: Install spdx-generator
+        
+      - name: Run spdx-generator to create input file
+        id: generate-input
+        run: |
+          java -jar spdx-generator.jar generationMinimalTest
+          echo "::set-output name=filePath::path/to/file"
+        
+      - name: Run minimal test case
+        run: java -jar build/libs/*.jar -t generationMinimalTest -f ${{ steps.generate-input.outputs.filePath }}
