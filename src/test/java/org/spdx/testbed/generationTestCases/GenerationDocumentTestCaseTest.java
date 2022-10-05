@@ -14,6 +14,6 @@ public class GenerationDocumentTestCaseTest {
         var testCase = new GenerationDocumentTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/DocumentTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

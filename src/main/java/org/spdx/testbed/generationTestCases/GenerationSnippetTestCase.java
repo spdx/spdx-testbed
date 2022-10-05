@@ -3,7 +3,6 @@ package org.spdx.testbed.generationTestCases;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.*;
 import org.spdx.library.model.enumerations.AnnotationType;
-import org.spdx.library.model.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
@@ -25,7 +24,7 @@ public class GenerationSnippetTestCase extends GenerationTestCase {
                 .setComment("Snippet level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
-        Checksum sha1Checksum = document.createChecksum(ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
 
         AnyLicenseInfo lgpl2_0onlyANDLicenseRef_2 = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only AND LicenseRef-3");
         AnyLicenseInfo gpl2_0only = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");

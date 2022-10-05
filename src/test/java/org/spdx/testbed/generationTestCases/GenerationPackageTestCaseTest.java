@@ -14,6 +14,6 @@ public class GenerationPackageTestCaseTest {
         var testCase = new GenerationPackageTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/PackageTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

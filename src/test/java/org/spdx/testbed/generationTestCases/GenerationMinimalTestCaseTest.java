@@ -14,6 +14,6 @@ public class GenerationMinimalTestCaseTest {
         var testCase = new GenerationMinimalTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/MinimalTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

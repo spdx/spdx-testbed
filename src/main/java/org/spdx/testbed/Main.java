@@ -28,36 +28,40 @@ public class Main {
             String testCase = cmd.getOptionValue("t");
             String[] files = {cmd.getOptionValue("f")};
 
+            TestResult testResult;
             switch (testCase) {
                 case "generationMinimalTest":
-                    (new GenerationMinimalTestCase()).test(files);
+                    testResult = (new GenerationMinimalTestCase()).test(files);
                     break;
                 case "generationDocumentTest":
-                    (new GenerationDocumentTestCase()).test(files);
+                    testResult = (new GenerationDocumentTestCase()).test(files);
                     break;
                 case "generationPackageTest":
-                    (new GenerationPackageTestCase()).test(files);
+                    testResult = (new GenerationPackageTestCase()).test(files);
                     break;
                 case "generationFileTest":
-                    (new GenerationFileTestCase()).test(files);
+                    testResult = (new GenerationFileTestCase()).test(files);
                     break;
                 case "generationSnippetTest":
-                    (new GenerationSnippetTestCase()).test(files);
+                    testResult = (new GenerationSnippetTestCase()).test(files);
                     break;
                 case "generationLicenseTest":
-                    (new GenerationLicenseTestCase()).test(files);
+                    testResult = (new GenerationLicenseTestCase()).test(files);
                     break;
                 case "generationRelationshipTest":
-                    (new GenerationRelationshipTestCase()).test(files);
+                    testResult = (new GenerationRelationshipTestCase()).test(files);
                     break;
                 case "generationExtractedLicenseInfoTest":
-                    (new GenerationExtractedLicenseInfoTestCase()).test(files);
+                    testResult = (new GenerationExtractedLicenseInfoTestCase()).test(files);
                     break;
                 default:
                     //TODO: add info about supported test cases
                     System.err.print("Error: " + testCase + " is an unrecognized test case. Here is a list of possible test cases: (work in progress)\n");
                     System.exit(1);
+                    return;
             }
+
+            System.out.print(testResult.outputMessage);
 
         } catch (ParseException e) {
             System.out.println(e.getMessage());

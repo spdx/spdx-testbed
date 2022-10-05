@@ -29,7 +29,7 @@ public class GenerationFileTestCase extends GenerationTestCase {
                 .setComment("File level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
-        Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
         Checksum md5Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
 
         AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only OR LicenseRef-2");

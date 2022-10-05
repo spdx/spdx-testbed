@@ -6,5 +6,5 @@ import org.spdx.tools.InvalidFileNameException;
 import java.io.IOException;
 
 public interface TestCase {
-    int test(String[] args) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException;
+    TestResult test(String[] args) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException;
 }
