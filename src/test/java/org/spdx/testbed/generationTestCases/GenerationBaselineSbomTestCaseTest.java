@@ -14,6 +14,6 @@ public class GenerationBaselineSbomTestCaseTest {
         var testCase = new GenerationBaselineSbomTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/BaselineSbomTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

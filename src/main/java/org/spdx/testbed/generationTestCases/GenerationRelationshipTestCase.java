@@ -4,7 +4,6 @@ import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.Checksum;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.SpdxFile;
-import org.spdx.library.model.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.enumerations.RelationshipType;
 import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
@@ -20,7 +19,7 @@ public class GenerationRelationshipTestCase extends GenerationTestCase {
         InMemSpdxStore modelStore = (InMemSpdxStore) document.getModelStore();
         String documentUri = document.getDocumentUri();
 
-        Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
 
         AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only");
 

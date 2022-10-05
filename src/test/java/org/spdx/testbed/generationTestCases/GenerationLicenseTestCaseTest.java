@@ -14,6 +14,6 @@ public class GenerationLicenseTestCaseTest {
         var testCase = new GenerationLicenseTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/LicenseTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

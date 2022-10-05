@@ -14,6 +14,6 @@ public class GenerationRelationshipTestCaseTest {
         var testCase = new GenerationRelationshipTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/RelationshipTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

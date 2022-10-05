@@ -27,7 +27,7 @@ public class GenerationPackageTestCase extends GenerationTestCase {
                 .setComment("Package level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
-        Checksum sha1Checksum = document.createChecksum(ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
         Checksum md5Checksum = document.createChecksum(ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
         Checksum sha256Checksum = document.createChecksum(ChecksumAlgorithm.SHA256, "11b6d3ee554eedf79299905a98f9b9a04e498210b59f15094c916c91d150efcd");
 

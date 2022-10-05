@@ -5,7 +5,6 @@ import org.spdx.library.model.Checksum;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.SpdxPackage;
 import org.spdx.library.model.SpdxPackageVerificationCode;
-import org.spdx.library.model.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.simple.InMemSpdxStore;
@@ -20,7 +19,7 @@ public class GenerationBaselineSbomTestCase extends GenerationTestCase {
         InMemSpdxStore modelStore = (InMemSpdxStore) document.getModelStore();
         String documentUri = document.getDocumentUri();
 
-        Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
         SpdxPackageVerificationCode spdxPackageVerificationCode = document.createPackageVerificationCode("d6a770ba38583ed4bb4525bd96e50461655d2758", List.of("./package.spdx"));
 
         AnyLicenseInfo lgpl3_0_only = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
@@ -36,4 +35,6 @@ public class GenerationBaselineSbomTestCase extends GenerationTestCase {
 
         return document;
     }
+
+
 }

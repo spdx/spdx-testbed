@@ -9,8 +9,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class testUtilities {
 
-    public static void assertThatTestCaseReturnsExitValueZero (TestCase testCase, String inputFilePath) throws IOException, InvalidSPDXAnalysisException, InvalidFileNameException {
-        int returnCode = testCase.test(new String[]{inputFilePath});
-        assertThat(returnCode).isEqualTo(0);
+    public static void assertThatTestCaseReturnsSuccess(TestCase testCase, String inputFilePath) throws IOException, InvalidSPDXAnalysisException, InvalidFileNameException {
+        TestResult testResult = testCase.test(new String[]{inputFilePath});
+        assertThat(testResult.success).isTrue();
     }
 }

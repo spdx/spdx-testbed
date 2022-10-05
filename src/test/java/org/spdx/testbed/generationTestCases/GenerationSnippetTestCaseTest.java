@@ -14,6 +14,6 @@ public class GenerationSnippetTestCaseTest {
         var testCase = new GenerationSnippetTestCase();
         var inputFilePath = "src/test/resources/testInput/generation/SnippetTest.xml";
 
-        testUtilities.assertThatTestCaseReturnsExitValueZero(testCase, inputFilePath);
+        testUtilities.assertThatTestCaseReturnsSuccess(testCase, inputFilePath);
     }
 }

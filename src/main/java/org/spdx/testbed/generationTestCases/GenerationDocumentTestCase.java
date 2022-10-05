@@ -6,7 +6,6 @@ import org.spdx.library.model.Checksum;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.enumerations.AnnotationType;
-import org.spdx.library.model.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
@@ -33,7 +32,7 @@ public class GenerationDocumentTestCase extends GenerationTestCase {
 
         document.addAnnotation(annotation);
 
-        Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
         var externalDocumentRef = document.createExternalDocumentRef("DocumentRef-externaldocumentid", "some-external-uri", sha1Checksum);
 
         document.setExternalDocumentRefs(List.of(externalDocumentRef));
