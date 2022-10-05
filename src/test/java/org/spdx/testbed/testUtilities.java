@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class testUtilities {
 
     public static void assertThatTestCaseReturnsSuccess(TestCase testCase, String inputFilePath) throws IOException, InvalidSPDXAnalysisException, InvalidFileNameException {
-        TestResult testResult = testCase.test(new String[]{inputFilePath});
+        var testResult = testCase.test(new String[]{inputFilePath});
         assertThat(testResult.success).isTrue();
     }
 }

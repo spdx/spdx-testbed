@@ -1,40 +1,36 @@
 package org.spdx.testbed.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.model.Checksum;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.enumerations.RelationshipType;
-import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import java.util.List;
 
 public class GenerationRelationshipTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        SpdxDocument document = createSpdxDocumentWithBasicInfo("Relationship test document");
+        var document = createSpdxDocumentWithBasicInfo("Relationship test document");
 
-        InMemSpdxStore modelStore = (InMemSpdxStore) document.getModelStore();
-        String documentUri = document.getDocumentUri();
+        var modelStore = document.getModelStore();
+        var documentUri = document.getDocumentUri();
 
-        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
+        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
 
-        AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only");
+        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only");
 
-        SpdxFile fileA = document.createSpdxFile("SPDXRef-fileA", "./fileA.c", concludedLicense,
+        var fileA = document.createSpdxFile("SPDXRef-fileA", "./fileA.c", concludedLicense,
                         List.of(), "Copyright 2022 some person", sha1Checksum)
                 .build();
 
-        SpdxFile fileB = document.createSpdxFile("SPDXRef-fileB", "./fileB.c", concludedLicense,
+        var fileB = document.createSpdxFile("SPDXRef-fileB", "./fileB.c", concludedLicense,
                         List.of(), "Copyright 2022 some person", sha1Checksum)
                 .build();
 
         document.getDocumentDescribes().add(fileA);
         document.getDocumentDescribes().add(fileB);
 
-        for (RelationshipType relationshipType : RelationshipType.values()) {
+        for (var relationshipType : RelationshipType.values()) {
             if (relationshipType == RelationshipType.MISSING) {
                 continue;
             }
