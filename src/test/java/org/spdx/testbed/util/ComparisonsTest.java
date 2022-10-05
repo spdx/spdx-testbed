@@ -115,8 +115,6 @@ public class ComparisonsTest {
 
     private void addAnnotation(SpdxElement spdxElement, Annotation annotation) throws InvalidSPDXAnalysisException {
         var clonedAnnotation = (Annotation) annotation.clone(spdxElement.getModelStore());
-        // This will no longer be necessary with version 1.1.1. of the spdx java library, see https://github.com/spdx/Spdx-Java-Library/issues/107
-        clonedAnnotation.copyFrom(annotation);
         spdxElement.addAnnotation(annotation);
     }
 
