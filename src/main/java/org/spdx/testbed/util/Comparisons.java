@@ -89,7 +89,7 @@ public class Comparisons {
     }
 
     private static boolean isMoveOperationWithSameBasePath(JsonPatchDiff jsonPatchDiff) {
-        if (!jsonPatchDiff.getOperation().equals("move")) {
+        if (!Operation.MOVE.equals(jsonPatchDiff.getOperation())) {
             return false;
         }
         return describeElementsOfSameList(jsonPatchDiff.getFrom(), jsonPatchDiff.getPath());

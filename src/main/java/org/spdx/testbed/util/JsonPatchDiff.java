@@ -19,7 +19,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonPatchDiff {
     @JsonProperty("op")
-    private String operation;
+    private Operation operation;
     // Path of the second element in case the operation describes two
     private String path;
     // Path of the first element in case the operation describes two

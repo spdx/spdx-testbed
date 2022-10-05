@@ -190,7 +190,7 @@ public class ComparisonsTest {
 
     private static ObjectNode getReplaceNode(String path, JsonNode fromValue, JsonNode value) {
         return JsonPatchDiff.builder()
-                .operation(Operation.REPLACE.getRfcName())
+                .operation(Operation.REPLACE)
                 .path(path)
                 .fromValue(fromValue)
                 .value(value)
@@ -199,7 +199,7 @@ public class ComparisonsTest {
 
     private static ObjectNode getAddNode(String path, JsonNode addedValue) {
         return JsonPatchDiff.builder()
-                .operation(Operation.ADD.getRfcName())
+                .operation(Operation.ADD)
                 .path(path)
                 .value(addedValue)
                 .build().toObjectNode(MAPPER);
@@ -207,7 +207,7 @@ public class ComparisonsTest {
 
     private static ObjectNode getRemoveNode(String path, JsonNode removedValue) {
         return JsonPatchDiff.builder()
-                .operation(Operation.REMOVE.getRfcName())
+                .operation(Operation.REMOVE)
                 .path(path)
                 .value(removedValue)
                 .build().toObjectNode(MAPPER);
