@@ -4,10 +4,10 @@ import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.Version;
 import org.spdx.library.model.Checksum;
-import org.spdx.library.model.SpdxCreatorInformation;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.enumerations.ChecksumAlgorithm;
+import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.testbed.TestCase;
 import org.spdx.testbed.TestResult;
@@ -23,14 +23,14 @@ import java.util.List;
 public abstract class GenerationTestCase implements TestCase {
 
     public TestResult test(String[] args) throws IOException, InvalidFileNameException, InvalidSPDXAnalysisException {
-        SpdxDocument inputDoc = parseArgsAndGetInputDoc(args);
-        SpdxDocument referenceDoc = buildReferenceDocument();
+        var inputDoc = parseArgsAndGetInputDoc(args);
+        var referenceDoc = buildReferenceDocument();
         var differences = Comparisons.findDifferences(referenceDoc, inputDoc, false);
 
         if (differences.isEmpty()) {
             return TestResult.builder().success(true).differences(Collections.emptyMap()).outputMessage("Test succeeded!").build();
         } else {
-            String outputString = "Test failure in " + this.getClass().getName() + ". " +
+            var outputString = "Test failure in " + this.getClass().getName() + ". " +
                     "The input document did not meet the expectations. The following differences were detected:\n" +
                     differences + "\n";
             return TestResult.builder().success(false).differences(differences).outputMessage(outputString).build();
@@ -51,13 +51,13 @@ public abstract class GenerationTestCase implements TestCase {
     public abstract SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException;
 
     SpdxDocument createSpdxDocumentWithBasicInfo(String documentName) throws InvalidSPDXAnalysisException {
-        InMemSpdxStore modelStore = new InMemSpdxStore();
-        String documentUri = "https://some.namespace";
-        ModelCopyManager copyManager = new ModelCopyManager();
+        var modelStore = new InMemSpdxStore();
+        var documentUri = "https://some.namespace";
+        var copyManager = new ModelCopyManager();
 
-        SpdxDocument document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
+        var document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
 
-        SpdxCreatorInformation creationInfo = document.createCreationInfo(
+        var creationInfo = document.createCreationInfo(
                 List.of("Tool: test-tool"), "2022-01-01T00:00:00Z");
 
         document.setCreationInfo(creationInfo);
@@ -67,7 +67,7 @@ public abstract class GenerationTestCase implements TestCase {
         return document;
     }
 
-    Checksum createSha1Checksum(InMemSpdxStore modelStore, String documentUri) throws InvalidSPDXAnalysisException {
+    Checksum createSha1Checksum(IModelStore modelStore, String documentUri) throws InvalidSPDXAnalysisException {
         return Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
     }
 }

@@ -4,39 +4,36 @@ import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.Annotation;
 import org.spdx.library.model.Checksum;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.library.model.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.enumerations.FileType;
-import org.spdx.library.model.license.AnyLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import java.util.List;
 
 public class GenerationFileTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        SpdxDocument document = createSpdxDocumentWithBasicInfo("File test document");
+        var document = createSpdxDocumentWithBasicInfo("File test document");
 
-        InMemSpdxStore modelStore = (InMemSpdxStore) document.getModelStore();
-        String documentUri = document.getDocumentUri();
+        var modelStore = document.getModelStore();
+        var documentUri = document.getDocumentUri();
 
-        Annotation annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
+        var annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: File Annotator")
                 .setAnnotationDate("2011-01-29T18:30:22Z")
                 .setComment("File level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
-        Checksum sha1Checksum = createSha1Checksum(modelStore, documentUri);
-        Checksum md5Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
+        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
+        var md5Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
 
-        AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only OR LicenseRef-2");
-        AnyLicenseInfo firstLicense = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
-        AnyLicenseInfo secondLicense = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-2");
+        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only OR LicenseRef-2");
+        var firstLicense = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
+        var secondLicense = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-2");
 
-        SpdxFile file = document.createSpdxFile("SPDXRef-somefile", "./package/foo.c", concludedLicense,
+        var file = document.createSpdxFile("SPDXRef-somefile", "./package/foo.c", concludedLicense,
                         List.of(firstLicense, secondLicense), "Copyright 2008-2010 John Smith", sha1Checksum)
                 .addAnnotation(annotation)
                 .addFileType(FileType.SOURCE)

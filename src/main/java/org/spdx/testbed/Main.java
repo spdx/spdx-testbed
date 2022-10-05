@@ -9,24 +9,23 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException, InvalidFileNameException {
-        Options options = new Options();
-        //TODO: better help text, the help option does not work currently as -t and -f are always required as input
+        var options = new Options();
         options.addOption(Option.builder("t").longOpt("test_case").desc("For possible values see some website.").hasArg().argName("TESTCASE").required().build());
-        options.addOption(Option.builder("f").longOpt("input_files").desc("The file to be processed").hasArgs().argName("FILE").required().build());
+        options.addOption(Option.builder("f").longOpt("input_files").desc("The files to be processed").hasArgs().argName("FILES").required().build());
         options.addOption(Option.builder("h").longOpt("help").desc("Display usage").required(false).build());
 
-        CommandLineParser parser = new DefaultParser();
+        var parser = new DefaultParser();
 
         try {
-            CommandLine cmd = parser.parse(options, args);
+            var cmd = parser.parse(options, args);
 
             if (cmd.hasOption("h")) {
                 printUsage(options);
                 System.exit(0);
             }
 
-            String testCase = cmd.getOptionValue("t");
-            String[] files = {cmd.getOptionValue("f")};
+            var testCase = cmd.getOptionValue("t");
+            String[] files = cmd.getOptionValues("f");
 
             TestResult testResult;
             switch (testCase) {
@@ -64,7 +63,7 @@ public class Main {
             System.out.print(testResult.outputMessage);
 
         } catch (ParseException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
 
             printUsage(options);
             System.exit(1);
@@ -72,9 +71,9 @@ public class Main {
     }
 
     private static void printUsage(Options options) {
-        HelpFormatter helper = new HelpFormatter();
-        String helpHeader = "Test if the input file solves the specified test case.\n\n";
-        String helpFooter = "\nFor possible options for testCase ";
+        var helper = new HelpFormatter();
+        var helpHeader = "Test if the input files solve the specified test case.\n\n";
+        var helpFooter = "\n";
         helper.printHelp("spdx-testbed.jar", helpHeader, options, helpFooter, true);
     }
 }

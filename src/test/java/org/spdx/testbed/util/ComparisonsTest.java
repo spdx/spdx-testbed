@@ -68,7 +68,7 @@ public class ComparisonsTest {
         firstSnippet.setName(SpdxConstants.NOASSERTION_VALUE);
         firstSnippet.setLicenseConcluded(new SpdxNoAssertionLicense());
         // Adding and removing the annotation results in an empty ModelCollection
-        Annotation annotation = new Annotation(modelStore, DOCUMENT_URI, "annotationId",
+        var annotation = new Annotation(modelStore, DOCUMENT_URI, "annotationId",
                 copyManager, true);
         firstSnippet.addAnnotation(annotation);
         firstSnippet.removeAnnotation(annotation);
