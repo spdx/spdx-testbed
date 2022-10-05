@@ -1,0 +1,22 @@
+name: "Tests for the Java tools"
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  test:
+    name: "Testcases"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        
+      - name: Set up Java Environment
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          
+      - name: Build fat jar
+        run: ./gradlew shadowJar
+        
+      - name: Run test case
+        run: java -jar build/libs/spdx-testbed-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f src/test/resources/testInput/generation/MinimalTest.xml
