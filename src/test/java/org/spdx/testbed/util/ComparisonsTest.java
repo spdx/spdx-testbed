@@ -73,6 +73,23 @@ public class ComparisonsTest {
     }
 
     @Test
+    public void detectNestedDifference() throws InvalidSPDXAnalysisException,
+            JsonProcessingException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
+        firstFile.getFileContributors().add("fileContributor");
+        var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
+        secondFile.getFileContributors().add("newContributor");
+
+        var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
+
+        assertThat(differences).containsExactly(getReplaceNode("/files/0/fileContributors/0",
+                new TextNode("fileContributor"), new TextNode("newContributor")));
+    }
+
+    @Test
     public void detectAdditionalProperty() throws InvalidSPDXAnalysisException,
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
@@ -80,7 +97,7 @@ public class ComparisonsTest {
         var annotation = new Annotation("annotationId");
         var annotationComment = "Completely new annotation!";
         annotation.setComment(annotationComment);
-        addAnnotation(firstDoc, annotation);
+        firstDoc.addAnnotation(annotation);
 
         var expectedAnnotationsNode = MAPPER.createArrayNode();
         var annotationNode = MAPPER.createObjectNode();
@@ -94,6 +111,27 @@ public class ComparisonsTest {
     }
 
     @Test
+    public void detectMissingProperty() throws InvalidSPDXAnalysisException,
+            JsonProcessingException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+        var annotation = new Annotation("annotationId");
+        var annotationComment = "Completely new annotation!";
+        annotation.setComment(annotationComment);
+        secondDoc.addAnnotation(annotation);
+
+        var expectedAnnotationsNode = MAPPER.createArrayNode();
+        var annotationNode = MAPPER.createObjectNode();
+        annotationNode.put("comment", annotationComment);
+        expectedAnnotationsNode.add(annotationNode);
+
+        var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
+
+        assertThat(differences).containsExactly(getAddNode("/annotations",
+                expectedAnnotationsNode));
+    }
+
+    @Test
     public void ignoreReorderedLists() throws InvalidSPDXAnalysisException,
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
@@ -103,19 +141,14 @@ public class ComparisonsTest {
         var secondAnnotation = new Annotation("secondAnnotationId").setComment("second annotation");
 
         // annotations are added in different orders
-        addAnnotation(firstDoc, firstAnnotation);
-        addAnnotation(firstDoc, secondAnnotation);
-        addAnnotation(secondDoc, secondAnnotation);
-        addAnnotation(secondDoc, firstAnnotation);
+        firstDoc.addAnnotation(firstAnnotation);
+        firstDoc.addAnnotation(secondAnnotation);
+        secondDoc.addAnnotation(secondAnnotation);
+        secondDoc.addAnnotation(firstAnnotation);
 
         var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
 
         assertThat(differences).isEmpty();
-    }
-
-    private void addAnnotation(SpdxElement spdxElement, Annotation annotation) throws InvalidSPDXAnalysisException {
-        var clonedAnnotation = (Annotation) annotation.clone(spdxElement.getModelStore());
-        spdxElement.addAnnotation(annotation);
     }
 
     @Test
@@ -155,7 +188,7 @@ public class ComparisonsTest {
     }
 
     @Test
-    public void detectNestedDifference() throws InvalidSPDXAnalysisException {
+    public void oldDetectNestedDifference() throws InvalidSPDXAnalysisException {
         var secondDocumentUri = "secondDocumentUri";
         var annotation = new Annotation(modelStore, secondDocumentUri, "annotationId",
                 copyManager, true)
@@ -176,7 +209,6 @@ public class ComparisonsTest {
         // TODO: Make validation more precise once the tools provide more precise results
         assertThat(differences).containsKey(SpdxConstants.PROP_RELATIONSHIP);
     }
-
 
     private void assertExclusivePropertyInFirst(Map<String, Tuple<?>> differences,
                                                 String propertyName, Object propertyValue) {
