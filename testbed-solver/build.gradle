@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 group 'com.tngtech.spdx'
@@ -10,11 +11,34 @@ repositories {
 }
 
 dependencies {
-    implementation('org.spdx:java-spdx-library:1.1.1')
+    implementation('org.spdx:tools-java:1.1.0')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+
+    constraints {
+        implementation("org.spdx:java-spdx-library") {
+            version {
+                require "1.1.1"
+            }
+            because 'Important bugfixes'
+        }
+        implementation("org.spdx:spdx-jackson-store") {
+            version {
+                require "1.1.1"
+            }
+            because 'Important bugfixes'
+        }
+    }
 }
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.spdx.testbedSolver.Main'
+        )
+    }
 }
