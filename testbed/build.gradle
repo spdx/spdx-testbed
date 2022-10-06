@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+group 'com.tngtech.spdx'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('org.spdx:tools-java:1.1.0')
+    testImplementation('org.assertj:assertj-core:3.23.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    testImplementation('org.junit.jupiter:junit-jupiter-params:5.9.0')
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation('com.flipkart.zjsonpatch:zjsonpatch:0.4.12')
+
+    constraints {
+        implementation("org.spdx:java-spdx-library") {
+            version {
+                require "1.1.1"
+            }
+            because 'Important bugfixes'
+        }
+        implementation("org.spdx:spdx-jackson-store") {
+            version {
+                require "1.1.1"
+            }
+            because 'Important bugfixes'
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.spdx.testbed.Main'
+        )
+    }
+}
