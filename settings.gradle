@@ -1,2 +1,4 @@
 rootProject.name = 'spdx-testbed'
+include 'testbed'
+include 'testbed-solver'
 
