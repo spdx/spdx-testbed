@@ -29,6 +29,7 @@ jobs:
     name: "Build and deploy fat jar for tools-java solver"
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
+    needs: test
     steps:
       - uses: actions/checkout@v3
 
