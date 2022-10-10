@@ -15,8 +15,14 @@ jobs:
         with:
           java-version: '11'
           
-      - name: Build fat jar
-        run: ./gradlew shadowJar
+      - name: Download testbed fat jar
+        id: download-testbed-artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ci-cd-testbed.yaml
+          branch: master
+          name: testbed-artifact
         
       - name: Run test case
         run: java -jar build/libs/spdx-testbed-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f src/test/resources/testInput/generation/MinimalTest.xml
