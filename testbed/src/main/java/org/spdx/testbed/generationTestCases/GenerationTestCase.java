@@ -17,7 +17,6 @@ import org.spdx.tools.SpdxToolsHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class GenerationTestCase implements TestCase {
@@ -29,7 +28,7 @@ public abstract class GenerationTestCase implements TestCase {
 
         if (differences.isEmpty()) {
             System.out.print(this.getClass().getSimpleName() + " succeeded!\n");
-            return TestResult.builder().success(true).differences(Collections.emptyMap()).build();
+            return TestResult.builder().success(true).build();
         } else {
             var outputString = "Test failure in " + this.getClass().getSimpleName() + ". " +
                     "The input document did not meet the expectations. The following differences were detected:\n" +
