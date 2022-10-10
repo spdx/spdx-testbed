@@ -1,21 +1,35 @@
-name: "Tests for the Java tools"
+name: "Testcases for the Java tools"
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
-  test:
-    name: "Testcases"
+  run-testcases:
+    name: "Run Testcases"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        
+
       - name: Set up Java Environment
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: temurin
-          
+
+      - name: Download spdx-tools-java-solver fat jar
+        id: download-spdx-tools-java-solver-artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ci-cd-java-tools-solver.yaml
+          branch: master
+          name: tools-java-solver-artifact
+
+      - name: Run spdx-tools-java-solver to create input file
+        id: generate-input
+        run: |
+          java -jar spdx-tools-java-solver-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml
+
       - name: Download testbed fat jar
         id: download-testbed-artifact
         uses: dawidd6/action-download-artifact@v2
@@ -24,14 +38,6 @@ jobs:
           workflow: ci-cd-testbed.yaml
           branch: master
           name: testbed-artifact
-        
-      - name: Build spdx-tools-java-solver fat jar
-        run: ./gradlew :spdx-tools-java-solver:shadowJar
-
-      - name: Run spdx-tools-java-solver to create input file
-        id: generate-input
-        run: |
-             java -jar spdx-tools-java-solver/build/libs/spdx-tools-java-solver-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml
 
       - name: Run test case
         run: java -jar testbed-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml
