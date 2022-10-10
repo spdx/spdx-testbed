@@ -31,7 +31,7 @@ jobs:
       - name: Run spdx-tools-java-solver to create input file
         id: generate-input
         run: |
-             java -jar spdx-tools-java-solver/build/libs/testbed-solver-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml
+             java -jar spdx-tools-java-solver/build/libs/spdx-tools-java-solver-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml
 
       - name: Run test case
-        run: java -jar testbed/build/libs/testbed-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml
+        run: java -jar build/libs/spdx-testbed-1.0-SNAPSHOT-all.jar -t generationMinimalTest -f generationMinimalResult.xml

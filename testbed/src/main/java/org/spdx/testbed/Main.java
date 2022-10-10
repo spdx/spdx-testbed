@@ -34,7 +34,7 @@ public class Main {
                 case GENERATION_MINIMAL:
                     testResult = (new GenerationMinimalTestCase()).test(files);
                     break;
-                case GENERATION_BASELINESBOM:
+                case GENERATION_BASELINE_SBOM:
                     testResult = (new GenerationBaselineSbomTestCase()).test(files);
                     break;
                 case GENERATION_DOCUMENT:
@@ -55,7 +55,7 @@ public class Main {
                 case GENERATION_RELATIONSHIP:
                     testResult = (new GenerationRelationshipTestCase()).test(files);
                     break;
-                case GENERATION_EXTRACTEDLICENSEINFO:
+                case GENERATION_EXTRACTED_LICENSE_INFO:
                     testResult = (new GenerationExtractedLicenseInfoTestCase()).test(files);
                     break;
             }
@@ -74,6 +74,6 @@ public class Main {
         var helper = new HelpFormatter();
         var helpHeader = "Test if the input files solve the specified test case.\n\n";
         var helpFooter = "\n";
-        helper.printHelp("spdx-testbed.jar", helpHeader, options, helpFooter, true);
+        helper.printHelp("spdx-tools-java-solver.jar", helpHeader, options, helpFooter, true);
     }
 }

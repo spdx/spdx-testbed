@@ -3,28 +3,28 @@ package org.spdx.testbed;
 public enum TestCaseName {
 
     GENERATION_MINIMAL("generationMinimalTest"),
-    GENERATION_BASELINESBOM("generationBaselineSbomTest"),
+    GENERATION_BASELINE_SBOM("generationBaselineSbomTest"),
     GENERATION_DOCUMENT("generationDocumentTest"),
     GENERATION_PACKAGE("generationPackageTest"),
     GENERATION_FILE("generationFileTest"),
     GENERATION_SNIPPET("generationSnippetTest"),
     GENERATION_LICENSE("generationLicenseTest"),
     GENERATION_RELATIONSHIP("generationRelationshipTest"),
-    GENERATION_EXTRACTEDLICENSEINFO("generationExtractedLicenseInfoTest");
+    GENERATION_EXTRACTED_LICENSE_INFO("generationExtractedLicenseInfoTest");
 
-    private final String name;
+    private final String fullName;
 
     TestCaseName(String name) {
-        this.name = name;
+        this.fullName = name;
     }
 
-    public String getName() {
-        return this.name;
+    public String getFullName() {
+        return this.fullName;
     }
 
     public static TestCaseName fromString(String str) {
         for (var testCaseName : TestCaseName.values()){
-            if (testCaseName.name.equals(str)){
+            if (testCaseName.getFullName().equals(str)){
                 return testCaseName;
             }
         }
