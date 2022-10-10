@@ -1,4 +1,4 @@
-package org.spdx.testbedSolver.generationTestCases;
+package org.spdx.toolsJavaSolver.generationTestCases;
 
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;

@@ -9,5 +9,4 @@ import java.util.Map;
 public class TestResult {
     Boolean success;
     Map<String, Comparisons.Tuple<?>> differences;
-    String outputMessage;
 }

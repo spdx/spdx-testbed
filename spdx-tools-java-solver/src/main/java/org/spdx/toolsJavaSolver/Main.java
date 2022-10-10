@@ -1,10 +1,10 @@
-package org.spdx.testbedSolver;
+package org.spdx.toolsJavaSolver;
 
 import org.apache.commons.cli.*;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.testbedSolver.generationTestCases.GenerationMinimalTestCase;
+import org.spdx.toolsJavaSolver.generationTestCases.GenerationMinimalTestCase;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
