@@ -1,0 +1,48 @@
+name: "Java Tools Solver CI/CD"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: ~
+  schedule:
+    - cron: '0 5 * * *' # Build every day at 5am
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: "Run Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java Environment
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Test
+        run: ./gradlew :spdx-tools-java-solver:test
+  
+  build-deploy:
+    name: "Build and deploy fat jar for tools-java solver"
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java Environment
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Build fat jar
+        run: ./gradlew :spdx-tools-java-solver:shadowJar
+
+      - name: Upload fat jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: tools-java-solver-artifact
+          path: spdx-tools-java-solver/build/libs/spdx-tools-java-solver-*.jar
