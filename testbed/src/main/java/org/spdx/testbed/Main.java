@@ -27,40 +27,40 @@ public class Main {
             var testCase = cmd.getOptionValue("t");
             String[] files = cmd.getOptionValues("f");
 
-            TestResult testResult;
-            switch (testCase) {
-                case "generationMinimalTest":
+            TestResult testResult = null;
+            var testCaseName = TestCaseName.fromString(testCase);
+
+            switch (testCaseName) {
+                case GENERATION_MINIMAL:
                     testResult = (new GenerationMinimalTestCase()).test(files);
                     break;
-                case "generationDocumentTest":
+                case GENERATION_BASELINESBOM:
+                    testResult = (new GenerationBaselineSbomTestCase()).test(files);
+                    break;
+                case GENERATION_DOCUMENT:
                     testResult = (new GenerationDocumentTestCase()).test(files);
                     break;
-                case "generationPackageTest":
+                case GENERATION_PACKAGE:
                     testResult = (new GenerationPackageTestCase()).test(files);
                     break;
-                case "generationFileTest":
+                case GENERATION_FILE:
                     testResult = (new GenerationFileTestCase()).test(files);
                     break;
-                case "generationSnippetTest":
+                case GENERATION_SNIPPET:
                     testResult = (new GenerationSnippetTestCase()).test(files);
                     break;
-                case "generationLicenseTest":
+                case GENERATION_LICENSE:
                     testResult = (new GenerationLicenseTestCase()).test(files);
                     break;
-                case "generationRelationshipTest":
+                case GENERATION_RELATIONSHIP:
                     testResult = (new GenerationRelationshipTestCase()).test(files);
                     break;
-                case "generationExtractedLicenseInfoTest":
+                case GENERATION_EXTRACTEDLICENSEINFO:
                     testResult = (new GenerationExtractedLicenseInfoTestCase()).test(files);
                     break;
-                default:
-                    //TODO: add info about supported test cases
-                    System.err.print("Error: " + testCase + " is an unrecognized test case. Here is a list of possible test cases: (work in progress)\n");
-                    System.exit(1);
-                    return;
             }
 
-            System.out.print(testResult.outputMessage);
+            //TODO: do something with the testResult
 
         } catch (ParseException e) {
             System.err.println(e.getMessage());

@@ -28,12 +28,14 @@ public abstract class GenerationTestCase implements TestCase {
         var differences = Comparisons.findDifferences(referenceDoc, inputDoc, false);
 
         if (differences.isEmpty()) {
-            return TestResult.builder().success(true).differences(Collections.emptyMap()).outputMessage("Test succeeded!").build();
+            System.out.print(this.getClass().getSimpleName() + " succeeded!\n");
+            return TestResult.builder().success(true).differences(Collections.emptyMap()).build();
         } else {
-            var outputString = "Test failure in " + this.getClass().getName() + ". " +
+            var outputString = "Test failure in " + this.getClass().getSimpleName() + ". " +
                     "The input document did not meet the expectations. The following differences were detected:\n" +
                     differences + "\n";
-            return TestResult.builder().success(false).differences(differences).outputMessage(outputString).build();
+            System.out.print(outputString);
+            return TestResult.builder().success(false).differences(differences).build();
         }
     }
 
