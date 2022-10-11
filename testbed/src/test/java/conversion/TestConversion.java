@@ -54,23 +54,23 @@ public class TestConversion {
     }
 
     private static Stream<Arguments> provideFileNames() {
-        var xmlInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXXMLExample-v2.3.spdx.xml";
-        var rdfInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXRdfExample-v2.3.spdx.rdf.xml";
-        var jsonInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXJSONExample-v2.3.spdx.json";
-        var xlsInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3.xls";
-        var xlsxInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3.xlsx";
-        var tagInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXTagExample-v2.3.spdx";
-        var yamlInputFile = "SPDXDocumentExamples/spdx-spec-v2.3/SPDXYAMLExample-2.3.spdx.yaml";
+        var xmlInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXXMLExample-v2.3.spdx.xml";
+        var rdfInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXRdfExample-v2.3.spdx.rdf.xml";
+        var jsonInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXJSONExample-v2.3.spdx.json";
+        var xlsInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3.xls";
+        var xlsxInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3.xlsx";
+        var tagInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXTagExample-v2.3.spdx";
+        var yamlInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXYAMLExample-2.3.spdx.yaml";
         var inputFiles = Set.of(xmlInputFile, rdfInputFile, jsonInputFile, xlsInputFile,
                 xlsxInputFile, tagInputFile, yamlInputFile);
 
-        var xmlOutputFile = "SPDXDocumentExamples/temp/convertedFile.spdx.xml";
-        var rdfOutputFile = "SPDXDocumentExamples/temp/convertedFile.spdx.rdf.xml";
-        var jsonOutputFile = "SPDXDocumentExamples/temp/convertedFile.spdx.json";
-        var xlsOutputFile = "SPDXDocumentExamples/temp/convertedFile.xls";
-        var xlsxOutputFile = "SPDXDocumentExamples/temp/convertedFile.xlsx";
-        var tagOutputFile = "SPDXDocumentExamples/temp/convertedFile.spdx";
-        var yamlOutputFile = "SPDXDocumentExamples/temp/convertedFile.spdx.yaml";
+        var xmlOutputFile = "../SPDXDocumentExamples/temp/convertedFile.spdx.xml";
+        var rdfOutputFile = "../SPDXDocumentExamples/temp/convertedFile.spdx.rdf.xml";
+        var jsonOutputFile = "../SPDXDocumentExamples/temp/convertedFile.spdx.json";
+        var xlsOutputFile = "../SPDXDocumentExamples/temp/convertedFile.xls";
+        var xlsxOutputFile = "../SPDXDocumentExamples/temp/convertedFile.xlsx";
+        var tagOutputFile = "../SPDXDocumentExamples/temp/convertedFile.spdx";
+        var yamlOutputFile = "../SPDXDocumentExamples/temp/convertedFile.spdx.yaml";
         var outputFiles = Set.of(xmlOutputFile, rdfOutputFile, jsonOutputFile, xlsOutputFile,
                 xlsxOutputFile, tagOutputFile, yamlOutputFile);
 

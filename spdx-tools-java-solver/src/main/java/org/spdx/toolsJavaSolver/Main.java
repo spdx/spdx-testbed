@@ -5,6 +5,7 @@ import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.toolsJavaSolver.generationTestCases.GenerationMinimalTestCase;
+import org.spdx.toolsJavaSolver.generationTestCases.GenerationRelationshipTestCase;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,14 +31,18 @@ public class Main {
             String outputPath = cmd.getOptionValue("f");
 
             SpdxDocument outputDoc;
+            var testCaseName = TestCaseName.fromString(testCase);
 
-            switch (testCase) {
-                case "generationMinimalTest":
+            switch (testCaseName) {
+                case GENERATION_MINIMAL:
                     outputDoc = GenerationMinimalTestCase.buildDocument();
+                    break;
+                case GENERATION_RELATIONSHIP:
+                    outputDoc = GenerationRelationshipTestCase.buildDocument();
                     break;
                 default:
                     //TODO: add info about supported test cases
-                    System.err.print("Error: " + testCase + " is an unrecognized test case. Here is a list of possible test cases: (work in progress)\n");
+                    System.err.print("Error: " + testCase + " is an unrecognized or unimplemented test case. Here is a list of possible test cases: (work in progress)\n");
                     System.exit(1);
                     return;
             }

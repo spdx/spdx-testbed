@@ -1,14 +1,13 @@
 package org.spdx.testbed;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Builder;
-import org.spdx.testbed.util.Comparisons;
-
-import java.util.Collections;
-import java.util.Map;
 
 @Builder
 public class TestResult {
     Boolean success;
+
     @Builder.Default
-    Map<String, Comparisons.Tuple<?>> differences = Collections.emptyMap();
+    ArrayNode differences = (new ObjectMapper()).createArrayNode();
 }
