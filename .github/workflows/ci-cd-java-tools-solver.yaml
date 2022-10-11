@@ -47,3 +47,4 @@ jobs:
         with:
           name: tools-java-solver-artifact
           path: spdx-tools-java-solver/build/libs/spdx-tools-java-solver-*.jar
+          retention-days: 30

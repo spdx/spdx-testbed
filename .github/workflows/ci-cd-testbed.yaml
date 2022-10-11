@@ -47,3 +47,4 @@ jobs:
         with:
           name: testbed-artifact
           path: testbed/build/libs/testbed-*.jar
+          retention-days: 30
