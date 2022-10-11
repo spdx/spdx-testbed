@@ -47,5 +47,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: testbed-artifact
-          path: testbed/build/libs/testbed-*.jar
+          path: testbed/build/libs/testbed-*-all.jar
           retention-days: 30
