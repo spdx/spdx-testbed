@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -32,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.spdx.testbed.util.Comparisons.Tuple;
 import static org.spdx.testbed.util.Comparisons.findDifferences;
 import static org.spdx.testbed.util.Comparisons.findDifferencesAsJsonPatch;
+import static org.spdx.testbed.util.Comparisons.yetAnotherDifferenceMethod;
 
 public class ComparisonsTest {
 
@@ -55,6 +57,19 @@ public class ComparisonsTest {
 
         assertThat(differences).containsExactly(Map.entry("class", new Tuple<>(SpdxDocument.class
                 , SpdxFile.class)));
+    }
+
+    @Test
+    public void detectSimpleDifferenceNewMethod() throws InvalidSPDXAnalysisException {
+        var minimalDocument = buildMinimalDocumentWithFile();
+        var secondDocument = buildMinimalDocumentWithFile();
+        secondDocument.setName("newName");
+        var expectedNameDifference = new Difference(new TextNode(minimalDocument.getName()
+                .get()), new TextNode(secondDocument.getName().get()), "/name", "");
+
+        var differences = yetAnotherDifferenceMethod(minimalDocument, secondDocument);
+
+        assertThat(differences).containsExactly(expectedNameDifference);
     }
 
     @Test
@@ -89,6 +104,23 @@ public class ComparisonsTest {
     }
 
     @Test
+    @Disabled("Need to refine the array comparison to properly detect such nested differences")
+    public void detectNestedDifferenceNewMethod() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
+        firstFile.getFileContributors().add("fileContributor");
+        var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
+        secondFile.getFileContributors().add("newContributor");
+        var expectedDifference = new Difference(null, null, null, null);
+
+        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+
+        assertThat(differences).containsExactly(expectedDifference);
+    }
+
+    @Test
     public void detectAdditionalProperty() throws InvalidSPDXAnalysisException,
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
@@ -106,6 +138,26 @@ public class ComparisonsTest {
 
         assertThat(differences).containsExactly(getRemoveNode("/annotations",
                 expectedAnnotationsNode));
+    }
+
+    @Test
+    public void detectAdditionalPropertyNewMethod() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+        var annotationComment = "Completely new annotation!";
+        var annotation = new Annotation("annotationId").setComment(annotationComment);
+        firstDoc.addAnnotation(annotation);
+
+        var expectedAnnotationsNode = MAPPER.createArrayNode();
+        var annotationNode = MAPPER.createObjectNode();
+        annotationNode.put("comment", annotationComment);
+        expectedAnnotationsNode.add(annotationNode);
+
+        var expectedDifference = new Difference(expectedAnnotationsNode, null, "/annotations", "");
+
+        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+
+        assertThat(differences).containsExactly(expectedDifference);
     }
 
     @Test
@@ -129,6 +181,25 @@ public class ComparisonsTest {
     }
 
     @Test
+    public void detectMissingPropertyNewMethod() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+        var annotationComment = "Completely new annotation!";
+        var annotation = new Annotation("annotationId").setComment(annotationComment);
+        secondDoc.addAnnotation(annotation);
+
+        var expectedAnnotationsNode = MAPPER.createArrayNode();
+        var annotationNode = MAPPER.createObjectNode();
+        annotationNode.put("comment", annotationComment);
+        expectedAnnotationsNode.add(annotationNode);
+        var expectedDifference = new Difference(null, expectedAnnotationsNode, "/annotations", "");
+
+        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+
+        assertThat(differences).containsExactly(expectedDifference);
+    }
+
+    @Test
     public void ignoreReorderedLists() throws InvalidSPDXAnalysisException,
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
@@ -144,6 +215,25 @@ public class ComparisonsTest {
         secondDoc.addAnnotation(firstAnnotation);
 
         var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
+    public void ignoreReorderedListsNewMethod() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        var firstAnnotation = new Annotation("firstAnnotationId").setComment("first annotation");
+        var secondAnnotation = new Annotation("secondAnnotationId").setComment("second annotation");
+
+        // annotations are added in different orders
+        firstDoc.addAnnotation(firstAnnotation);
+        firstDoc.addAnnotation(secondAnnotation);
+        secondDoc.addAnnotation(secondAnnotation);
+        secondDoc.addAnnotation(firstAnnotation);
+
+        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
 
         assertThat(differences).isEmpty();
     }
