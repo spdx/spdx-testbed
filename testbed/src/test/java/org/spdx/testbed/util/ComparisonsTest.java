@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -87,7 +86,7 @@ public class ComparisonsTest {
     }
 
     @Test
-    public void detectNestedDifference() throws InvalidSPDXAnalysisException,
+    public void detectNestedDifferenceInList() throws InvalidSPDXAnalysisException,
             JsonProcessingException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
@@ -104,8 +103,7 @@ public class ComparisonsTest {
     }
 
     @Test
-    @Disabled("Need to refine the array comparison to properly detect such nested differences")
-    public void detectNestedDifferenceNewMethod() throws InvalidSPDXAnalysisException {
+    public void detectNestedDifferenceInListNewMethod() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
 
@@ -113,7 +111,67 @@ public class ComparisonsTest {
         firstFile.getFileContributors().add("fileContributor");
         var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
         secondFile.getFileContributors().add("newContributor");
-        var expectedDifference = new Difference(null, null, null, null);
+
+        var firstExpectedDifference = new Difference(new TextNode("fileContributor"), null,
+                "/files/0/fileContributors/0", "No matching element in second list and no id to " +
+                "determine a candidate.");
+        var secondExpectedDifference = new Difference(null, new TextNode("newContributor"),
+                "/files/0/fileContributors/0", "No matching element in first list and no id to " +
+                "determine a candidate.");
+
+        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+
+        assertThat(differences).containsExactlyInAnyOrder(firstExpectedDifference,
+                secondExpectedDifference);
+    }
+
+    @Test
+    public void showDifferencesOfListElementsMatchedById() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        var sha1Checksum = Checksum.create(modelStore, firstDoc.getDocumentUri(),
+                ChecksumAlgorithm.SHA1,
+                "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
+        var file = firstDoc.createSpdxFile("SPDXRef-different", "./foo.txt", concludedLicense,
+                        List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum)
+                .build();
+        var fileWithSameIdButDifferentProperties = secondDoc.createSpdxFile("SPDXRef-different",
+                "./bar.txt", concludedLicense,
+                List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum).build();
+        var identicalFileInBothDocs = firstDoc.createSpdxFile("SPDXRef-identical", "./foo.txt",
+                concludedLicense,
+                List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum).build();
+
+        // It looks like these are reordered somewhere in the serialization process that we use 
+        // during comparison, so putting them in reverse order doesn't really matter at the moment.
+        firstDoc.setDocumentDescribes(List.of(file, identicalFileInBothDocs));
+        secondDoc.setDocumentDescribes(List.of(identicalFileInBothDocs,
+                fileWithSameIdButDifferentProperties));
+
+        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+
+        assertThat(differences.size()).isEqualTo(1);
+        var difference = differences.get(0);
+        assertThat(difference.getFirstValue()).isEqualTo(new TextNode("./foo.txt"));
+        assertThat(difference.getSecondValue()).isEqualTo(new TextNode("./bar.txt"));
+        // Because of the reordering mentioned above, we avoid asserting on the exact index in 
+        // the list
+        assertThat(difference.getPath()).startsWith("/files/");
+        assertThat(difference.getPath()).endsWith("fileName");
+    }
+
+    @Test
+    public void detectNestedDifferenceNewMethod() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        firstDoc.getCreationInfo().setComment("firstComment");
+        secondDoc.getCreationInfo().setComment("secondComment");
+
+        var expectedDifference = new Difference(new TextNode("firstComment"), new TextNode(
+                "secondComment"), "/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment", "");
 
         var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
 

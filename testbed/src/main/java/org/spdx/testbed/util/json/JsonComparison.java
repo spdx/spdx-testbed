@@ -141,24 +141,99 @@ public class JsonComparison {
         var secondNodeElements =
                 removeIrrelevantElements(IteratorUtils.toList(secondNode.elements()));
 
-        for (var element : firstNodeElements) {
-            var matchingElementOptional = secondNodeElements.stream()
-                    .filter(loopElement -> findDifferences(loopElement, element, pathPrefix).isEmpty())
+        // These will be modified while iterating
+        var remainingFirstNodeElements = new ArrayList<>(firstNodeElements);
+        var remainingSecondNodeElements = new ArrayList<>(secondNodeElements);
+
+        for (var currentFirstNodeElement : firstNodeElements) {
+            var exactMatchOptional = secondNodeElements.stream()
+                    .filter(loopElement -> findDifferences(loopElement, currentFirstNodeElement,
+                            pathPrefix).isEmpty())
                     .findFirst();
 
-            // TODO: Improve Difference class to make the information more precise
-            matchingElementOptional.ifPresentOrElse(secondNodeElements::remove,
-                    () -> differences.add(new Difference(element, null,
-                            pathPrefix + "/" + firstNodeElements.indexOf(element), "Could not " +
-                            "find a matching element in the second list")));
+            if (exactMatchOptional.isPresent()) {
+                remainingFirstNodeElements.remove(currentFirstNodeElement);
+                remainingSecondNodeElements.remove(exactMatchOptional.get());
+                continue;
+            }
+
+            var elementPath = pathPrefix + "/" + firstNodeElements.indexOf(currentFirstNodeElement);
+
+            // Backup plan: If no exact match was found, try to find a unique match by id and 
+            // compare
+
+            if (!currentFirstNodeElement.has(SpdxConstants.SPDX_IDENTIFIER)) {
+                differences.add(new Difference(currentFirstNodeElement, null, elementPath, "No " +
+                        "matching element " +
+                        "in second list and no id to determine a candidate."));
+                continue;
+            }
+
+            var idMatches = remainingSecondNodeElements.stream()
+                    .filter(jsonNode -> jsonNode.has(SpdxConstants.SPDX_IDENTIFIER))
+                    .filter(jsonNode -> jsonNode.get(SpdxConstants.SPDX_IDENTIFIER)
+                            .equals(currentFirstNodeElement.get(SpdxConstants.SPDX_IDENTIFIER)))
+                    .collect(Collectors.toList());
+
+            if (idMatches.isEmpty()) {
+                differences.add(new Difference(currentFirstNodeElement, null, elementPath, "No " +
+                        "element in second " +
+                        "list with a matching id."));
+                continue;
+            } else if (idMatches.size() > 1) {
+                differences.add(new Difference(currentFirstNodeElement, null, elementPath,
+                        "Multiple items in " +
+                                "second list with the same id."));
+                continue;
+            }
+
+            var uniqueIdMatch = idMatches.get(0);
+            remainingFirstNodeElements.remove(currentFirstNodeElement);
+            remainingSecondNodeElements.remove(uniqueIdMatch);
+            // TODO: Pass on information on which elements we are comparing, since they may have 
+            //  different indices in the two lists
+            differences.addAll(findDifferences(currentFirstNodeElement, uniqueIdMatch,
+                    elementPath));
         }
 
-        // Elements remaining in the second list were not matched
-        for (var element : secondNodeElements) {
-            // TODO: The index is wrong since some elements were removed earlier
-            differences.add(new Difference(null, element,
-                    pathPrefix + "/" + secondNodeElements.indexOf(element), "Could not find a " +
-                    "matching element in the first list"));
+        for (var currentSecondNodeElement : remainingSecondNodeElements) {
+            // There cannot be an exact match in the first list since it would have been found in
+            // the previous loop
+
+            var elementPath =
+                    pathPrefix + "/" + secondNodeElements.indexOf(currentSecondNodeElement);
+            if (!currentSecondNodeElement.has(SpdxConstants.SPDX_IDENTIFIER)) {
+                differences.add(new Difference(null, currentSecondNodeElement, elementPath, "No " +
+                        "matching element " +
+                        "in first list and no id to determine a candidate."));
+                continue;
+            }
+
+            var idMatches = remainingFirstNodeElements.stream()
+                    .filter(jsonNode -> jsonNode.has(SpdxConstants.SPDX_IDENTIFIER))
+                    .filter(jsonNode -> jsonNode.get(SpdxConstants.SPDX_IDENTIFIER)
+                            .equals(currentSecondNodeElement.get(SpdxConstants.SPDX_IDENTIFIER)))
+                    .collect(Collectors.toList());
+
+            if (idMatches.isEmpty()) {
+                differences.add(new Difference(null, currentSecondNodeElement, elementPath, "No " +
+                        "element in first " +
+                        "list with a matching id."));
+                continue;
+            } else if (idMatches.size() > 1) {
+                differences.add(new Difference(null, currentSecondNodeElement, elementPath,
+                        "Multiple items in " +
+                                "first list with the same id."));
+                continue;
+            }
+
+            var uniqueIdMatch = idMatches.get(0);
+            remainingFirstNodeElements.remove(uniqueIdMatch);
+            remainingSecondNodeElements.remove(currentSecondNodeElement);
+            // TODO: Pass on information on which elements we are comparing, since they may have 
+            //  different indices in the two lists
+            differences.addAll(findDifferences(uniqueIdMatch, currentSecondNodeElement,
+                    elementPath));
         }
 
         return differences;
