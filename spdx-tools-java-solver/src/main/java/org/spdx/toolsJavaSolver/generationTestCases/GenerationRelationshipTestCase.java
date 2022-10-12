@@ -10,7 +10,7 @@ import java.util.List;
 public class GenerationRelationshipTestCase {
 
     public static SpdxDocument buildDocument() throws InvalidSPDXAnalysisException {
-        var document = GenerationUtil.createSpdxDocumentWithBasicInfo("Relationship test document");
+        var document = GenerationUtil.createSpdxDocumentWithBasicInfo();
 
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
