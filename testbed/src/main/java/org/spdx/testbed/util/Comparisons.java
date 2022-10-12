@@ -22,10 +22,12 @@ import org.spdx.library.model.IndividualUriValue;
 import org.spdx.library.model.ModelCollection;
 import org.spdx.library.model.ModelObject;
 import org.spdx.library.model.SimpleUriValue;
+import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.TypedValue;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
+import org.spdx.testbed.util.json.JsonComparison;
 
 import javax.annotation.Nonnull;
 
@@ -47,6 +49,13 @@ import java.util.stream.Collectors;
 public class Comparisons {
     private static final String CLASS_KEY = "class";
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    public static List<Difference> yetAnotherDifferenceMethod(@Nonnull SpdxDocument firstDocument,
+                                                              @Nonnull SpdxDocument secondDocument) throws InvalidSPDXAnalysisException {
+        var firstJson = asJson(firstDocument);
+        var secondJson = asJson(secondDocument);
+        return JsonComparison.findDifferences(firstJson, secondJson);
+    }
 
     public static ArrayNode findDifferencesAsJsonPatch(@Nonnull ModelObject firstObject,
                                                        @Nonnull ModelObject secondObject
