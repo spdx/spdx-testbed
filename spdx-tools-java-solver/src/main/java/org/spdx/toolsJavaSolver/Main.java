@@ -4,8 +4,7 @@ import org.apache.commons.cli.*;
 import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.toolsJavaSolver.generationTestCases.GenerationMinimalTestCase;
-import org.spdx.toolsJavaSolver.generationTestCases.GenerationRelationshipTestCase;
+import org.spdx.toolsJavaSolver.generationTestCases.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,6 +36,24 @@ public class Main {
                 case GENERATION_MINIMAL:
                     outputDoc = GenerationMinimalTestCase.buildDocument();
                     break;
+                case GENERATION_BASELINE_SBOM:
+                    outputDoc = GenerationBaselineSbomTestCase.buildDocument();
+                    break;
+                case GENERATION_DOCUMENT:
+                    outputDoc = GenerationDocumentTestCase.buildDocument();
+                    break;
+                case GENERATION_FILE:
+                    outputDoc = GenerationFileTestCase.buildDocument();
+                    break;
+                case GENERATION_SNIPPET:
+                    outputDoc = GenerationSnippetTestCase.buildDocument();
+                    break;
+                case GENERATION_PACKAGE:
+                    outputDoc = GenerationPackageTestCase.buildDocument();
+                    break;
+                case GENERATION_LICENSE:
+//                    outputDoc = GenerationLicenseTestCase.buildDocument();
+//                    break;
                 case GENERATION_RELATIONSHIP:
                     outputDoc = GenerationRelationshipTestCase.buildDocument();
                     break;

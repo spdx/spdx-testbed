@@ -8,7 +8,7 @@ import java.util.List;
 public class GenerationMinimalTestCase {
 
     public static SpdxDocument buildDocument() throws InvalidSPDXAnalysisException {
-        var document = GenerationUtil.createSpdxDocumentWithBasicInfo("Minimal test document");
+        var document = GenerationUtil.createSpdxDocumentWithBasicInfo();
 
         var sha1Checksum = GenerationUtil.createSha1Checksum(document.getModelStore(), document.getDocumentUri());
         var file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", null, List.of(), null, sha1Checksum).build();

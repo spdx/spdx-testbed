@@ -6,7 +6,7 @@
     <created>2022-01-01T00:00:00Z</created>
     <creators>Tool: test-tool</creators>
   </creationInfo>
-  <name>Minimal test document</name>
+  <name>document name</name>
   <dataLicense>CC0-1.0</dataLicense>
   <documentDescribes>SPDXRef-somefile</documentDescribes>
   <documentNamespace>https://some.namespace</documentNamespace>

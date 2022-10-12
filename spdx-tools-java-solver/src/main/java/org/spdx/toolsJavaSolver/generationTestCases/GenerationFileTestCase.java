@@ -1,4 +1,4 @@
-package org.spdx.testbed.generationTestCases;
+package org.spdx.toolsJavaSolver.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.Annotation;
@@ -12,10 +12,10 @@ import org.spdx.storage.IModelStore;
 
 import java.util.List;
 
-public class GenerationFileTestCase extends GenerationTestCase {
+public class GenerationFileTestCase {
 
-    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        var document = createSpdxDocumentWithBasicInfo();
+    public static SpdxDocument buildDocument() throws InvalidSPDXAnalysisException {
+        var document = GenerationUtil.createSpdxDocumentWithBasicInfo();
 
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
@@ -26,7 +26,7 @@ public class GenerationFileTestCase extends GenerationTestCase {
                 .setComment("File level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
-        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
+        var sha1Checksum = GenerationUtil.createSha1Checksum(modelStore, documentUri);
         var md5Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
 
         var license = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");

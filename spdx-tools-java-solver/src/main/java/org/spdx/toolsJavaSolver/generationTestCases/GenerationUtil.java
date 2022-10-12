@@ -19,7 +19,7 @@ public class GenerationUtil {
         return Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
     }
 
-    static SpdxDocument createSpdxDocumentWithBasicInfo(String documentName) throws InvalidSPDXAnalysisException {
+    static SpdxDocument createSpdxDocumentWithBasicInfo() throws InvalidSPDXAnalysisException {
         var modelStore = new MultiFormatStore(new InMemSpdxStore(), MultiFormatStore.Format.XML, MultiFormatStore.Verbose.COMPACT);
         var documentUri = "https://some.namespace";
         var copyManager = new ModelCopyManager();
@@ -31,7 +31,7 @@ public class GenerationUtil {
 
         document.setCreationInfo(creationInfo);
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setName(documentName);
+        document.setName("document name");
 
         return document;
     }

@@ -1,4 +1,4 @@
-package org.spdx.testbed.generationTestCases;
+package org.spdx.toolsJavaSolver.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.Annotation;
@@ -8,10 +8,10 @@ import org.spdx.storage.IModelStore;
 
 import java.util.List;
 
-public class GenerationDocumentTestCase extends GenerationTestCase {
+public class GenerationDocumentTestCase {
 
-    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        var document = createSpdxDocumentWithBasicInfo();
+    public static SpdxDocument buildDocument() throws InvalidSPDXAnalysisException {
+        var document = GenerationUtil.createSpdxDocumentWithBasicInfo();
 
         document.getCreationInfo().getCreators().add("Person: Jane Doe (jane.doe@example.com)");
 
@@ -31,7 +31,7 @@ public class GenerationDocumentTestCase extends GenerationTestCase {
 
         document.addAnnotation(annotation);
 
-        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
+        var sha1Checksum = GenerationUtil.createSha1Checksum(modelStore, documentUri);
         var externalDocumentRef = document.createExternalDocumentRef("DocumentRef-externaldocumentid", "http://external.uri", sha1Checksum);
 
         document.setExternalDocumentRefs(List.of(externalDocumentRef));

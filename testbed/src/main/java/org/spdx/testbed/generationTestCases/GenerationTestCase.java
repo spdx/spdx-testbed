@@ -51,7 +51,7 @@ public abstract class GenerationTestCase implements TestCase {
 
     public abstract SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException;
 
-    SpdxDocument createSpdxDocumentWithBasicInfo(String documentName) throws InvalidSPDXAnalysisException {
+    SpdxDocument createSpdxDocumentWithBasicInfo() throws InvalidSPDXAnalysisException {
         var modelStore = new InMemSpdxStore();
         var documentUri = "https://some.namespace";
         var copyManager = new ModelCopyManager();
@@ -63,7 +63,7 @@ public abstract class GenerationTestCase implements TestCase {
 
         document.setCreationInfo(creationInfo);
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setName(documentName);
+        document.setName("document name");
 
         return document;
     }

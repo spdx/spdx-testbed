@@ -1,19 +1,19 @@
-package org.spdx.testbed.generationTestCases;
+package org.spdx.toolsJavaSolver.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 
 import java.util.List;
 
-public class GenerationBaselineSbomTestCase extends GenerationTestCase {
+public class GenerationBaselineSbomTestCase {
 
-    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        var document = createSpdxDocumentWithBasicInfo();
+    public static SpdxDocument buildDocument() throws InvalidSPDXAnalysisException {
+        var document = GenerationUtil.createSpdxDocumentWithBasicInfo();
 
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
 
-        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
+        var sha1Checksum = GenerationUtil.createSha1Checksum(modelStore, documentUri);
 
         var spdxPackage = document.createPackage("SPDXRef-somepackage", "package name", null,
                         null, null)

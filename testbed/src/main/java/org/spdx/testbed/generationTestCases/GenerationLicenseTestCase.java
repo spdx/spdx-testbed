@@ -9,7 +9,7 @@ import java.util.List;
 public class GenerationLicenseTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        var document = createSpdxDocumentWithBasicInfo("License test document");
+        var document = createSpdxDocumentWithBasicInfo();
 
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
