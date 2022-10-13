@@ -1,3 +1,14 @@
+# General information
+The SPDX testbed provides tasks that are meant to be solved by external SPDX tools/libraries to prove their capability in handling SPDX documents.  
+Please provide a GitHub actions workflow at `.github/workflows/[name of your tool].yaml` that downloads and executes your tool in order to generate the desired solution, and then checks it via the testbed application.
+For an example, have a look at `.github/workflows/tools-java.yaml` that uses the `spdx-tools-java-solver` to generate an output file `generationMinimalResult.xml`
+that should solve the test "generationMinimalTest" found below.
+To check that your solution is right, call  
+`java -jar testbed-*-all.jar -t <test-name> -f path/to/solution/file`  
+where `<test-name>` is the name of the test found in the headings found below (in the format "Task <heading-number>: <test-name>").
+
+Note that currently only one test case can be checked at a time.
+
 # Part 1: Generation of SPDX documents
 
 ## Minimal information

@@ -1,4 +1,4 @@
-name: "Java Tools Solver CI/CD"
+name: "spdx-tools-java-solver CI/CD"
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew :spdx-tools-java-solver:test
   
   build-deploy:
-    name: "Build and deploy fat jar for tools-java solver"
+    name: "Build and deploy fat jar for spdx-tools-java-solver"
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' }}
     needs: test
