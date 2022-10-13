@@ -55,9 +55,6 @@ public class Main {
                 case GENERATION_RELATIONSHIP:
                     testResult = (new GenerationRelationshipTestCase()).test(files);
                     break;
-                case GENERATION_EXTRACTED_LICENSE_INFO:
-                    testResult = (new GenerationExtractedLicenseInfoTestCase()).test(files);
-                    break;
             }
 
             //TODO: do something with the testResult

@@ -52,8 +52,8 @@ public class Main {
                     outputDoc = GenerationPackageTestCase.buildDocument();
                     break;
                 case GENERATION_LICENSE:
-//                    outputDoc = GenerationLicenseTestCase.buildDocument();
-//                    break;
+                    outputDoc = GenerationLicenseTestCase.buildDocument();
+                    break;
                 case GENERATION_RELATIONSHIP:
                     outputDoc = GenerationRelationshipTestCase.buildDocument();
                     break;

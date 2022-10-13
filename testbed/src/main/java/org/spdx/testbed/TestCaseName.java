@@ -9,8 +9,7 @@ public enum TestCaseName {
     GENERATION_FILE("generationFileTest"),
     GENERATION_SNIPPET("generationSnippetTest"),
     GENERATION_LICENSE("generationLicenseTest"),
-    GENERATION_RELATIONSHIP("generationRelationshipTest"),
-    GENERATION_EXTRACTED_LICENSE_INFO("generationExtractedLicenseInfoTest");
+    GENERATION_RELATIONSHIP("generationRelationshipTest");
 
     private final String fullName;
 

@@ -1,4 +1,4 @@
-package org.spdx.testbed.generationTestCases;
+package org.spdx.toolsJavaSolver.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
@@ -7,16 +7,16 @@ import org.spdx.library.model.license.LicenseInfoFactory;
 
 import java.util.List;
 
-public class GenerationLicenseTestCase extends GenerationTestCase {
+public class GenerationLicenseTestCase {
 
-    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        var document = createSpdxDocumentWithBasicInfo();
+    public static SpdxDocument buildDocument() throws InvalidSPDXAnalysisException {
+        var document = GenerationUtil.createSpdxDocumentWithBasicInfo();
 
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
         var copyManager = document.getCopyManager();
 
-        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
+        var sha1Checksum = GenerationUtil.createSha1Checksum(modelStore, documentUri);
 
         var extractedLicenseInfo1 = new ExtractedLicenseInfo(modelStore, documentUri, "LicenseRef-1", copyManager, true);
         extractedLicenseInfo1.setExtractedText("extracted text");
@@ -42,14 +42,14 @@ public class GenerationLicenseTestCase extends GenerationTestCase {
         var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("((LicenseRef-1 WITH u-boot-exception-2.0) OR LicenseRef-two) AND (Aladdin WITH Classpath-exception-2.0)");
 
         var fileA = document.createSpdxFile("SPDXRef-fileA", "./package/faa.txt", licenseRef1or2,
-                        List.of(licenseRef1, licenseRef2), null, sha1Checksum)
+                List.of(licenseRef1, licenseRef2), null, sha1Checksum)
                 .build();
         var fileB = document.createSpdxFile("SPDXRef-fileB", "./package/fbb.txt", alladinWithException,
-                        List.of(alladin, dldeby2_0), null, sha1Checksum)
+                List.of(alladin, dldeby2_0), null, sha1Checksum)
                 .build();
 
         var snippet = document.createSpdxSnippet("SPDXRef-somesnippet", "snippet name", alladin,
-                        List.of(alladin, dldeby2_0), null, fileB, 100, 200)
+                List.of(alladin, dldeby2_0), null, fileB, 100, 200)
                 .build();
 
         var spdxPackageVerificationCode = document.createPackageVerificationCode("d6a770ba38583ed4bb4525bd96e50461655d2758", List.of());
