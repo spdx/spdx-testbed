@@ -1,5 +1,4 @@
 # Part 1: Generation of SPDX documents
-[//]: # (TODO: specify an output path)
 
 ## Minimal information
 The following tasks will contain some repeating information that is necessary overhead for every SPDX document. These cases are marked with the keyphrase "minimal information".
@@ -155,9 +154,12 @@ Add a file `SPDXRef-somefile` with minimal information.
 
 ## Task 7: generationRelationshipTest
 Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA` and `SPDXRef-fileB` with minimal information each (TODO: wait for issue #30, then update....).  
-Create the following relationships: TODO: how many relationships are necessary?
+Create the following relationships:
 
-`SPDXRef-fileA` DESCRIBES `SPDXRef-fileB`, comment: `comment on DESCRIBES`
+`SPDXRef-fileA` DESCRIBED_BY `SPDXRef-Document`, comment: `comment on DESCRIBED_BY`
+`SPDXRef-fileA` CONTAINS `SPDXRef-fileB`
+`SPDXRef-fileB` DESCRIBED_BY `SPDXRef-Document`
+`SPDXRef-fileB` CONTAINED_BY `SPDXRef-fileA`, comment: `comment on CONTAINED_BY`
 
 ## Task 8: generationLicenseTest
 Generate an SPDX document with minimal information and add two external references:

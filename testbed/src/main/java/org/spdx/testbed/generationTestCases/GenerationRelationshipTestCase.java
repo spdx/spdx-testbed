@@ -3,7 +3,6 @@ package org.spdx.testbed.generationTestCases;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.enumerations.RelationshipType;
-import org.spdx.library.model.license.LicenseInfoFactory;
 
 import java.util.List;
 
@@ -17,28 +16,39 @@ public class GenerationRelationshipTestCase extends GenerationTestCase {
 
         var sha1Checksum = createSha1Checksum(modelStore, documentUri);
 
-        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-2.0-only");
-
-        var fileA = document.createSpdxFile("SPDXRef-fileA", "./fileA.c", concludedLicense,
-                        List.of(), "Copyright 2022 some person", sha1Checksum)
+        var fileA = document.createSpdxFile("SPDXRef-fileA", "./fileA.c", null,
+                        List.of(), null, sha1Checksum)
                 .build();
 
-        var fileB = document.createSpdxFile("SPDXRef-fileB", "./fileB.c", concludedLicense,
-                        List.of(), "Copyright 2022 some person", sha1Checksum)
+        var fileB = document.createSpdxFile("SPDXRef-fileB", "./fileB.c", null,
+                        List.of(), null, sha1Checksum)
                 .build();
 
-        document.getDocumentDescribes().add(fileA);
-        document.getDocumentDescribes().add(fileB);
+        document.getDocumentDescribes().addAll(List.of(fileA, fileB));
 
-        for (var relationshipType : RelationshipType.values()) {
-            if (relationshipType == RelationshipType.MISSING) {
-                continue;
-            }
-            fileB.addRelationship(
-                    document.createRelationship(
-                            fileA, relationshipType, String.format("comment on %s", relationshipType.name())));
+        fileA.addRelationship(
+                document.createRelationship(
+                        document, RelationshipType.DESCRIBED_BY, "comment on DESCRIBED_BY"
+                )
+        );
 
-        }
+        fileB.addRelationship(
+                document.createRelationship(
+                        document, RelationshipType.DESCRIBED_BY, null
+                )
+        );
+
+        fileA.addRelationship(
+                document.createRelationship(
+                        fileB, RelationshipType.CONTAINS, null
+                )
+        );
+
+        fileB.addRelationship(
+                document.createRelationship(
+                        fileA, RelationshipType.CONTAINED_BY, "comment on CONTAINED_BY"
+                )
+        );
 
         return document;
     }
