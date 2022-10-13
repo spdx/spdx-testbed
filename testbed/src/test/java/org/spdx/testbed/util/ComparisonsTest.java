@@ -204,6 +204,54 @@ public class ComparisonsTest {
     }
 
     @Test
+    public void ignoreNoAssertionLicense() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
+        firstFile.setLicenseConcluded(new SpdxNoAssertionLicense());
+        var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
+        secondFile.setLicenseConcluded(null);
+
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
+    public void ignoreNoAssertionValue() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        // a no assertion comment doesn't make that much sense, but it's the easiest optional 
+        // property...
+        firstDoc.setComment(SpdxConstants.NOASSERTION_VALUE);
+
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
+    public void ignoreEmptyList() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        // Adding and removing a value leaves an empty list
+        var sha1Checksum = Checksum.create(secondDoc.getModelStore(), secondDoc.getDocumentUri(),
+                ChecksumAlgorithm.SHA1,
+                "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        var externalDocumentRef = secondDoc.createExternalDocumentRef("DocumentRef-1", "uri",
+                sha1Checksum);
+        secondDoc.setExternalDocumentRefs(List.of(externalDocumentRef));
+        secondDoc.getExternalDocumentRefs().remove(externalDocumentRef);
+
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
     public void detectExclusiveProperties() throws InvalidSPDXAnalysisException {
         var firstSnippet = new SpdxSnippet(modelStore, DOCUMENT_URI, "firstSnippetId",
                 copyManager, true);

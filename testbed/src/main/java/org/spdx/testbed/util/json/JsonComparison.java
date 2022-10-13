@@ -75,8 +75,8 @@ public class JsonComparison {
 
         for (var fieldName : commonFields) {
 
-            // TODO: reference type looks different in different formats, so for now we ignore 
-            //  it. See https://github.com/spdx/tools-java/issues/80 
+            // Reference type may be local to the document, so we skip it.
+            // Compare https://github.com/spdx/Spdx-Java-Library/blob/06ffee5e3754400a36dbb2f652d814c92e228e87/src/main/java/org/spdx/library/model/ExternalRef.java#L329
             if (fieldName.equals("referenceType")) {
                 continue;
             }
