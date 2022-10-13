@@ -107,7 +107,7 @@ Generate an SPDX document with minimal information, describing a package with al
 - Package home page: `http://home.page`
 - Source information: `source information`
 - Concluded license: `GPL-2.0-only`
-- All license information from files: `GPL-2.0-only`
+- All licenses information from files: `GPL-2.0-only`
 - Declared license: `GPL-2.0-only`
 - Comments on license: `license comment`
 - Copyright text: `Copyright 2022 Jane Doe`
@@ -160,9 +160,47 @@ Create the following relationships: TODO: how many relationships are necessary?
 `SPDXRef-fileA` DESCRIBES `SPDXRef-fileB`, comment: `comment on DESCRIBES`
 
 ## Task 8: generationLicenseTest
+Generate an SPDX document with minimal information and add two external references:
+- License identifier: `LicenseRef-1`
+  - extracted text: `extracted license text`
+  - license name: `extracted license 1`
+  - license cross reference: `http://extracted.license` and `http://see.also` 
+  - license comment: `extracted license info comment`
+- License identifier: `LicenseRef-two`
+  - extracted text: `extracted license text`
+  - license name: `extracted license 2`
+  - license cross reference: `http://another.license`
+  - license comment: `extracted license info comment`
 
-## Task 9: generationExtractedLicenseInfoTest
-TODO: merge with generationLicenseTest
+Add a package, described by the document, with the following information:
+- Package name: `package name`
+- Package SPDX identifier: `SPDXRef-somepackage`
+- Files analyzed: `true`
+- Package verification code:
+  - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
+- Concluded License: `((LicenseRef-1 WITH u-boot-exception-2.0) OR LicenseRef-two) AND (Aladdin WITH Classpath-exception-2.0)`
+- All licenses information from files: `LicenseRef-1 OR LicenseRef-two` and `Aladdin WITH Classpath-exception-2.0`
+- Declared License: `(LicenseRef-1 OR LicenseRef-two) AND (Aladdin WITH Classpath-exception-2.0)`
 
-## External Reference Test
-TODO: add test for external references (each extRef type requires different locator formats)
+Let the package contain the following two files:
+- File SPDX identifier: `SPDXRef-fileA`
+  - File name: `./faa.txt`
+  - File checksum:
+    - algorithm: `SHA1`
+    - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
+  - Concluded license: `LicenseRef-1 OR LicenseRef-two`
+  - License information in file: `LicenseRef-1` and `LicenseRef-two`
+- File SPDX identifier: `SPDXRef-fileB`
+  - File name: `./fbb.txt`
+  - File checksum:
+    - algorithm: `SHA1`
+    - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
+  - Concluded license: `Aladdin WITH Classpath-exception-2.0`
+  - License information in file: `Aladdin` and `DL-DE-BY-2.0`
+
+Add a snippet with the following information:
+- Snippet SPDX identifier: `SPDXRef-somesnippet`
+- Snippet from file SPDX identifier: `SPDXRef-fileB`
+- Snippet byte range: `100:200`
+- Snippet concluded license: `Aladdin`
+- License information in snippet: `Aladdin` and `DL-DE-BY-2.0`

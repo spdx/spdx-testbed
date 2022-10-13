@@ -6,21 +6,78 @@
     <created>2022-01-01T00:00:00Z</created>
     <creators>Tool: test-tool</creators>
   </creationInfo>
-  <name>License test document</name>
+  <name>document name</name>
   <dataLicense>CC0-1.0</dataLicense>
-  <documentDescribes>SPDXRef-somefile</documentDescribes>
+  <hasExtractedLicensingInfos>
+    <licenseId>LicenseRef-1</licenseId>
+    <comment>extracted license info comment</comment>
+    <extractedText>extracted text</extractedText>
+    <name>extracted license info name</name>
+    <seeAlsos>http://see.also</seeAlsos>
+    <seeAlsos>http://extracted.license</seeAlsos>
+  </hasExtractedLicensingInfos>
+  <hasExtractedLicensingInfos>
+    <licenseId>LicenseRef-two</licenseId>
+    <comment>extracted license info comment</comment>
+    <extractedText>extracted text</extractedText>
+    <name>extracted license info name</name>
+    <seeAlsos>http://another.license</seeAlsos>
+  </hasExtractedLicensingInfos>
+  <documentDescribes>SPDXRef-somepackage</documentDescribes>
   <documentNamespace>https://some.namespace</documentNamespace>
+  <packages>
+    <SPDXID>SPDXRef-somepackage</SPDXID>
+    <filesAnalyzed>true</filesAnalyzed>
+    <licenseConcluded>((LicenseRef-gnrtd0 WITH u-boot-exception-2.0 OR LicenseRef-gnrtd1) AND Aladdin WITH Classpath-exception-2.0)</licenseConcluded>
+    <licenseDeclared>((LicenseRef-gnrtd0 OR LicenseRef-gnrtd1) AND Aladdin WITH Classpath-exception-2.0)</licenseDeclared>
+    <licenseInfoFromFiles>(LicenseRef-gnrtd0 OR LicenseRef-gnrtd1)</licenseInfoFromFiles>
+    <licenseInfoFromFiles>Aladdin WITH Classpath-exception-2.0</licenseInfoFromFiles>
+    <name>package name</name>
+    <packageVerificationCode>
+      <packageVerificationCodeValue>d6a770ba38583ed4bb4525bd96e50461655d2758</packageVerificationCodeValue>
+    </packageVerificationCode>
+    <hasFiles>SPDXRef-fileA</hasFiles>
+    <hasFiles>SPDXRef-fileA</hasFiles>
+    <hasFiles>SPDXRef-fileB</hasFiles>
+  </packages>
   <files>
-    <SPDXID>SPDXRef-somefile</SPDXID>
+    <SPDXID>SPDXRef-fileB</SPDXID>
     <checksums>
       <algorithm>SHA1</algorithm>
       <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
     </checksums>
-    <copyrightText>Copyright 2008-2010 John Smith</copyrightText>
-    <fileName>./package/foo.c</fileName>
-    <licenseConcluded>(LGPL-2.0-only OR LicenseRef-2)</licenseConcluded>
-    <licenseInfoInFiles>(GPL-3.0-only WITH GPL-3.0-linking-exception AND LicenseRef-1)</licenseInfoInFiles>
-    <licenseInfoInFiles>((LicenseRef-1 AND LicenseRef-2) OR LicenseRef-1 WITH another-exception)</licenseInfoInFiles>
-    <licenseInfoInFiles>((CERN-OHL-1.2 WITH u-boot-exception-2.0 AND LicenseRef-2) OR LicenseRef-1 WITH another-exception)</licenseInfoInFiles>
+    <fileName>./package/fbb.txt</fileName>
+    <licenseConcluded>Aladdin WITH Classpath-exception-2.0</licenseConcluded>
+    <licenseInfoInFiles>Aladdin</licenseInfoInFiles>
+    <licenseInfoInFiles>DL-DE-BY-2.0</licenseInfoInFiles>
   </files>
+  <files>
+    <SPDXID>SPDXRef-fileA</SPDXID>
+    <checksums>
+      <algorithm>SHA1</algorithm>
+      <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
+    </checksums>
+    <fileName>./package/faa.txt</fileName>
+    <licenseConcluded>(LicenseRef-gnrtd0 OR LicenseRef-gnrtd1)</licenseConcluded>
+    <licenseInfoInFiles>LicenseRef-gnrtd0</licenseInfoInFiles>
+    <licenseInfoInFiles>LicenseRef-gnrtd1</licenseInfoInFiles>
+  </files>
+  <snippets>
+    <SPDXID>SPDXRef-somesnippet</SPDXID>
+    <licenseConcluded>Aladdin</licenseConcluded>
+    <licenseInfoInSnippets>Aladdin</licenseInfoInSnippets>
+    <licenseInfoInSnippets>DL-DE-BY-2.0</licenseInfoInSnippets>
+    <name>snippet name</name>
+    <ranges>
+      <endPointer>
+        <offset>200</offset>
+        <reference>SPDXRef-fileB</reference>
+      </endPointer>
+      <startPointer>
+        <offset>100</offset>
+        <reference>SPDXRef-fileB</reference>
+      </startPointer>
+    </ranges>
+    <snippetFromFile>SPDXRef-fileB</snippetFromFile>
+  </snippets>
 </Document>
