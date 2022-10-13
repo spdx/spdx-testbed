@@ -1,13 +1,7 @@
 package org.spdx.testbed.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.flipkart.zjsonpatch.DiffFlags;
-import com.flipkart.zjsonpatch.JsonDiff;
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -31,10 +25,7 @@ import org.spdx.testbed.util.json.JsonComparison;
 
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,35 +34,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Comparisons {
     private static final String CLASS_KEY = "class";
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public static List<Difference> yetAnotherDifferenceMethod(@Nonnull SpdxDocument firstDocument,
-                                                              @Nonnull SpdxDocument secondDocument) throws InvalidSPDXAnalysisException {
+    public static List<Difference> findDifferencesInSerializedJson(@Nonnull SpdxDocument firstDocument,
+                                                                   @Nonnull SpdxDocument secondDocument) throws InvalidSPDXAnalysisException {
         var firstJson = asJson(firstDocument);
         var secondJson = asJson(secondDocument);
         return JsonComparison.findDifferences(firstJson, secondJson);
-    }
-
-    public static ArrayNode findDifferencesAsJsonPatch(@Nonnull ModelObject firstObject,
-                                                       @Nonnull ModelObject secondObject
-            , Collection<String> ignoredPaths) throws InvalidSPDXAnalysisException,
-            JsonProcessingException {
-        var firstJson = asJson(firstObject);
-        var secondJson = asJson(secondObject);
-        var differences = (ArrayNode) JsonDiff.asJson(firstJson, secondJson,
-                EnumSet.of(DiffFlags.ADD_ORIGINAL_VALUE_ON_REPLACE, DiffFlags.OMIT_COPY_OPERATION));
-        omitIrrelevantDifferences(differences, ignoredPaths);
-        return differences;
-    }
-
-    public static ArrayNode findDifferencesAsJsonPatch(ModelObject firstObject,
-                                                       ModelObject secondObject) throws JsonProcessingException, InvalidSPDXAnalysisException {
-        return findDifferencesAsJsonPatch(firstObject, secondObject, Collections.emptySet());
     }
 
     public static ObjectNode asJson(ModelObject modelObject) throws InvalidSPDXAnalysisException {
@@ -79,80 +51,6 @@ public class Comparisons {
                 MultiFormatStore.Format.JSON_PRETTY, MultiFormatStore.Verbose.COMPACT,
                 modelObject.getModelStore());
         return serializer.docToJsonNode(modelObject.getDocumentUri());
-    }
-
-    private static void omitIrrelevantDifferences(ArrayNode differencesNode,
-                                                  Collection<String> ignoredPaths) throws JsonProcessingException {
-        List<Integer> indicesToRemove = new ArrayList<>();
-        var nodeIterator = differencesNode.iterator();
-        var currentIndex = -1;
-        while (nodeIterator.hasNext()) {
-            currentIndex++;
-            var currentDiff = OBJECT_MAPPER.treeToValue(nodeIterator.next(), JsonPatchDiff.class);
-            if (isMoveOperationWithSameBasePath(currentDiff) ||
-                    shouldBeIgnored(currentDiff.getPath(), ignoredPaths) ||
-                    isAddOrRemoveWithEmptyArray(currentDiff) ||
-                    isNoAssertionVsNull(currentDiff)) {
-                // list is created in reverse order so the subsequent remove operations are 
-                // executed from largest to smallest index and don't interfere with each other
-                indicesToRemove.add(0, currentIndex);
-            }
-        }
-        indicesToRemove.forEach(differencesNode::remove);
-    }
-
-    private static boolean shouldBeIgnored(String path, Collection<String> ignoredPaths) {
-        return ignoredPaths.stream()
-                .anyMatch(path::startsWith);
-    }
-
-    private static boolean isMoveOperationWithSameBasePath(JsonPatchDiff jsonPatchDiff) {
-        if (!Operation.MOVE.equals(jsonPatchDiff.getOperation())) {
-            return false;
-        }
-        return describeElementsOfSameList(jsonPatchDiff.getFrom(), jsonPatchDiff.getPath());
-    }
-
-    private static boolean isAddOrRemoveWithEmptyArray(JsonPatchDiff jsonPatchDiff) {
-        var relevantOperations = EnumSet.of(Operation.ADD, Operation.REMOVE);
-        if (!relevantOperations.contains(jsonPatchDiff.getOperation())) {
-            return false;
-        }
-        return jsonPatchDiff.getValue() == null && isEmptyArrayNode(jsonPatchDiff.getFromValue()) ||
-                isEmptyArrayNode(jsonPatchDiff.getValue()) && jsonPatchDiff.getFromValue() == null;
-    }
-
-    private static boolean isEmptyArrayNode(JsonNode jsonNode) {
-        return jsonNode instanceof ArrayNode && jsonNode.isEmpty();
-    }
-
-    private static boolean isNoAssertionVsNull(JsonPatchDiff jsonPatchDiff) {
-        var relevantOperations = EnumSet.of(Operation.ADD, Operation.REMOVE);
-        if (!relevantOperations.contains(jsonPatchDiff.getOperation())) {
-            return false;
-        }
-        return jsonPatchDiff.getValue() == null && isNoAssertion(jsonPatchDiff.getFromValue()) ||
-                isNoAssertion(jsonPatchDiff.getValue()) && jsonPatchDiff.getFromValue() == null;
-    }
-
-    private static boolean isNoAssertion(JsonNode jsonNode) {
-        return jsonNode instanceof TextNode && jsonNode.asText()
-                .equals(SpdxConstants.NOASSERTION_VALUE);
-    }
-
-    private static boolean describeElementsOfSameList(String firstPath, String secondPath) {
-        if (!describesListElement(firstPath) || !describesListElement(secondPath)) {
-            return false;
-        }
-        // Check that paths agree up to the index in the list
-        return firstPath.substring(0, firstPath.length() - 1)
-                .equals(secondPath.substring(0, secondPath.length() - 1));
-    }
-
-    private static boolean describesListElement(String path) {
-        // Check that path ends with "/x", where x is any nonnegative number
-        var regex = Pattern.compile(".*/[0-9]+$");
-        return regex.matcher(path).matches();
     }
 
     public static Map<String, Tuple<?>> findDifferences(ModelObject firstObject,

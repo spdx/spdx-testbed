@@ -1,7 +1,6 @@
 package org.spdx.testbed.util;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -31,8 +30,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.spdx.testbed.util.Comparisons.Tuple;
 import static org.spdx.testbed.util.Comparisons.findDifferences;
-import static org.spdx.testbed.util.Comparisons.findDifferencesAsJsonPatch;
-import static org.spdx.testbed.util.Comparisons.yetAnotherDifferenceMethod;
+import static org.spdx.testbed.util.Comparisons.findDifferencesInSerializedJson;
 
 public class ComparisonsTest {
 
@@ -59,51 +57,20 @@ public class ComparisonsTest {
     }
 
     @Test
-    public void detectSimpleDifferenceNewMethod() throws InvalidSPDXAnalysisException {
+    public void detectSimpleDifference() throws InvalidSPDXAnalysisException {
         var minimalDocument = buildMinimalDocumentWithFile();
         var secondDocument = buildMinimalDocumentWithFile();
         secondDocument.setName("newName");
         var expectedNameDifference = new Difference(new TextNode(minimalDocument.getName()
                 .get()), new TextNode(secondDocument.getName().get()), "/name", "");
 
-        var differences = yetAnotherDifferenceMethod(minimalDocument, secondDocument);
+        var differences = findDifferencesInSerializedJson(minimalDocument, secondDocument);
 
         assertThat(differences).containsExactly(expectedNameDifference);
     }
 
     @Test
-    public void detectSimpleDifference() throws InvalidSPDXAnalysisException,
-            JsonProcessingException {
-        var minimalDocument = buildMinimalDocumentWithFile();
-        var secondDocument = buildMinimalDocumentWithFile();
-        secondDocument.setName("newName");
-
-        var differences = findDifferencesAsJsonPatch(minimalDocument, secondDocument);
-
-        assertThat(differences).containsExactly(getReplaceNode("/name",
-                new TextNode(minimalDocument.getName()
-                        .get()), new TextNode(secondDocument.getName().get())));
-    }
-
-    @Test
-    public void detectNestedDifferenceInList() throws InvalidSPDXAnalysisException,
-            JsonProcessingException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-
-        var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
-        firstFile.getFileContributors().add("fileContributor");
-        var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
-        secondFile.getFileContributors().add("newContributor");
-
-        var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
-
-        assertThat(differences).containsExactly(getReplaceNode("/files/0/fileContributors/0",
-                new TextNode("fileContributor"), new TextNode("newContributor")));
-    }
-
-    @Test
-    public void detectNestedDifferenceInListNewMethod() throws InvalidSPDXAnalysisException {
+    public void detectNestedDifferenceInList() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
 
@@ -119,7 +86,7 @@ public class ComparisonsTest {
                 "/files/0/fileContributors/0", "No matching element in first list and no id to " +
                 "determine a candidate.");
 
-        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
         assertThat(differences).containsExactlyInAnyOrder(firstExpectedDifference,
                 secondExpectedDifference);
@@ -150,7 +117,7 @@ public class ComparisonsTest {
         secondDoc.setDocumentDescribes(List.of(identicalFileInBothDocs,
                 fileWithSameIdButDifferentProperties));
 
-        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
         assertThat(differences.size()).isEqualTo(1);
         var difference = differences.get(0);
@@ -163,7 +130,7 @@ public class ComparisonsTest {
     }
 
     @Test
-    public void detectNestedDifferenceNewMethod() throws InvalidSPDXAnalysisException {
+    public void detectNestedDifference() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
 
@@ -173,33 +140,13 @@ public class ComparisonsTest {
         var expectedDifference = new Difference(new TextNode("firstComment"), new TextNode(
                 "secondComment"), "/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment", "");
 
-        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
         assertThat(differences).containsExactly(expectedDifference);
     }
 
     @Test
-    public void detectAdditionalProperty() throws InvalidSPDXAnalysisException,
-            JsonProcessingException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-        var annotationComment = "Completely new annotation!";
-        var annotation = new Annotation("annotationId").setComment(annotationComment);
-        firstDoc.addAnnotation(annotation);
-
-        var expectedAnnotationsNode = MAPPER.createArrayNode();
-        var annotationNode = MAPPER.createObjectNode();
-        annotationNode.put("comment", annotationComment);
-        expectedAnnotationsNode.add(annotationNode);
-
-        var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
-
-        assertThat(differences).containsExactly(getRemoveNode("/annotations",
-                expectedAnnotationsNode));
-    }
-
-    @Test
-    public void detectAdditionalPropertyNewMethod() throws InvalidSPDXAnalysisException {
+    public void detectAdditionalProperty() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
         var annotationComment = "Completely new annotation!";
@@ -213,33 +160,13 @@ public class ComparisonsTest {
 
         var expectedDifference = new Difference(expectedAnnotationsNode, null, "/annotations", "");
 
-        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
         assertThat(differences).containsExactly(expectedDifference);
     }
 
     @Test
-    public void detectMissingProperty() throws InvalidSPDXAnalysisException,
-            JsonProcessingException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-        var annotationComment = "Completely new annotation!";
-        var annotation = new Annotation("annotationId").setComment(annotationComment);
-        secondDoc.addAnnotation(annotation);
-
-        var expectedAnnotationsNode = MAPPER.createArrayNode();
-        var annotationNode = MAPPER.createObjectNode();
-        annotationNode.put("comment", annotationComment);
-        expectedAnnotationsNode.add(annotationNode);
-
-        var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
-
-        assertThat(differences).containsExactly(getAddNode("/annotations",
-                expectedAnnotationsNode));
-    }
-
-    @Test
-    public void detectMissingPropertyNewMethod() throws InvalidSPDXAnalysisException {
+    public void detectMissingProperty() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
         var annotationComment = "Completely new annotation!";
@@ -252,14 +179,13 @@ public class ComparisonsTest {
         expectedAnnotationsNode.add(annotationNode);
         var expectedDifference = new Difference(null, expectedAnnotationsNode, "/annotations", "");
 
-        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
         assertThat(differences).containsExactly(expectedDifference);
     }
 
     @Test
-    public void ignoreReorderedLists() throws InvalidSPDXAnalysisException,
-            JsonProcessingException {
+    public void ignoreReorderedLists() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
 
@@ -272,26 +198,7 @@ public class ComparisonsTest {
         secondDoc.addAnnotation(secondAnnotation);
         secondDoc.addAnnotation(firstAnnotation);
 
-        var differences = findDifferencesAsJsonPatch(firstDoc, secondDoc);
-
-        assertThat(differences).isEmpty();
-    }
-
-    @Test
-    public void ignoreReorderedListsNewMethod() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-
-        var firstAnnotation = new Annotation("firstAnnotationId").setComment("first annotation");
-        var secondAnnotation = new Annotation("secondAnnotationId").setComment("second annotation");
-
-        // annotations are added in different orders
-        firstDoc.addAnnotation(firstAnnotation);
-        firstDoc.addAnnotation(secondAnnotation);
-        secondDoc.addAnnotation(secondAnnotation);
-        secondDoc.addAnnotation(firstAnnotation);
-
-        var differences = yetAnotherDifferenceMethod(firstDoc, secondDoc);
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
         assertThat(differences).isEmpty();
     }

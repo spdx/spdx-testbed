@@ -47,7 +47,7 @@ public class TestConversion {
         var outputDocument = SpdxToolsHelper.deserializeDocument(convertedFile);
         assertThat(outputDocument.verify()).isEmpty();
 
-        var newDifferences = Comparisons.yetAnotherDifferenceMethod(inputDocument,
+        var newDifferences = Comparisons.findDifferencesInSerializedJson(inputDocument,
                 outputDocument);
         assertThat(newDifferences).isEmpty();
     }

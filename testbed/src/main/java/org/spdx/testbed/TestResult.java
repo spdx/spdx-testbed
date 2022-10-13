@@ -1,13 +1,15 @@
 package org.spdx.testbed;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Builder;
+import org.spdx.testbed.util.Difference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 public class TestResult {
     Boolean success;
 
     @Builder.Default
-    ArrayNode differences = (new ObjectMapper()).createArrayNode();
+    List<Difference> differences = new ArrayList<>();
 }
