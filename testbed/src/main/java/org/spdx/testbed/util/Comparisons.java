@@ -46,7 +46,7 @@ public class Comparisons {
         return JsonComparison.findDifferences(firstJson, secondJson);
     }
 
-    public static ObjectNode asJson(ModelObject modelObject) throws InvalidSPDXAnalysisException {
+    private static ObjectNode asJson(ModelObject modelObject) throws InvalidSPDXAnalysisException {
         var serializer = new JacksonSerializer(new ObjectMapper(),
                 MultiFormatStore.Format.JSON_PRETTY, MultiFormatStore.Verbose.COMPACT,
                 modelObject.getModelStore());
