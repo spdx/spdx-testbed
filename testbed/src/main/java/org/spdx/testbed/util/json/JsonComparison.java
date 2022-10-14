@@ -59,6 +59,11 @@ public class JsonComparison {
         return findDifferences(firstNode, secondNode, "");
     }
 
+    // TODO: Check if IndividualUriValues are always serialized as a simple string. If they are 
+    //  not, we should only consider the individualUri value when comparing. It would also 
+    //  require special logic when comparing an IndividualUriValue to a simple string. Replacing 
+    //  \r\n by \n sounds like a good idea to cover Windows. Finally, the URI-versions of NONE 
+    //  and NOASSERTION should be considered equal to the string equivalents.
     public static List<Difference> findDifferences(@Nonnull ObjectNode firstNode,
                                                    @Nonnull ObjectNode secondNode,
                                                    String pathPrefix) {
