@@ -45,4 +45,6 @@ jobs:
           name: testbed-artifact
 
       - name: Run test case
+        # provide the -t flag with the name of the test case that the input file (-f) attempts to solve
+        # look up the README for a list of possible test case names
         run: java -jar testbed-*-all.jar -t generationMinimalTest -f generationMinimalResult.xml

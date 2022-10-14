@@ -35,11 +35,13 @@ public class GenerationLicenseTestCase {
         var alladin = LicenseInfoFactory.parseSPDXLicenseString("Aladdin");
         var alladinWithException = LicenseInfoFactory.parseSPDXLicenseString("Aladdin WITH Classpath-exception-2.0");
         var dldeby2_0 = LicenseInfoFactory.parseSPDXLicenseString("DL-DE-BY-2.0");
-        var licenseRef1 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-1");
-        var licenseRef2 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-two");
-        var licenseRef1or2 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-1 OR LicenseRef-two");
-        var declaredLicense = LicenseInfoFactory.parseSPDXLicenseString("(LicenseRef-1 OR LicenseRef-two) AND (Aladdin WITH Classpath-exception-2.0)");
-        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("((LicenseRef-1 WITH u-boot-exception-2.0) OR LicenseRef-two) AND (Aladdin WITH Classpath-exception-2.0)");
+        var licenseRef1 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-1", modelStore, documentUri, copyManager);
+        var licenseRef1WithException = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-1 WITH u-boot-exception-2.0", modelStore, documentUri, copyManager);
+        var licenseRef2 = LicenseInfoFactory.parseSPDXLicenseString("LicenseRef-two", modelStore, documentUri, copyManager);
+        var licenseRef1or2 = document.createDisjunctiveLicenseSet(List.of(licenseRef1, licenseRef2));
+        var licenseRef1WithExceptionOr2 = document.createDisjunctiveLicenseSet(List.of(licenseRef1WithException, licenseRef2));
+        var declaredLicense = document.createConjunctiveLicenseSet(List.of(licenseRef1or2, alladinWithException));
+        var concludedLicense = document.createConjunctiveLicenseSet(List.of(licenseRef1WithExceptionOr2, alladinWithException));
 
         var fileA = document.createSpdxFile("SPDXRef-fileA", "./package/faa.txt", licenseRef1or2,
                 List.of(licenseRef1, licenseRef2), null, sha1Checksum)

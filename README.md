@@ -2,17 +2,18 @@
 The SPDX testbed provides tasks that are meant to be solved by external SPDX tools/libraries to prove their capability in handling SPDX documents.  
 Please provide a GitHub actions workflow at `.github/workflows/[name of your tool].yaml` that downloads and executes your tool in order to generate the desired solution, and then checks it via the testbed application.
 For an example, have a look at `.github/workflows/tools-java.yaml` that uses the `spdx-tools-java-solver` to generate an output file `generationMinimalResult.xml`
-that should solve the test "generationMinimalTest" found below.
+that should solve the test "generationMinimalTest" found below.  
 To check that your solution is right, call  
 `java -jar testbed-*-all.jar -t <test-name> -f path/to/solution/file`  
-where `<test-name>` is the name of the test found in the headings found below (in the format "Task <heading-number>: <test-name>").
+where `<test-name>` is the name of the test found in the headings below (in the format "Task <heading-number>: <test-name>").  
+To use this locally, you can build the `testbed-*-all.jar` using `./gradlew :testbed:shadowJar` and then find it in `testbed/build/libs/`.
 
 Note that currently only one test case can be checked at a time.
 
 # Part 1: Generation of SPDX documents
 
 ## Minimal information
-The following tasks will contain some repeating information that is necessary overhead for every SPDX document. These cases are marked with the keyphrase "minimal information".
+The following tasks will contain some repeating information that is necessary overhead for a valid SPDX document. These cases are marked with the keyphrase "minimal information".
 
 A document with minimal information contains the following:
 - SPDX version: `SPDX-2.3`
@@ -23,6 +24,7 @@ A document with minimal information contains the following:
 - Creator: arbitrary
 - Created: arbitrary
 
+An SPDX document always requires at least one SPDX element to describe. If this is not the focus of the test case, it refers to using files with "minimal information".
 A file with minimal information contains the following:
 - File name: `./foo.txt`
 - File SPDX identifier: `SPDXRef-somefile` (except for where noted differently)
@@ -167,10 +169,10 @@ Add a file `SPDXRef-somefile` with minimal information.
 Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA` and `SPDXRef-fileB` with minimal information each (TODO: wait for issue #30, then update....).  
 Create the following relationships:
 
-`SPDXRef-fileA` DESCRIBED_BY `SPDXRef-Document`, comment: `comment on DESCRIBED_BY`
-`SPDXRef-fileA` CONTAINS `SPDXRef-fileB`
-`SPDXRef-fileB` DESCRIBED_BY `SPDXRef-Document`
-`SPDXRef-fileB` CONTAINED_BY `SPDXRef-fileA`, comment: `comment on CONTAINED_BY`
+- `SPDXRef-fileA` DESCRIBED_BY `SPDXRef-Document`, comment: `comment on DESCRIBED_BY`
+- `SPDXRef-fileA` DEPENDS_ON `SPDXRef-fileB`
+- `SPDXRef-fileB` DESCRIBED_BY `SPDXRef-Document`
+- `SPDXRef-fileB` DEPENDENCY_OF `SPDXRef-fileA`, comment: `comment on DEPENDENCY_OF`
 
 ## Task 8: generationLicenseTest
 Generate an SPDX document with minimal information and add two external references:

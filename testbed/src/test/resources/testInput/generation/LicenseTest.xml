@@ -28,9 +28,9 @@
   <packages>
     <SPDXID>SPDXRef-somepackage</SPDXID>
     <filesAnalyzed>true</filesAnalyzed>
-    <licenseConcluded>((LicenseRef-gnrtd0 WITH u-boot-exception-2.0 OR LicenseRef-gnrtd1) AND Aladdin WITH Classpath-exception-2.0)</licenseConcluded>
-    <licenseDeclared>((LicenseRef-gnrtd0 OR LicenseRef-gnrtd1) AND Aladdin WITH Classpath-exception-2.0)</licenseDeclared>
-    <licenseInfoFromFiles>(LicenseRef-gnrtd0 OR LicenseRef-gnrtd1)</licenseInfoFromFiles>
+    <licenseConcluded>((LicenseRef-1 WITH u-boot-exception-2.0 OR LicenseRef-two) AND Aladdin WITH Classpath-exception-2.0)</licenseConcluded>
+    <licenseDeclared>((LicenseRef-1 OR LicenseRef-two) AND Aladdin WITH Classpath-exception-2.0)</licenseDeclared>
+    <licenseInfoFromFiles>(LicenseRef-1 OR LicenseRef-two)</licenseInfoFromFiles>
     <licenseInfoFromFiles>Aladdin WITH Classpath-exception-2.0</licenseInfoFromFiles>
     <name>package name</name>
     <packageVerificationCode>
@@ -58,9 +58,9 @@
       <checksumValue>d6a770ba38583ed4bb4525bd96e50461655d2758</checksumValue>
     </checksums>
     <fileName>./package/faa.txt</fileName>
-    <licenseConcluded>(LicenseRef-gnrtd0 OR LicenseRef-gnrtd1)</licenseConcluded>
-    <licenseInfoInFiles>LicenseRef-gnrtd0</licenseInfoInFiles>
-    <licenseInfoInFiles>LicenseRef-gnrtd1</licenseInfoInFiles>
+    <licenseConcluded>(LicenseRef-1 OR LicenseRef-two)</licenseConcluded>
+    <licenseInfoInFiles>LicenseRef-1</licenseInfoInFiles>
+    <licenseInfoInFiles>LicenseRef-two</licenseInfoInFiles>
   </files>
   <snippets>
     <SPDXID>SPDXRef-somesnippet</SPDXID>
