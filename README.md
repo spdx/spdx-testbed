@@ -1,3 +1,8 @@
+
+# License
+
+[Apache-2.0](LICENSE)
+
 # General information
 The SPDX testbed provides tasks that are meant to be solved by external SPDX tools/libraries to prove their capability in handling SPDX documents.  
 Please provide a GitHub actions workflow at `.github/workflows/[name of your tool].yaml` that downloads and executes your tool in order to generate the desired solution, and then checks it via the testbed application.
