@@ -40,13 +40,13 @@ public class GenerationRelationshipTestCase {
 
         fileA.addRelationship(
                 document.createRelationship(
-                        fileB, RelationshipType.CONTAINS, null
+                        fileB, RelationshipType.DEPENDS_ON, null
                 )
         );
 
         fileB.addRelationship(
                 document.createRelationship(
-                        fileA, RelationshipType.CONTAINED_BY, "comment on CONTAINED_BY"
+                        fileA, RelationshipType.DEPENDENCY_OF, "comment on DEPENDENCY_OF"
                 )
         );
 

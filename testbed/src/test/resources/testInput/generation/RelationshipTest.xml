@@ -34,9 +34,9 @@
   </relationships>
   <relationships>
     <spdxElementId>SPDXRef-fileB</spdxElementId>
-    <relationshipType>CONTAINED_BY</relationshipType>
+    <relationshipType>DEPENDENCY_OF</relationshipType>
     <relatedSpdxElement>SPDXRef-fileA</relatedSpdxElement>
-    <comment>comment on CONTAINED_BY</comment>
+    <comment>comment on DEPENDENCY_OF</comment>
   </relationships>
   <relationships>
     <spdxElementId>SPDXRef-fileA</spdxElementId>
@@ -46,7 +46,7 @@
   </relationships>
   <relationships>
     <spdxElementId>SPDXRef-fileA</spdxElementId>
-    <relationshipType>CONTAINS</relationshipType>
+    <relationshipType>DEPENDS_ON</relationshipType>
     <relatedSpdxElement>SPDXRef-fileB</relatedSpdxElement>
   </relationships>
 </Document>
