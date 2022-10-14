@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -18,6 +19,7 @@ import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.SpdxSnippet;
 import org.spdx.library.model.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.license.ExternalExtractedLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
@@ -245,6 +247,62 @@ public class ComparisonsTest {
                 sha1Checksum);
         secondDoc.setExternalDocumentRefs(List.of(externalDocumentRef));
         secondDoc.getExternalDocumentRefs().remove(externalDocumentRef);
+
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
+    @Disabled("https://github.com/spdx/spdx-java-jackson-store/issues/46")
+    // The idea is to test whether ExternalExtractedLicenseInfo gets serialized to a simple 
+    // string. If so, we don't need to add special logic. If not, we would need to make sure that
+    // our comparison only considers the individual uri value.
+    public void externalExtractedLicenseInfo() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        var sha1Checksum = Checksum.create(firstDoc.getModelStore(), firstDoc.getDocumentUri(),
+                ChecksumAlgorithm.SHA1,
+                "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        var externalDocumentRef = firstDoc.createExternalDocumentRef("DocumentRef-1",
+                "externalDocUri"
+                , sha1Checksum);
+        var externalLicenseInfo = new ExternalExtractedLicenseInfo(firstDoc.getModelStore(),
+                firstDoc.getDocumentUri(), "DocumentRef-1:LicenseRef-XXX",
+                firstDoc.getCopyManager(), true);
+        firstDoc.setExternalDocumentRefs(List.of(externalDocumentRef));
+        firstDoc.setExtractedLicenseInfos(List.of(externalLicenseInfo));
+
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
+    public void stringsAreNormalizedBeforeComparison() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        firstDoc.setName(" " + firstDoc.getName() + "\r\n" + " ");
+        secondDoc.setName(secondDoc.getName() + "\n");
+
+        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+
+        assertThat(differences).isEmpty();
+    }
+
+    @Test
+    public void noneAndNoAssertionIsEquivalentForStringAndUri() throws InvalidSPDXAnalysisException {
+        var firstDoc = buildMinimalDocumentWithFile();
+        var secondDoc = buildMinimalDocumentWithFile();
+
+        // While putting these values in comments does not really make sense, handling 
+        // should be identical for all string-valued fields, so it shouldn't matter.
+        firstDoc.setComment(SpdxConstants.URI_VALUE_NONE);
+        secondDoc.setComment(SpdxConstants.NONE_VALUE);
+        firstDoc.getCreationInfo().setComment(SpdxConstants.URI_VALUE_NOASSERTION);
+        secondDoc.getCreationInfo().setComment(SpdxConstants.NOASSERTION_VALUE);
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 

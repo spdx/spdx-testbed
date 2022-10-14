@@ -20,8 +20,12 @@ public class JsonComparison {
 
     public static Optional<Difference> findDifference(@Nonnull ValueNode firstNode,
                                                       @Nonnull ValueNode secondNode, String path) {
-        var firstValueAsString = firstNode.asText();
-        var secondValueAsString = secondNode.asText();
+        var firstValueAsString = normalizeString(firstNode.asText());
+        var secondValueAsString = normalizeString(secondNode.asText());
+
+        firstValueAsString = convertNoneUriValueToPlainString(firstValueAsString);
+        secondValueAsString = convertNoneUriValueToPlainString(secondValueAsString);
+
         if (!Objects.equals(firstValueAsString, secondValueAsString)) {
             return Optional.of(new Difference(firstNode, secondNode, path, ""));
         }
@@ -59,11 +63,6 @@ public class JsonComparison {
         return findDifferences(firstNode, secondNode, "");
     }
 
-    // TODO: Check if IndividualUriValues are always serialized as a simple string. If they are 
-    //  not, we should only consider the individualUri value when comparing. It would also 
-    //  require special logic when comparing an IndividualUriValue to a simple string. Replacing 
-    //  \r\n by \n sounds like a good idea to cover Windows. Finally, the URI-versions of NONE 
-    //  and NOASSERTION should be considered equal to the string equivalents.
     public static List<Difference> findDifferences(@Nonnull ObjectNode firstNode,
                                                    @Nonnull ObjectNode secondNode,
                                                    String pathPrefix) {
@@ -123,7 +122,7 @@ public class JsonComparison {
             return true;
         }
         if (node.isValueNode()) {
-            return SpdxConstants.NOASSERTION_VALUE.equals(node.asText());
+            return SpdxConstants.NOASSERTION_VALUE.equals(node.asText()) || SpdxConstants.URI_VALUE_NOASSERTION.equals(node.asText());
         }
         return node.isNull();
     }
@@ -248,5 +247,20 @@ public class JsonComparison {
         return list.stream()
                 .filter(difference -> !isEquivalentToNull(difference))
                 .collect(Collectors.toList());
+    }
+
+    private static String normalizeString(String s) {
+        return s.replaceAll("\r\n", "\n").trim();
+    }
+
+    // None values are treated the same, regardless of whether it's the uri form or the simple 
+    // form. We convert all to the simple form to make comparison easier.
+    // Note that noassertion values (of both uri and plain string type) are treated like null 
+    // anyway, so they don't require conversion.
+    private static String convertNoneUriValueToPlainString(String input) {
+        if (SpdxConstants.URI_VALUE_NONE.equals(input)) {
+            return SpdxConstants.NONE_VALUE;
+        }
+        return input;
     }
 }
