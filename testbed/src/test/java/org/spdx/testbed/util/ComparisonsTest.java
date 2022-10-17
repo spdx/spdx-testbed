@@ -59,7 +59,7 @@ public class ComparisonsTest {
     }
 
     @Test
-    public void detectSimpleDifference() throws InvalidSPDXAnalysisException {
+    public void detectRootLevelDifference() throws InvalidSPDXAnalysisException {
         var minimalDocument = buildMinimalDocumentWithFile();
         var secondDocument = buildMinimalDocumentWithFile();
         secondDocument.setName("newName");
