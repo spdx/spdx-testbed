@@ -168,8 +168,7 @@ public class JsonComparison {
 
             if (!currentFirstNodeElement.has(SpdxConstants.SPDX_IDENTIFIER)) {
                 differences.add(new Difference(currentFirstNodeElement, null, elementPath, "No " +
-                        "matching element " +
-                        "in second list and no id to determine a candidate."));
+                        "matching element in second list and no id to determine a candidate."));
                 continue;
             }
 
@@ -181,13 +180,11 @@ public class JsonComparison {
 
             if (idMatches.isEmpty()) {
                 differences.add(new Difference(currentFirstNodeElement, null, elementPath, "No " +
-                        "element in second " +
-                        "list with a matching id."));
+                        "element in second list with a matching id."));
                 continue;
             } else if (idMatches.size() > 1) {
                 differences.add(new Difference(currentFirstNodeElement, null, elementPath,
-                        "Multiple items in " +
-                                "second list with the same id."));
+                        "Multiple items in second list with the same id."));
                 continue;
             }
 
@@ -208,8 +205,7 @@ public class JsonComparison {
                     pathPrefix + "/" + secondNodeElements.indexOf(currentSecondNodeElement);
             if (!currentSecondNodeElement.has(SpdxConstants.SPDX_IDENTIFIER)) {
                 differences.add(new Difference(null, currentSecondNodeElement, elementPath, "No " +
-                        "matching element " +
-                        "in first list and no id to determine a candidate."));
+                        "matching element in first list and no id to determine a candidate."));
                 continue;
             }
 
@@ -221,13 +217,11 @@ public class JsonComparison {
 
             if (idMatches.isEmpty()) {
                 differences.add(new Difference(null, currentSecondNodeElement, elementPath, "No " +
-                        "element in first " +
-                        "list with a matching id."));
+                        "element in first list with a matching id."));
                 continue;
             } else if (idMatches.size() > 1) {
                 differences.add(new Difference(null, currentSecondNodeElement, elementPath,
-                        "Multiple items in " +
-                                "first list with the same id."));
+                        "Multiple items in first list with the same id."));
                 continue;
             }
 
