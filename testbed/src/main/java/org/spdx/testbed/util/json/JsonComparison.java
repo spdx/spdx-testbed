@@ -127,15 +127,13 @@ public class JsonComparison {
         return node.isNull();
     }
 
-    // TODO: One could consider different matching strategies here, like matching by id. But that
-    //  would come with its range of exceptions (like anonymous ids, or duplicate ids), and it's 
-    //  unclear whether it would be really helpful in many situations.
     public static List<Difference> findDifferences(@Nonnull ArrayNode firstNode,
                                                    @Nonnull ArrayNode secondNode,
                                                    String pathPrefix) {
         var differences = new ArrayList<Difference>();
 
-        // TODO: Remove this temporary workaround once hasFiles is fixed. See https://github.com/spdx/spdx-java-jackson-store/issues/42
+        // TODO: Remove this temporary workaround once hasFiles is fixed. See https://github.com/spdx/spdx-java-jackson-store/issues/42.
+        //  Should be included in the next release after 1.1.1.
         if (pathPrefix.endsWith("hasFiles")) {
             return differences;
         }
@@ -150,10 +148,7 @@ public class JsonComparison {
         var remainingSecondNodeElements = new ArrayList<>(secondNodeElements);
 
         for (var currentFirstNodeElement : firstNodeElements) {
-            var exactMatchOptional = secondNodeElements.stream()
-                    .filter(loopElement -> findDifferences(loopElement, currentFirstNodeElement,
-                            pathPrefix).isEmpty())
-                    .findFirst();
+            var exactMatchOptional = findExactMatch(secondNodeElements, currentFirstNodeElement);
 
             if (exactMatchOptional.isPresent()) {
                 remainingFirstNodeElements.remove(currentFirstNodeElement);
@@ -166,21 +161,12 @@ public class JsonComparison {
             // Backup plan: If no exact match was found, try to find a unique match by id and 
             // compare
 
-            if (!currentFirstNodeElement.has(SpdxConstants.SPDX_IDENTIFIER)) {
-                differences.add(new Difference(currentFirstNodeElement, null, elementPath, "No " +
-                        "matching element in second list and no id to determine a candidate."));
-                continue;
-            }
-
-            var idMatches = remainingSecondNodeElements.stream()
-                    .filter(jsonNode -> jsonNode.has(SpdxConstants.SPDX_IDENTIFIER))
-                    .filter(jsonNode -> jsonNode.get(SpdxConstants.SPDX_IDENTIFIER)
-                            .equals(currentFirstNodeElement.get(SpdxConstants.SPDX_IDENTIFIER)))
-                    .collect(Collectors.toList());
+            var idMatches = findIdMatches(remainingSecondNodeElements,
+                    currentFirstNodeElement);
 
             if (idMatches.isEmpty()) {
                 differences.add(new Difference(currentFirstNodeElement, null, elementPath, "No " +
-                        "element in second list with a matching id."));
+                        "element in second list with a matching id or no id present."));
                 continue;
             } else if (idMatches.size() > 1) {
                 differences.add(new Difference(currentFirstNodeElement, null, elementPath,
@@ -203,21 +189,13 @@ public class JsonComparison {
 
             var elementPath =
                     pathPrefix + "/" + secondNodeElements.indexOf(currentSecondNodeElement);
-            if (!currentSecondNodeElement.has(SpdxConstants.SPDX_IDENTIFIER)) {
-                differences.add(new Difference(null, currentSecondNodeElement, elementPath, "No " +
-                        "matching element in first list and no id to determine a candidate."));
-                continue;
-            }
 
-            var idMatches = remainingFirstNodeElements.stream()
-                    .filter(jsonNode -> jsonNode.has(SpdxConstants.SPDX_IDENTIFIER))
-                    .filter(jsonNode -> jsonNode.get(SpdxConstants.SPDX_IDENTIFIER)
-                            .equals(currentSecondNodeElement.get(SpdxConstants.SPDX_IDENTIFIER)))
-                    .collect(Collectors.toList());
+            var idMatches = findIdMatches(remainingFirstNodeElements,
+                    currentSecondNodeElement);
 
             if (idMatches.isEmpty()) {
                 differences.add(new Difference(null, currentSecondNodeElement, elementPath, "No " +
-                        "element in first list with a matching id."));
+                        "element in first list with a matching id or no id present."));
                 continue;
             } else if (idMatches.size() > 1) {
                 differences.add(new Difference(null, currentSecondNodeElement, elementPath,
@@ -235,6 +213,22 @@ public class JsonComparison {
         }
 
         return differences;
+    }
+
+    private static Optional<JsonNode> findExactMatch(List<JsonNode> elementsToCheck,
+                                                     JsonNode elementToFind) {
+        return elementsToCheck.stream()
+                .filter(loopElement -> findDifferences(loopElement, elementToFind, "").isEmpty())
+                .findFirst();
+    }
+
+    private static List<JsonNode> findIdMatches(ArrayList<JsonNode> elementsToCheck,
+                                                JsonNode elementToMatch) {
+        return elementsToCheck.stream()
+                .filter(jsonNode -> jsonNode.has(SpdxConstants.SPDX_IDENTIFIER))
+                .filter(jsonNode -> jsonNode.get(SpdxConstants.SPDX_IDENTIFIER)
+                        .equals(elementToMatch.get(SpdxConstants.SPDX_IDENTIFIER)))
+                .collect(Collectors.toList());
     }
 
     private static List<JsonNode> removeIrrelevantElements(List<JsonNode> list) {

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
@@ -19,7 +18,6 @@ import org.spdx.library.model.SpdxFile;
 import org.spdx.library.model.SpdxModelFactory;
 import org.spdx.library.model.SpdxSnippet;
 import org.spdx.library.model.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.license.ExternalExtractedLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
@@ -82,11 +80,11 @@ public class ComparisonsTest {
         secondFile.getFileContributors().add("newContributor");
 
         var firstExpectedDifference = new Difference(new TextNode("fileContributor"), null,
-                "/files/0/fileContributors/0", "No matching element in second list and no id to " +
-                "determine a candidate.");
+                "/files/0/fileContributors/0", "No element in second list with a matching id or " +
+                "no id present.");
         var secondExpectedDifference = new Difference(null, new TextNode("newContributor"),
-                "/files/0/fileContributors/0", "No matching element in first list and no id to " +
-                "determine a candidate.");
+                "/files/0/fileContributors/0", "No element in first list with a matching id or no" +
+                " id present.");
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
