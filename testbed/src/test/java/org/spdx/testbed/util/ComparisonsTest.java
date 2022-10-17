@@ -61,8 +61,11 @@ public class ComparisonsTest {
         var minimalDocument = buildMinimalDocumentWithFile();
         var secondDocument = buildMinimalDocumentWithFile();
         secondDocument.setName("newName");
-        var expectedNameDifference = new Difference(new TextNode(minimalDocument.getName()
-                .get()), new TextNode(secondDocument.getName().get()), "/name", "");
+        var expectedNameDifference = Difference.builder()
+                .firstValue(new TextNode(minimalDocument.getName().get()))
+                .secondValue(new TextNode(secondDocument.getName().get()))
+                .path("/name")
+                .build();
 
         var differences = findDifferencesInSerializedJson(minimalDocument, secondDocument);
 
@@ -79,12 +82,18 @@ public class ComparisonsTest {
         var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
         secondFile.getFileContributors().add("newContributor");
 
-        var firstExpectedDifference = new Difference(new TextNode("fileContributor"), null,
-                "/files/0/fileContributors/0", "No element in second list with a matching id or " +
-                "no id present.");
-        var secondExpectedDifference = new Difference(null, new TextNode("newContributor"),
-                "/files/0/fileContributors/0", "No element in first list with a matching id or no" +
-                " id present.");
+        var firstExpectedDifference = Difference.builder()
+                .firstValue(new TextNode("fileContributor"))
+                .path("/files/0/fileContributors/0")
+                .secondPath("/files/0/fileContributors")
+                .comment("No element in second list with a matching id or no id present.")
+                .build();
+        var secondExpectedDifference = Difference.builder()
+                .secondValue(new TextNode("newContributor"))
+                .secondPath("/files/0/fileContributors/0")
+                .path("/files/0/fileContributors")
+                .comment("No element in first list with a matching id or no id present.")
+                .build();
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
@@ -134,8 +143,11 @@ public class ComparisonsTest {
         firstDoc.getCreationInfo().setComment("firstComment");
         secondDoc.getCreationInfo().setComment("secondComment");
 
-        var expectedDifference = new Difference(new TextNode("firstComment"), new TextNode(
-                "secondComment"), "/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment", "");
+        var expectedDifference = Difference.builder()
+                .firstValue(new TextNode("firstComment"))
+                .secondValue(new TextNode("secondComment"))
+                .path("/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment")
+                .build();
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
@@ -155,7 +167,10 @@ public class ComparisonsTest {
         annotationNode.put("comment", annotationComment);
         expectedAnnotationsNode.add(annotationNode);
 
-        var expectedDifference = new Difference(expectedAnnotationsNode, null, "/annotations", "");
+        var expectedDifference = Difference.builder()
+                .firstValue(expectedAnnotationsNode)
+                .path("/annotations")
+                .build();
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
@@ -174,7 +189,10 @@ public class ComparisonsTest {
         var annotationNode = MAPPER.createObjectNode();
         annotationNode.put("comment", annotationComment);
         expectedAnnotationsNode.add(annotationNode);
-        var expectedDifference = new Difference(null, expectedAnnotationsNode, "/annotations", "");
+        var expectedDifference = Difference.builder()
+                .secondValue(expectedAnnotationsNode)
+                .path("/annotations")
+                .build();
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
