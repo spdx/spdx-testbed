@@ -100,18 +100,15 @@ public class ComparisonsTest {
         var secondDoc = buildMinimalDocumentWithFile();
 
         var sha1Checksum = Checksum.create(modelStore, firstDoc.getDocumentUri(),
-                ChecksumAlgorithm.SHA1,
-                "d6a770ba38583ed4bb4525bd96e50461655d2758");
-        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
-        var file = firstDoc.createSpdxFile("SPDXRef-different", "./foo.txt", concludedLicense,
-                        List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum)
+                ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        var file = firstDoc.createSpdxFile("SPDXRef-different", "./foo.txt", null,
+                        List.of(), null, sha1Checksum)
                 .build();
         var fileWithSameIdButDifferentProperties = secondDoc.createSpdxFile("SPDXRef-different",
-                "./bar.txt", concludedLicense,
-                List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum).build();
+                        "./bar.txt", null, List.of(), null, sha1Checksum)
+                .build();
         var identicalFileInBothDocs = firstDoc.createSpdxFile("SPDXRef-identical", "./foo.txt",
-                concludedLicense,
-                List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum).build();
+                null, List.of(), null, sha1Checksum).build();
 
         // It looks like these are reordered somewhere in the serialization process that we use 
         // during comparison, so putting them in reverse order doesn't really matter at the moment.
