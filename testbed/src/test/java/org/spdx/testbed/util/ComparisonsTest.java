@@ -251,32 +251,6 @@ public class ComparisonsTest {
     }
 
     @Test
-    @Disabled("https://github.com/spdx/spdx-java-jackson-store/issues/46")
-    // The idea is to test whether ExternalExtractedLicenseInfo gets serialized to a simple 
-    // string. If so, we don't need to add special logic. If not, we would need to make sure that
-    // our comparison only considers the individual uri value.
-    public void externalExtractedLicenseInfo() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-
-        var sha1Checksum = Checksum.create(firstDoc.getModelStore(), firstDoc.getDocumentUri(),
-                ChecksumAlgorithm.SHA1,
-                "d6a770ba38583ed4bb4525bd96e50461655d2758");
-        var externalDocumentRef = firstDoc.createExternalDocumentRef("DocumentRef-1",
-                "externalDocUri"
-                , sha1Checksum);
-        var externalLicenseInfo = new ExternalExtractedLicenseInfo(firstDoc.getModelStore(),
-                firstDoc.getDocumentUri(), "DocumentRef-1:LicenseRef-XXX",
-                firstDoc.getCopyManager(), true);
-        firstDoc.setExternalDocumentRefs(List.of(externalDocumentRef));
-        firstDoc.setExtractedLicenseInfos(List.of(externalLicenseInfo));
-
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
-
-        assertThat(differences).isEmpty();
-    }
-
-    @Test
     public void stringsAreNormalizedBeforeComparison() throws InvalidSPDXAnalysisException {
         var firstDoc = buildMinimalDocumentWithFile();
         var secondDoc = buildMinimalDocumentWithFile();
