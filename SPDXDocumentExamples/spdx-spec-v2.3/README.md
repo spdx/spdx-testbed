@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ## Examples
 copied from https://github.com/spdx/spdx-spec/tree/development/v2.3.1/examples on Sep 14, 2022 (commit 484fd76 on Aug 26, 2022).
 

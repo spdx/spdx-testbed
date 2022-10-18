@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package org.spdx.testbed.util.json;
 
 import com.fasterxml.jackson.databind.JsonNode;

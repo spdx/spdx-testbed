@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package org.spdx.toolsJavaSolver;
 
 import org.apache.commons.cli.*;
