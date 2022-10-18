@@ -1,7 +1,7 @@
 package org.spdx.testbed;
 
 import lombok.Builder;
-import org.spdx.testbed.util.Difference;
+import org.spdx.testbed.util.json.Difference;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import org.apache.commons.collections4.IteratorUtils;
 import org.spdx.library.SpdxConstants;
-import org.spdx.testbed.util.Difference;
 
 import javax.annotation.Nullable;
 

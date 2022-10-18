@@ -7,6 +7,7 @@ import org.spdx.jacksonstore.MultiFormatStore;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.ModelObject;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.testbed.util.json.Difference;
 import org.spdx.testbed.util.json.JsonComparison;
 
 import javax.annotation.Nonnull;
