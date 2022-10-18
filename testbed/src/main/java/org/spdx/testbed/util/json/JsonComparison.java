@@ -16,8 +16,20 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Utility methods for comparing two Spdx documents serialized as json.
+ * At the moment, most methods accept an optional second path. This is used when lists are in
+ * play: Since the ordering is not relevant, the index of elements to compare (and therefore the
+ * path) may differ. The null-handling is certainly not ideal and may be refactored in the future.
+ */
 public class JsonComparison {
 
+    /**
+     * Compares the values of two ValueNodes and returns a difference if detected.
+     * Note: The precise value type does not matter, only the stringified versions are compared.
+     *
+     * @param secondPath optional path of the second node in the document
+     */
     public static Optional<Difference> findDifference(ValueNode firstNode,
                                                       ValueNode secondNode,
                                                       String firstPath,
@@ -39,6 +51,12 @@ public class JsonComparison {
         return Optional.empty();
     }
 
+    /**
+     * Compares the two provided JsonNodes and returns a list of detected differences. The
+     * semantics of the comparison depend on the type of the nodes.
+     *
+     * @param secondPathPrefix optional path of the second node in the document
+     */
     public static List<Difference> findDifferences(JsonNode firstNode,
                                                    JsonNode secondNode,
                                                    String firstPathPrefix,
@@ -82,6 +100,11 @@ public class JsonComparison {
         return findDifferences(firstNode, secondNode, "", null);
     }
 
+    /**
+     * Compares the two provided ObjectNodes and returns a list of detected differences.
+     *
+     * @param secondPathPrefix optional path of the second node in the document
+     */
     public static List<Difference> findDifferences(ObjectNode firstNode,
                                                    ObjectNode secondNode,
                                                    String firstPathPrefix,
@@ -150,7 +173,7 @@ public class JsonComparison {
         return currentPath + "/" + newComponent;
     }
 
-    public static boolean isEquivalentToNull(JsonNode node) {
+    private static boolean isEquivalentToNull(JsonNode node) {
         // TODO: there may be edge cases here, like an array or object that only contains 
         //  NOASSERTIONS. Not sure whether such cases would be relevant
         if (node.isArray() || node.isObject()) {
@@ -165,6 +188,11 @@ public class JsonComparison {
         return node.isNull();
     }
 
+    /**
+     * Compares the two provided ArrayNodes and returns a list of detected differences.
+     *
+     * @param secondPathPrefix optional path of the second node in the document
+     */
     public static List<Difference> findDifferences(ArrayNode firstNode,
                                                    ArrayNode secondNode,
                                                    String firstPathPrefix,
@@ -206,8 +234,9 @@ public class JsonComparison {
             var secondListPath = secondPathPrefix == null ? firstPathPrefix : secondPathPrefix;
 
             if (idMatches.size() != 1) {
-                var comment = idMatches.isEmpty() ? "No element in second list with a matching id" +
-                        " or no id present." : "Multiple items in second list with the same id.";
+                var comment = idMatches.isEmpty() ? "No element in second list with a matching " +
+                        "Spdx id or no Spdx id present." : "Multiple items in second list with " +
+                        "the same Spdx id.";
                 differences.add(Difference.builder()
                         .firstValue(currentFirstNodeElement)
                         .path(firstElementPath)
@@ -240,8 +269,9 @@ public class JsonComparison {
                     currentSecondNodeElement);
 
             if (idMatches.size() != 1) {
-                var comment = idMatches.isEmpty() ? "No element in first list with a matching id " +
-                        "or no id present." : "Multiple items in first list with the same id.";
+                var comment = idMatches.isEmpty() ? "No element in first list with a matching " +
+                        "Spdx id or no Spdx id present." : "Multiple items in first list with the" +
+                        " same Spdx id.";
                 differences.add(Difference.builder()
                         .secondValue(currentSecondNodeElement)
                         .secondPath(secondElementPath)

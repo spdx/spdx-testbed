@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Holds information about a difference detected during the comparison of two json documents, 
+ * including the two values and the path of those values in the documents.
+ */
 @Setter
 @Getter
 @AllArgsConstructor

@@ -64,13 +64,13 @@ public class ComparisonsTest {
                 .firstValue(new TextNode("fileContributor"))
                 .path("/files/0/fileContributors/0")
                 .secondPath("/files/0/fileContributors")
-                .comment("No element in second list with a matching id or no id present.")
+                .comment("No element in second list with a matching Spdx id or no Spdx id present.")
                 .build();
         var secondExpectedDifference = Difference.builder()
                 .secondValue(new TextNode("newContributor"))
                 .secondPath("/files/0/fileContributors/0")
                 .path("/files/0/fileContributors")
-                .comment("No element in first list with a matching id or no id present.")
+                .comment("No element in first list with a matching Spdx id or no Spdx id present.")
                 .build();
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
