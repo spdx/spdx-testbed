@@ -16,8 +16,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class Difference {
-    private final JsonNode firstValue;
-    private final JsonNode secondValue;
+    private final JsonNode actualValue;
+    private final JsonNode expectedValue;
     private final String path;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String comment;
@@ -28,26 +28,26 @@ public class Difference {
 
     /**
      * This is a customized builder that will produce either {@link Difference} or
-     * {@link ListDifference}, depending on whether secondPath is set.
+     * {@link ListDifference}, depending on whether pathInReferenceDoc is set.
      */
     public static class DifferenceBuilder {
-        private JsonNode firstValue;
-        private JsonNode secondValue;
+        private JsonNode actualValue;
+        private JsonNode expectedValue;
         private String path;
-        private String secondPath;
+        private String pathInReferenceDoc;
         private String comment;
 
 
         DifferenceBuilder() {
         }
 
-        public DifferenceBuilder firstValue(JsonNode firstValue) {
-            this.firstValue = firstValue;
+        public DifferenceBuilder actualValue(JsonNode actualValue) {
+            this.actualValue = actualValue;
             return this;
         }
 
-        public DifferenceBuilder secondValue(JsonNode secondValue) {
-            this.secondValue = secondValue;
+        public DifferenceBuilder expectedValue(JsonNode expectedValue) {
+            this.expectedValue = expectedValue;
             return this;
         }
 
@@ -56,8 +56,8 @@ public class Difference {
             return this;
         }
 
-        public DifferenceBuilder secondPath(String path) {
-            this.secondPath = path;
+        public DifferenceBuilder pathInReferenceDoc(String pathInReferenceDoc) {
+            this.pathInReferenceDoc = pathInReferenceDoc;
             return this;
         }
 
@@ -67,16 +67,18 @@ public class Difference {
         }
 
         public Difference build() {
-            if (secondPath == null) {
-                return new Difference(firstValue, secondValue, path, comment);
+            if (pathInReferenceDoc == null) {
+                return new Difference(actualValue, expectedValue, path, comment);
             } else {
-                return new ListDifference(firstValue, secondValue, path, comment, secondPath);
+                return new ListDifference(actualValue, expectedValue, path, comment,
+                        pathInReferenceDoc);
             }
         }
 
         public String toString() {
-            return "Difference.DifferenceBuilder(firstValue=" + this.firstValue + ", secondValue" +
-                    "=" + this.secondValue + ", path=" + this.path + ", secondPath=" + this.secondPath + ", comment=" + this.comment + ")";
+            return "Difference.DifferenceBuilder(actualValue=" + this.actualValue + ", " +
+                    "expectedValue" +
+                    "=" + this.expectedValue + ", path=" + this.path + ", pathInReferenceDoc=" + this.pathInReferenceDoc + ", comment=" + this.comment + ")";
         }
     }
 }

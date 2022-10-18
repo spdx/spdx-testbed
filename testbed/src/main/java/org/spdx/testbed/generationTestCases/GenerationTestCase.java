@@ -26,7 +26,7 @@ public abstract class GenerationTestCase implements TestCase {
     public TestResult test(String[] args) throws IOException, InvalidFileNameException, InvalidSPDXAnalysisException {
         var inputDoc = parseArgsAndGetInputDoc(args);
         var referenceDoc = buildReferenceDocument();
-        var differences = Comparisons.findDifferencesInSerializedJson(referenceDoc, inputDoc);
+        var differences = Comparisons.findDifferencesInSerializedJson(inputDoc, referenceDoc);
 
         if (differences.isEmpty()) {
             System.out.print(this.getClass().getSimpleName() + " succeeded!\n");

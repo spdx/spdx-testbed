@@ -32,11 +32,11 @@ public class Comparisons {
      * @return a list of {@link Difference}s
      * @throws InvalidSPDXAnalysisException In case of parsing errors
      */
-    public static List<Difference> findDifferencesInSerializedJson(@Nonnull SpdxDocument firstDocument,
-                                                                   @Nonnull SpdxDocument secondDocument) throws InvalidSPDXAnalysisException {
-        var firstJson = asJson(firstDocument);
-        var secondJson = asJson(secondDocument);
-        return JsonComparison.findDifferences(firstJson, secondJson);
+    public static List<Difference> findDifferencesInSerializedJson(@Nonnull SpdxDocument actualDocument,
+                                                                   @Nonnull SpdxDocument expectedDocument) throws InvalidSPDXAnalysisException {
+        var expectedJson = asJson(actualDocument);
+        var actualJson = asJson(expectedDocument);
+        return JsonComparison.findDifferences(expectedJson, actualJson);
     }
 
     private static ObjectNode asJson(ModelObject modelObject) throws InvalidSPDXAnalysisException {

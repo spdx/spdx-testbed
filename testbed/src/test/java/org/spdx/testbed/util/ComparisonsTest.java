@@ -41,8 +41,8 @@ public class ComparisonsTest {
         var secondDocument = buildMinimalDocumentWithFile();
         secondDocument.setName("newName");
         var expectedNameDifference = Difference.builder()
-                .firstValue(new TextNode(minimalDocument.getName().get()))
-                .secondValue(new TextNode(secondDocument.getName().get()))
+                .actualValue(new TextNode(minimalDocument.getName().get()))
+                .expectedValue(new TextNode(secondDocument.getName().get()))
                 .path("/name")
                 .build();
 
@@ -62,16 +62,17 @@ public class ComparisonsTest {
         secondFile.getFileContributors().add("newContributor");
 
         var firstExpectedDifference = Difference.builder()
-                .firstValue(new TextNode("fileContributor"))
+                .actualValue(new TextNode("fileContributor"))
                 .path("/files/0/fileContributors/0")
-                .secondPath("/files/0/fileContributors")
-                .comment("No element in second list with a matching Spdx id or no Spdx id present.")
+                .pathInReferenceDoc("/files/0/fileContributors")
+                .comment("No element in expected list with a matching Spdx id or no Spdx id " +
+                        "present.")
                 .build();
         var secondExpectedDifference = Difference.builder()
-                .secondValue(new TextNode("newContributor"))
-                .secondPath("/files/0/fileContributors/0")
+                .expectedValue(new TextNode("newContributor"))
+                .pathInReferenceDoc("/files/0/fileContributors/0")
                 .path("/files/0/fileContributors")
-                .comment("No element in first list with a matching Spdx id or no Spdx id present.")
+                .comment("No element in actual list with a matching Spdx id or no Spdx id present.")
                 .build();
 
         var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
@@ -106,8 +107,8 @@ public class ComparisonsTest {
 
         assertThat(differences.size()).isEqualTo(1);
         var difference = differences.get(0);
-        assertThat(difference.getFirstValue()).isEqualTo(new TextNode("./foo.txt"));
-        assertThat(difference.getSecondValue()).isEqualTo(new TextNode("./bar.txt"));
+        assertThat(difference.getActualValue()).isEqualTo(new TextNode("./foo.txt"));
+        assertThat(difference.getExpectedValue()).isEqualTo(new TextNode("./bar.txt"));
         // Because of the reordering mentioned above, we avoid asserting on the exact index in 
         // the list
         assertThat(difference.getPath()).startsWith("/files/");
@@ -123,8 +124,8 @@ public class ComparisonsTest {
         secondDoc.getCreationInfo().setComment("secondComment");
 
         var expectedDifference = Difference.builder()
-                .firstValue(new TextNode("firstComment"))
-                .secondValue(new TextNode("secondComment"))
+                .actualValue(new TextNode("firstComment"))
+                .expectedValue(new TextNode("secondComment"))
                 .path("/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment")
                 .build();
 
@@ -147,7 +148,7 @@ public class ComparisonsTest {
         expectedAnnotationsNode.add(annotationNode);
 
         var expectedDifference = Difference.builder()
-                .firstValue(expectedAnnotationsNode)
+                .actualValue(expectedAnnotationsNode)
                 .path("/annotations")
                 .build();
 
@@ -169,7 +170,7 @@ public class ComparisonsTest {
         annotationNode.put("comment", annotationComment);
         expectedAnnotationsNode.add(annotationNode);
         var expectedDifference = Difference.builder()
-                .secondValue(expectedAnnotationsNode)
+                .expectedValue(expectedAnnotationsNode)
                 .path("/annotations")
                 .build();
 
