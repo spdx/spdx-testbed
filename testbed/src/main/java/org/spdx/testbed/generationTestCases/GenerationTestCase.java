@@ -4,6 +4,8 @@
 
 package org.spdx.testbed.generationTestCases;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.ModelCopyManager;
 import org.spdx.library.Version;
@@ -34,10 +36,11 @@ public abstract class GenerationTestCase implements TestCase {
             System.out.print(this.getClass().getSimpleName() + " succeeded!\n");
             return TestResult.builder().success(true).build();
         } else {
-            var outputString = "Test failure in " + this.getClass().getSimpleName() + ". " +
-                    "The input document did not meet the expectations. The following differences were detected:\n" +
-                    differences + "\n";
-            System.out.print(outputString);
+            System.out.println("Test failure in " + this.getClass().getSimpleName() + ". " +
+                    "The input document did not meet the expectations. The following differences were detected:");
+            var objectMapper = new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            System.out.println(objectMapper.writeValueAsString(differences));
             return TestResult.builder().success(false).differences(differences).build();
         }
     }

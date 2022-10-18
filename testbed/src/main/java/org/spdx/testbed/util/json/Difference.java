@@ -4,6 +4,7 @@
 
 package org.spdx.testbed.util.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,7 @@ public class Difference {
     private final JsonNode firstValue;
     private final JsonNode secondValue;
     private final String path;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String comment;
 
     public static DifferenceBuilder builder() {
