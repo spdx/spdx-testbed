@@ -31,24 +31,24 @@ public class JsonComparison {
      * Compares the values of two ValueNodes and returns a difference if detected.
      * Note: The precise value type does not matter, only the stringified versions are compared.
      *
-     * @param secondPath optional path of the second node in the document
+     * @param referencePath optional path of the reference node in the document
      */
-    public static Optional<Difference> findDifference(ValueNode firstNode,
-                                                      ValueNode secondNode,
-                                                      String firstPath,
-                                                      @Nullable String secondPath) {
-        var firstValueAsString = normalizeString(firstNode.asText());
-        var secondValueAsString = normalizeString(secondNode.asText());
+    public static Optional<Difference> findDifference(ValueNode actualNode,
+                                                      ValueNode expectedNode,
+                                                      String path,
+                                                      @Nullable String referencePath) {
+        var actualValueAsString = normalizeString(actualNode.asText());
+        var expectedValueAsString = normalizeString(expectedNode.asText());
 
-        firstValueAsString = convertNoneUriValueToPlainString(firstValueAsString);
-        secondValueAsString = convertNoneUriValueToPlainString(secondValueAsString);
+        actualValueAsString = convertNoneUriValueToPlainString(actualValueAsString);
+        expectedValueAsString = convertNoneUriValueToPlainString(expectedValueAsString);
 
-        if (!Objects.equals(firstValueAsString, secondValueAsString)) {
+        if (!Objects.equals(actualValueAsString, expectedValueAsString)) {
             return Optional.of(Difference.builder()
-                    .firstValue(firstNode)
-                    .secondValue(secondNode)
-                    .path(firstPath)
-                    .secondPath(secondPath)
+                    .actualValue(actualNode)
+                    .expectedValue(expectedNode)
+                    .path(path)
+                    .pathInReferenceDoc(referencePath)
                     .build());
         }
         return Optional.empty();
@@ -58,70 +58,71 @@ public class JsonComparison {
      * Compares the two provided JsonNodes and returns a list of detected differences. The
      * semantics of the comparison depend on the type of the nodes.
      *
-     * @param secondPathPrefix optional path of the second node in the document
+     * @param referencePathPrefix optional path of the reference node in the document
      */
-    public static List<Difference> findDifferences(JsonNode firstNode,
-                                                   JsonNode secondNode,
-                                                   String firstPathPrefix,
-                                                   @Nullable String secondPathPrefix) {
+    public static List<Difference> findDifferences(JsonNode actualNode,
+                                                   JsonNode expectedNode,
+                                                   String pathPrefix,
+                                                   @Nullable String referencePathPrefix) {
         var differences = new ArrayList<Difference>();
 
-        if (isEquivalentToNull(firstNode) && isEquivalentToNull(secondNode)) {
+        if (isEquivalentToNull(actualNode) && isEquivalentToNull(expectedNode)) {
             return differences;
-        } else if (isEquivalentToNull(firstNode) || isEquivalentToNull(secondNode)) {
+        } else if (isEquivalentToNull(actualNode) || isEquivalentToNull(expectedNode)) {
             differences.add(Difference.builder()
-                    .firstValue(firstNode)
-                    .secondValue(secondNode)
-                    .path(firstPathPrefix)
-                    .secondPath(secondPathPrefix)
+                    .actualValue(actualNode)
+                    .expectedValue(expectedNode)
+                    .path(pathPrefix)
+                    .pathInReferenceDoc(referencePathPrefix)
                     .build());
-        } else if (firstNode.isValueNode() && secondNode.isValueNode()) {
-            findDifference((ValueNode) firstNode, (ValueNode) secondNode, firstPathPrefix,
-                    secondPathPrefix).ifPresent(differences::add);
-        } else if (firstNode instanceof ObjectNode && secondNode instanceof ObjectNode) {
-            differences.addAll(findDifferences((ObjectNode) firstNode, (ObjectNode) secondNode,
-                    firstPathPrefix, secondPathPrefix));
-        } else if (firstNode instanceof ArrayNode && secondNode instanceof ArrayNode) {
-            differences.addAll(findDifferences((ArrayNode) firstNode, (ArrayNode) secondNode,
-                    firstPathPrefix, secondPathPrefix));
+        } else if (actualNode.isValueNode() && expectedNode.isValueNode()) {
+            findDifference((ValueNode) actualNode, (ValueNode) expectedNode, pathPrefix,
+                    referencePathPrefix).ifPresent(differences::add);
+        } else if (actualNode instanceof ObjectNode && expectedNode instanceof ObjectNode) {
+            differences.addAll(findDifferences((ObjectNode) actualNode, (ObjectNode) expectedNode,
+                    pathPrefix, referencePathPrefix));
+        } else if (actualNode instanceof ArrayNode && expectedNode instanceof ArrayNode) {
+            differences.addAll(findDifferences((ArrayNode) actualNode, (ArrayNode) expectedNode,
+                    pathPrefix, referencePathPrefix));
         } else {
             // The node types don't match and none of the nodes is equivalent to null
             // Anything smarter to do here?
             differences.add(Difference.builder()
-                    .firstValue(firstNode)
-                    .secondValue(secondNode)
-                    .path(firstPathPrefix)
-                    .secondPath(secondPathPrefix)
+                    .actualValue(actualNode)
+                    .expectedValue(expectedNode)
+                    .path(pathPrefix)
+                    .pathInReferenceDoc(referencePathPrefix)
                     .build());
         }
 
         return differences;
     }
 
-    public static List<Difference> findDifferences(ObjectNode firstNode,
-                                                   ObjectNode secondNode) {
-        return findDifferences(firstNode, secondNode, "", null);
+    public static List<Difference> findDifferences(ObjectNode actualNode,
+                                                   ObjectNode expectedNode) {
+        return findDifferences(actualNode, expectedNode, "", null);
     }
 
     /**
      * Compares the two provided ObjectNodes and returns a list of detected differences.
      *
-     * @param secondPathPrefix optional path of the second node in the document
+     * @param referencePathPrefix optional path of the reference node in the document
      */
-    public static List<Difference> findDifferences(ObjectNode firstNode,
-                                                   ObjectNode secondNode,
-                                                   String firstPathPrefix,
-                                                   @Nullable String secondPathPrefix) {
+    public static List<Difference> findDifferences(ObjectNode actualNode,
+                                                   ObjectNode expectedNode,
+                                                   String pathPrefix,
+                                                   @Nullable String referencePathPrefix) {
         var differences = new ArrayList<Difference>();
 
-        var firstNodeFieldNames = IteratorUtils.toList(firstNode.fieldNames());
-        var secondNodeFieldNames = IteratorUtils.toList(secondNode.fieldNames());
-        var commonFields = firstNodeFieldNames.stream().filter(secondNodeFieldNames::contains)
+        var actualNodeFieldNames = IteratorUtils.toList(actualNode.fieldNames());
+        var expectedNodeFieldNames = IteratorUtils.toList(expectedNode.fieldNames());
+        var commonFields = actualNodeFieldNames.stream().filter(expectedNodeFieldNames::contains)
                 .collect(Collectors.toList());
-        var firstNodeExclusiveFields = firstNodeFieldNames.stream()
-                .filter(name -> !secondNodeFieldNames.contains(name)).collect(Collectors.toList());
-        var secondNodeExclusiveFields = secondNodeFieldNames.stream()
-                .filter(name -> !firstNodeFieldNames.contains(name)).collect(Collectors.toList());
+        var actualNodeExclusiveFields = actualNodeFieldNames.stream()
+                .filter(name -> !expectedNodeFieldNames.contains(name))
+                .collect(Collectors.toList());
+        var expectedNodeExclusiveFields = expectedNodeFieldNames.stream()
+                .filter(name -> !actualNodeFieldNames.contains(name)).collect(Collectors.toList());
 
         for (var fieldName : commonFields) {
             // Reference type may be local to the document, so we skip it.
@@ -130,41 +131,41 @@ public class JsonComparison {
                 continue;
             }
 
-            var firstValue = firstNode.get(fieldName);
-            var secondValue = secondNode.get(fieldName);
+            var actualValue = actualNode.get(fieldName);
+            var expectedValue = expectedNode.get(fieldName);
 
-            var newFirstPathPrefix = addPathComponent(firstPathPrefix, fieldName);
-            var newSecondPathPrefix = secondPathPrefix == null ? null :
-                    addPathComponent(secondPathPrefix, fieldName);
+            var newPathPrefix = addPathComponent(pathPrefix, fieldName);
+            var newReferencePathPrefix = referencePathPrefix == null ? null :
+                    addPathComponent(referencePathPrefix, fieldName);
 
-            differences.addAll(findDifferences(firstValue, secondValue, newFirstPathPrefix,
-                    newSecondPathPrefix));
+            differences.addAll(findDifferences(actualValue, expectedValue, newPathPrefix,
+                    newReferencePathPrefix));
         }
 
-        for (var fieldName : firstNodeExclusiveFields) {
-            var value = firstNode.get(fieldName);
-            var newFirstPathPrefix = addPathComponent(firstPathPrefix, fieldName);
-            var newSecondPathPrefix = secondPathPrefix == null ? null :
-                    addPathComponent(secondPathPrefix, fieldName);
+        for (var fieldName : actualNodeExclusiveFields) {
+            var value = actualNode.get(fieldName);
+            var newPathPrefix = addPathComponent(pathPrefix, fieldName);
+            var newReferencePathPrefix = referencePathPrefix == null ? null :
+                    addPathComponent(referencePathPrefix, fieldName);
             if (!isEquivalentToNull(value)) {
                 differences.add(Difference.builder()
-                        .firstValue(value)
-                        .path(newFirstPathPrefix)
-                        .secondPath(newSecondPathPrefix)
+                        .actualValue(value)
+                        .path(newPathPrefix)
+                        .pathInReferenceDoc(newReferencePathPrefix)
                         .build());
             }
         }
 
-        for (var fieldName : secondNodeExclusiveFields) {
-            var value = secondNode.get(fieldName);
-            var newFirstPathPrefix = addPathComponent(firstPathPrefix, fieldName);
-            var newSecondPathPrefix = secondPathPrefix == null ? null :
-                    addPathComponent(secondPathPrefix, fieldName);
+        for (var fieldName : expectedNodeExclusiveFields) {
+            var value = expectedNode.get(fieldName);
+            var newPathPrefix = addPathComponent(pathPrefix, fieldName);
+            var newReferencePathPrefix = referencePathPrefix == null ? null :
+                    addPathComponent(referencePathPrefix, fieldName);
             if (!isEquivalentToNull(value)) {
                 differences.add(Difference.builder()
-                        .secondValue(value)
-                        .path(newFirstPathPrefix)
-                        .secondPath(newSecondPathPrefix)
+                        .expectedValue(value)
+                        .path(newPathPrefix)
+                        .pathInReferenceDoc(newReferencePathPrefix)
                         .build());
             }
         }
@@ -194,104 +195,107 @@ public class JsonComparison {
     /**
      * Compares the two provided ArrayNodes and returns a list of detected differences.
      *
-     * @param secondPathPrefix optional path of the second node in the document
+     * @param referencePathPrefix optional path of the reference node in the document
      */
-    public static List<Difference> findDifferences(ArrayNode firstNode,
-                                                   ArrayNode secondNode,
-                                                   String firstPathPrefix,
-                                                   @Nullable String secondPathPrefix) {
+    public static List<Difference> findDifferences(ArrayNode actualNode,
+                                                   ArrayNode expectedNode,
+                                                   String pathPrefix,
+                                                   @Nullable String referencePathPrefix) {
         var differences = new ArrayList<Difference>();
 
         // TODO: Remove this temporary workaround once hasFiles is fixed. See https://github.com/spdx/spdx-java-jackson-store/issues/42.
         //  Should be included in the next release after 1.1.1.
-        if (firstPathPrefix.endsWith("hasFiles")) {
+        if (pathPrefix.endsWith("hasFiles")) {
             return differences;
         }
 
-        var firstNodeElements =
-                removeIrrelevantElements(IteratorUtils.toList(firstNode.elements()));
-        var secondNodeElements =
-                removeIrrelevantElements(IteratorUtils.toList(secondNode.elements()));
+        var actualNodeElements =
+                removeIrrelevantElements(IteratorUtils.toList(actualNode.elements()));
+        var expectedNodeElements =
+                removeIrrelevantElements(IteratorUtils.toList(expectedNode.elements()));
 
         // These will be modified while iterating
-        var remainingFirstNodeElements = new ArrayList<>(firstNodeElements);
-        var remainingSecondNodeElements = new ArrayList<>(secondNodeElements);
+        var remainingActualNodeElements = new ArrayList<>(actualNodeElements);
+        var remainingExpectedNodeElements = new ArrayList<>(expectedNodeElements);
 
-        for (var currentFirstNodeElement : firstNodeElements) {
-            var exactMatchOptional = findExactMatch(secondNodeElements, currentFirstNodeElement);
+        for (var currentActualNodeElement : actualNodeElements) {
+            var exactMatchOptional = findExactMatch(expectedNodeElements, currentActualNodeElement);
 
             if (exactMatchOptional.isPresent()) {
-                remainingFirstNodeElements.remove(currentFirstNodeElement);
-                remainingSecondNodeElements.remove(exactMatchOptional.get());
+                remainingActualNodeElements.remove(currentActualNodeElement);
+                remainingExpectedNodeElements.remove(exactMatchOptional.get());
                 continue;
             }
 
-            var firstElementPath = addPathComponent(firstPathPrefix,
-                    Integer.toString(firstNodeElements.indexOf(currentFirstNodeElement)));
+            var actualElementPath = addPathComponent(pathPrefix,
+                    Integer.toString(actualNodeElements.indexOf(currentActualNodeElement)));
 
             // Backup plan: If no exact match was found, try to find a unique match by id and 
             // compare
 
-            var idMatches = findIdMatches(remainingSecondNodeElements,
-                    currentFirstNodeElement);
-            var secondListPath = secondPathPrefix == null ? firstPathPrefix : secondPathPrefix;
+            var idMatches = findIdMatches(remainingExpectedNodeElements,
+                    currentActualNodeElement);
+            var expectedListPath = referencePathPrefix == null ? pathPrefix : referencePathPrefix;
 
             if (idMatches.size() != 1) {
-                var comment = idMatches.isEmpty() ? "No element in second list with a matching " +
-                        "Spdx id or no Spdx id present." : "Multiple items in second list with " +
+                var comment = idMatches.isEmpty() ? "No element in expected list with a matching " +
+                        "Spdx id or no Spdx id present." : "Multiple items in expected list with " +
                         "the same Spdx id.";
                 differences.add(Difference.builder()
-                        .firstValue(currentFirstNodeElement)
-                        .path(firstElementPath)
-                        .secondPath(secondListPath)
+                        .actualValue(currentActualNodeElement)
+                        .path(actualElementPath)
+                        .pathInReferenceDoc(expectedListPath)
                         .comment(comment)
                         .build());
                 continue;
             }
 
             var uniqueIdMatch = idMatches.get(0);
-            var secondElementIndexAsString =
-                    String.valueOf(secondNodeElements.indexOf(uniqueIdMatch));
-            var secondElementPath = addPathComponent(secondListPath, secondElementIndexAsString);
-            remainingFirstNodeElements.remove(currentFirstNodeElement);
-            remainingSecondNodeElements.remove(uniqueIdMatch);
-            differences.addAll(findDifferences(currentFirstNodeElement, uniqueIdMatch,
-                    firstElementPath, secondElementPath));
+            var expectedElementIndexAsString =
+                    String.valueOf(expectedNodeElements.indexOf(uniqueIdMatch));
+            var expectedElementPath = addPathComponent(expectedListPath,
+                    expectedElementIndexAsString);
+            remainingActualNodeElements.remove(currentActualNodeElement);
+            remainingExpectedNodeElements.remove(uniqueIdMatch);
+            differences.addAll(findDifferences(currentActualNodeElement, uniqueIdMatch,
+                    actualElementPath, expectedElementPath));
         }
 
-        for (var currentSecondNodeElement : remainingSecondNodeElements) {
+        for (var currentExpectedNodeElement : remainingExpectedNodeElements) {
             // There cannot be an exact match in the first list since it would have been found in
             // the previous loop
 
-            var secondElementIndexAsString =
-                    String.valueOf(secondNodeElements.indexOf(currentSecondNodeElement));
-            var secondListPath = secondPathPrefix == null ? firstPathPrefix : secondPathPrefix;
-            var secondElementPath = addPathComponent(secondListPath, secondElementIndexAsString);
+            var expectedElementIndexAsString =
+                    String.valueOf(expectedNodeElements.indexOf(currentExpectedNodeElement));
+            var expectedListPath = referencePathPrefix == null ? pathPrefix : referencePathPrefix;
+            var expectedElementPath = addPathComponent(expectedListPath,
+                    expectedElementIndexAsString);
 
-            var idMatches = findIdMatches(remainingFirstNodeElements,
-                    currentSecondNodeElement);
+            var idMatches = findIdMatches(remainingActualNodeElements,
+                    currentExpectedNodeElement);
 
             if (idMatches.size() != 1) {
-                var comment = idMatches.isEmpty() ? "No element in first list with a matching " +
-                        "Spdx id or no Spdx id present." : "Multiple items in first list with the" +
+                var comment = idMatches.isEmpty() ? "No element in actual list with a matching " +
+                        "Spdx id or no Spdx id present." : "Multiple items in actual list with " +
+                        "the" +
                         " same Spdx id.";
                 differences.add(Difference.builder()
-                        .secondValue(currentSecondNodeElement)
-                        .secondPath(secondElementPath)
-                        .path(firstPathPrefix)
+                        .expectedValue(currentExpectedNodeElement)
+                        .pathInReferenceDoc(expectedElementPath)
+                        .path(pathPrefix)
                         .comment(comment)
                         .build());
                 continue;
             }
 
             var uniqueIdMatch = idMatches.get(0);
-            var firstElementIndexAsString =
-                    String.valueOf(firstNodeElements.indexOf(uniqueIdMatch));
-            var firstElementPath = addPathComponent(firstPathPrefix, firstElementIndexAsString);
-            remainingFirstNodeElements.remove(uniqueIdMatch);
-            remainingSecondNodeElements.remove(currentSecondNodeElement);
-            differences.addAll(findDifferences(uniqueIdMatch, currentSecondNodeElement,
-                    firstElementPath, secondElementPath));
+            var actualElementIndexAsString =
+                    String.valueOf(actualNodeElements.indexOf(uniqueIdMatch));
+            var actualElementPath = addPathComponent(pathPrefix, actualElementIndexAsString);
+            remainingActualNodeElements.remove(uniqueIdMatch);
+            remainingExpectedNodeElements.remove(currentExpectedNodeElement);
+            differences.addAll(findDifferences(uniqueIdMatch, currentExpectedNodeElement,
+                    actualElementPath, expectedElementPath));
         }
 
         return differences;

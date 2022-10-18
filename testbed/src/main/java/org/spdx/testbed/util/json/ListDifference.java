@@ -17,16 +17,16 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class ListDifference extends Difference {
-    private final String secondPath;
+    private final String pathInReferenceDoc;
 
-    public ListDifference(JsonNode firstValue, JsonNode secondValue, String path, String comment,
-                          String secondPath) {
-        super(firstValue, secondValue, path, comment);
-        this.secondPath = secondPath;
+    public ListDifference(JsonNode actualValue, JsonNode expectedValue, String path, String comment,
+                          String pathInReferenceDoc) {
+        super(actualValue, expectedValue, path, comment);
+        this.pathInReferenceDoc = pathInReferenceDoc;
     }
 
     @Override
     public String toString() {
-        return "ListDifference(firstValue=" + this.getFirstValue() + ", secondValue=" + this.getSecondValue() + ", firstPath=" + this.getPath() + ", secondPath=" + this.getSecondPath() + ", comment=" + this.getComment() + ")";
+        return "ListDifference(actualValue=" + this.getActualValue() + ", expectedValue=" + this.getExpectedValue() + ", path=" + this.getPath() + ", pathInReferenceDoc=" + this.getPathInReferenceDoc() + ", comment=" + this.getComment() + ")";
     }
 }
