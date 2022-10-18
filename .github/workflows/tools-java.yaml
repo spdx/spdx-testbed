@@ -31,7 +31,11 @@ jobs:
       - name: Run spdx-tools-java-solver to create input file
         id: generate-input
         run: |
-          java -jar spdx-tools-java-solver-*-all.jar -t generationMinimalTest -f generationMinimalResult.xml
+          java -jar spdx-tools-java-solver-*-all.jar -t generationMinimalTest -f generationMinimal.xml
+          java -jar spdx-tools-java-solver-*-all.jar -t generationBaselineSbomTest -f generationBaselineSbom.xml
+          java -jar spdx-tools-java-solver-*-all.jar -t generationDocumentTest -f generationDocument.xml
+          java -jar spdx-tools-java-solver-*-all.jar -t generationLicenseTest -f generationLicense.xml
+          java -jar spdx-tools-java-solver-*-all.jar -t generationRelationshipTest -f generationRelationship.xml
 
 # user tool specific section ends here
 
@@ -47,4 +51,9 @@ jobs:
       - name: Run test case
         # provide the -t flag with the name of the test case that the input file (-f) attempts to solve
         # look up the README for a list of possible test case names
-        run: java -jar testbed-*-all.jar -t generationMinimalTest -f generationMinimalResult.xml
+        run: |
+          java -jar testbed-*-all.jar -t generationMinimalTest -f generationMinimal.xml
+          java -jar testbed-*-all.jar -t generationBaselineSbomTest -f generationBaselineSbom.xml
+          java -jar testbed-*-all.jar -t generationDocumentTest -f generationDocument.xml
+          java -jar testbed-*-all.jar -t generationLicenseTest -f generationLicense.xml
+          java -jar testbed-*-all.jar -t generationRelationshipTest -f generationRelationship.xml
