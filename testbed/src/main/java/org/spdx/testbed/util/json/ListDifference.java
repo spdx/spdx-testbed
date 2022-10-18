@@ -1,9 +1,8 @@
-package org.spdx.testbed.util;
+package org.spdx.testbed.util.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Specialized version of {@link Difference} intended to be used when the difference is detected
@@ -12,10 +11,9 @@ import lombok.Setter;
  * order to capture this information, this class adds a second path.
  */
 @Getter
-@Setter
 @EqualsAndHashCode(callSuper = true)
 public class ListDifference extends Difference {
-    private String secondPath;
+    private final String secondPath;
 
     public ListDifference(JsonNode firstValue, JsonNode secondValue, String path, String comment,
                           String secondPath) {

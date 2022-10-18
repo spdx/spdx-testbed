@@ -19,6 +19,7 @@ import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.library.model.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
+import org.spdx.testbed.util.json.Difference;
 
 import java.util.List;
 

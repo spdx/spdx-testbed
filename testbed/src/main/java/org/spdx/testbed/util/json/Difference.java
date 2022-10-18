@@ -1,28 +1,24 @@
-package org.spdx.testbed.util;
+package org.spdx.testbed.util.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
  * Holds information about a difference detected during the comparison of two json documents,
  * including the two values and the path of those values in the documents.
  */
-@Setter
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class Difference {
-    private JsonNode firstValue;
-    private JsonNode secondValue;
-    private String path;
-    private String comment;
+    private final JsonNode firstValue;
+    private final JsonNode secondValue;
+    private final String path;
+    private final String comment;
 
     public static DifferenceBuilder builder() {
         return new DifferenceBuilder();
