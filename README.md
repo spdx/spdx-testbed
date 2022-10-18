@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+
+SPDX-License-Identifier: Apache-2.0
+-->
 
 # License
 

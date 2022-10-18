@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package conversion;
 
 import org.junit.jupiter.params.ParameterizedTest;

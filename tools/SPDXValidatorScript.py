@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # script that calls multiple SPDX validation tools on every input file from the command line
 import os
 import sys

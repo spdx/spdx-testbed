@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
 set -euo pipefail
 
 version=1.1.0

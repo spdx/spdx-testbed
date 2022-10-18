@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: TNG Technology Consulting GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # insert the name of your tool here to identify its run in GitHub actions
 name: "Testcases for tools-java"
 
