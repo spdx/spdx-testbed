@@ -6,6 +6,7 @@ package org.spdx.testbed;
 
 public enum TestCaseName {
 
+    GENERATION_ALL("generation"),
     GENERATION_MINIMAL("generationMinimalTest"),
     GENERATION_BASELINE_SBOM("generationBaselineSbomTest"),
     GENERATION_DOCUMENT("generationDocumentTest"),
@@ -26,8 +27,8 @@ public enum TestCaseName {
     }
 
     public static TestCaseName fromString(String str) {
-        for (var testCaseName : TestCaseName.values()){
-            if (testCaseName.getFullName().equals(str)){
+        for (var testCaseName : TestCaseName.values()) {
+            if (testCaseName.getFullName().equals(str)) {
                 return testCaseName;
             }
         }

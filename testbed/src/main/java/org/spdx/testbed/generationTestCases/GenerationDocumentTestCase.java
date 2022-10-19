@@ -9,6 +9,7 @@ import org.spdx.library.model.Annotation;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.storage.IModelStore;
+import org.spdx.testbed.TestCaseName;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class GenerationDocumentTestCase extends GenerationTestCase {
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
 
-        var annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
+        var annotation = new Annotation(modelStore, documentUri,
+                modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: Document Commenter (mail@mail.com)")
                 .setAnnotationDate("2022-01-01T00:00:00Z")
                 .setComment("Document level annotation")
@@ -36,7 +38,8 @@ public class GenerationDocumentTestCase extends GenerationTestCase {
         document.addAnnotation(annotation);
 
         var sha1Checksum = createSha1Checksum(modelStore, documentUri);
-        var externalDocumentRef = document.createExternalDocumentRef("DocumentRef-externaldocumentid", "http://external.uri", sha1Checksum);
+        var externalDocumentRef = document.createExternalDocumentRef("DocumentRef" +
+                "-externaldocumentid", "http://external.uri", sha1Checksum);
 
         document.setExternalDocumentRefs(List.of(externalDocumentRef));
 
@@ -47,5 +50,10 @@ public class GenerationDocumentTestCase extends GenerationTestCase {
         document.getDocumentDescribes().add(file);
 
         return document;
+    }
+
+    @Override
+    public String getName() {
+        return TestCaseName.GENERATION_DOCUMENT.getFullName();
     }
 }

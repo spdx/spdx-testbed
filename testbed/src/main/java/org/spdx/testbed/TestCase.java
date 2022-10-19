@@ -11,4 +11,6 @@ import java.io.IOException;
 
 public interface TestCase {
     TestResult test(String[] args) throws InvalidSPDXAnalysisException, IOException, InvalidFileNameException;
+    
+    String getName();
 }

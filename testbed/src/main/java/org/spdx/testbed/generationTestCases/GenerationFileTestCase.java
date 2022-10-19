@@ -13,6 +13,7 @@ import org.spdx.library.model.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.enumerations.FileType;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
+import org.spdx.testbed.TestCaseName;
 
 import java.util.List;
 
@@ -24,14 +25,16 @@ public class GenerationFileTestCase extends GenerationTestCase {
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
 
-        var annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
+        var annotation = new Annotation(modelStore, documentUri,
+                modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: File Annotator")
                 .setAnnotationDate("2022-01-01T00:00:00Z")
                 .setComment("File level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
         var sha1Checksum = createSha1Checksum(modelStore, documentUri);
-        var md5Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
+        var md5Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.MD5, 
+                "624c1abb3664f4b35547e7c73864ad24");
 
         var license = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
 
@@ -50,5 +53,10 @@ public class GenerationFileTestCase extends GenerationTestCase {
         document.getDocumentDescribes().add(file);
 
         return document;
+    }
+
+    @Override
+    public String getName() {
+        return TestCaseName.GENERATION_FILE.getFullName();
     }
 }

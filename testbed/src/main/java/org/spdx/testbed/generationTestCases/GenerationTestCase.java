@@ -18,6 +18,7 @@ import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.testbed.TestCase;
 import org.spdx.testbed.TestResult;
 import org.spdx.testbed.util.Comparisons;
+import org.spdx.testbed.util.testClassification.GenerationTest;
 import org.spdx.tools.InvalidFileNameException;
 import org.spdx.tools.SpdxToolsHelper;
 
@@ -25,9 +26,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+@GenerationTest
 public abstract class GenerationTestCase implements TestCase {
 
-    public TestResult test(String[] args) throws IOException, InvalidFileNameException, InvalidSPDXAnalysisException {
+    public TestResult test(String[] args) throws IOException, InvalidFileNameException,
+            InvalidSPDXAnalysisException {
         var inputDoc = parseArgsAndGetInputDoc(args);
         var referenceDoc = buildReferenceDocument();
         var differences = Comparisons.findDifferencesInSerializedJson(inputDoc, referenceDoc);
@@ -37,7 +40,8 @@ public abstract class GenerationTestCase implements TestCase {
             return TestResult.builder().success(true).build();
         } else {
             System.out.println("Test failure in " + this.getClass().getSimpleName() + ". " +
-                    "The input document did not meet the expectations. The following differences were detected:");
+                    "The input document did not meet the expectations. The following differences " +
+                    "were detected:");
             var objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             System.out.println(objectMapper.writeValueAsString(differences));
@@ -45,14 +49,16 @@ public abstract class GenerationTestCase implements TestCase {
         }
     }
 
-    protected SpdxDocument parseArgsAndGetInputDoc(String[] args) throws IOException, InvalidFileNameException, InvalidSPDXAnalysisException {
+    protected SpdxDocument parseArgsAndGetInputDoc(String[] args) throws IOException,
+            InvalidFileNameException, InvalidSPDXAnalysisException {
         if (args.length != 1) {
             throw new IllegalArgumentException("Expected 1 input file path, but got " + args.length);
         }
         try {
             return SpdxToolsHelper.deserializeDocument(new File(args[0]));
         } catch (InvalidSPDXAnalysisException e) {
-            throw new InvalidSPDXAnalysisException("The input file does not seem to be a valid SPDX document: " + e.getMessage(), e);
+            throw new InvalidSPDXAnalysisException("The input file does not seem to be a valid " +
+                    "SPDX document: " + e.getMessage(), e);
         }
     }
 
@@ -76,6 +82,7 @@ public abstract class GenerationTestCase implements TestCase {
     }
 
     Checksum createSha1Checksum(IModelStore modelStore, String documentUri) throws InvalidSPDXAnalysisException {
-        return Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+        return Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1,
+                "d6a770ba38583ed4bb4525bd96e50461655d2758");
     }
 }
