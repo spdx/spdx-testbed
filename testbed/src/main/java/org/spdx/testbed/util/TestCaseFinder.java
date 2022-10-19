@@ -17,30 +17,29 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestCaseFinder {
 
-    public Collection<TestCase> findTestCases(TestCaseName testCaseName) {
+    public List<TestCase> findTestCases(TestCaseName testCaseName) {
         switch (testCaseName) {
             case GENERATION_MINIMAL:
-                return Set.of(new GenerationMinimalTestCase());
+                return List.of(new GenerationMinimalTestCase());
             case GENERATION_BASELINE_SBOM:
-                return Set.of(new GenerationBaselineSbomTestCase());
+                return List.of(new GenerationBaselineSbomTestCase());
             case GENERATION_DOCUMENT:
-                return Set.of(new GenerationDocumentTestCase());
+                return List.of(new GenerationDocumentTestCase());
             case GENERATION_PACKAGE:
-                return Set.of(new GenerationPackageTestCase());
+                return List.of(new GenerationPackageTestCase());
             case GENERATION_FILE:
-                return Set.of(new GenerationFileTestCase());
+                return List.of(new GenerationFileTestCase());
             case GENERATION_SNIPPET:
-                return Set.of(new GenerationSnippetTestCase());
+                return List.of(new GenerationSnippetTestCase());
             case GENERATION_LICENSE:
-                return Set.of(new GenerationLicenseTestCase());
+                return List.of(new GenerationLicenseTestCase());
             case GENERATION_RELATIONSHIP:
-                return Set.of(new GenerationRelationshipTestCase());
+                return List.of(new GenerationRelationshipTestCase());
             case GENERATION_ALL:
                 return determineGenerationTestCases();
         }
@@ -53,7 +52,7 @@ public class TestCaseFinder {
      * annotation attributes, see e.g.
      * <a href="https://www.baeldung.com/java-scan-annotations-runtime#scanning-annotations-with-spring-context-library">this tutorial</a>
      */
-    private Collection<TestCase> determineGenerationTestCases() {
+    private List<TestCase> determineGenerationTestCases() {
         var provider = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(GenerationTest.class));
 
