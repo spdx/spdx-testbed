@@ -15,6 +15,7 @@ import org.spdx.library.model.enumerations.Purpose;
 import org.spdx.library.model.enumerations.ReferenceCategory;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
+import org.spdx.testbed.TestCaseName;
 
 import java.util.List;
 
@@ -26,26 +27,29 @@ public class GenerationPackageTestCase extends GenerationTestCase {
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
 
-        var annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
+        var annotation = new Annotation(modelStore, documentUri,
+                modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: Package Annotator")
                 .setAnnotationDate("2022-01-01T00:00:00Z")
                 .setComment("Package level annotation")
                 .setAnnotationType(AnnotationType.OTHER);
 
         var sha1Checksum = createSha1Checksum(modelStore, documentUri);
-        var md5Checksum = document.createChecksum(ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24");
+        var md5Checksum = document.createChecksum(ChecksumAlgorithm.MD5, 
+                "624c1abb3664f4b35547e7c73864ad24");
 
         var gpl2_0only = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
 
         var file = document.createSpdxFile("SPDXRef-somefile", "./foo.txt", null,
-                        List.of(), null , sha1Checksum)
+                        List.of(), null, sha1Checksum)
                 .build();
 
         var externalRef = document.createExternalRef(ReferenceCategory.OTHER,
                 new ReferenceType(new SimpleUriValue("http://reference.type")),
                 "reference/locator", "external reference comment");
 
-        var spdxPackageVerificationCode = document.createPackageVerificationCode("d6a770ba38583ed4bb4525bd96e50461655d2758", List.of("./some.file"));
+        var spdxPackageVerificationCode = document.createPackageVerificationCode(
+                "d6a770ba38583ed4bb4525bd96e50461655d2758", List.of("./some.file"));
 
         var spdxPackage = document.createPackage("SPDXRef-somepackage", "package name", gpl2_0only,
                         "Copyright 2022 Jane Doe", gpl2_0only)
@@ -77,5 +81,10 @@ public class GenerationPackageTestCase extends GenerationTestCase {
         document.getDocumentDescribes().add(spdxPackage);
 
         return document;
+    }
+
+    @Override
+    public String getName() {
+        return TestCaseName.GENERATION_PACKAGE.getFullName();
     }
 }

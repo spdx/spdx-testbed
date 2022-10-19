@@ -6,6 +6,7 @@ package org.spdx.testbed.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.testbed.TestCaseName;
 
 import java.util.List;
 
@@ -32,5 +33,8 @@ public class GenerationBaselineSbomTestCase extends GenerationTestCase {
         return document;
     }
 
-
+    @Override
+    public String getName() {
+        return TestCaseName.GENERATION_BASELINE_SBOM.getFullName();
+    }
 }

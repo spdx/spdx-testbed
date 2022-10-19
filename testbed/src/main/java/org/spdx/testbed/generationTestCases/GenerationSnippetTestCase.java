@@ -10,6 +10,7 @@ import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
+import org.spdx.testbed.TestCaseName;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class GenerationSnippetTestCase extends GenerationTestCase {
         var modelStore = document.getModelStore();
         var documentUri = document.getDocumentUri();
 
-        var annotation = new Annotation(modelStore, documentUri, modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
+        var annotation = new Annotation(modelStore, documentUri,
+                modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
                 .setAnnotator("Person: Snippet Annotator")
                 .setAnnotationDate("2022-01-01T00:00:00Z")
                 .setComment("Snippet level annotation")
@@ -35,7 +37,8 @@ public class GenerationSnippetTestCase extends GenerationTestCase {
                         List.of(), null, sha1Checksum)
                 .build();
 
-        var spdxSnippet = document.createSpdxSnippet("SPDXRef-somesnippet", "snippet name", gpl2_0only,
+        var spdxSnippet = document.createSpdxSnippet("SPDXRef-somesnippet", "snippet name",
+                        gpl2_0only,
                         List.of(gpl2_0only), "Copyright 2022 Jane Doe", file, 100, 400)
                 .addAnnotation(annotation)
                 .setLineRange(30, 40)
@@ -47,5 +50,10 @@ public class GenerationSnippetTestCase extends GenerationTestCase {
         document.getDocumentDescribes().add(spdxSnippet);
 
         return document;
+    }
+
+    @Override
+    public String getName() {
+        return TestCaseName.GENERATION_SNIPPET.getFullName();
     }
 }
