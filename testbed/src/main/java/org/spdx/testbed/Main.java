@@ -18,7 +18,6 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException,
             InvalidFileNameException {
-        // TODO: Add support for providing multiple files
         var options = new Options();
         options.addOption(Option.builder("t").longOpt("test_case")
                 .desc("For possible values see the readme.").hasArg().argName("TESTCASE")
@@ -44,10 +43,21 @@ public class Main {
             var testCaseName = TestCaseName.fromString(testCase);
             var testCaseFinder = new TestCaseFinder();
             var testCases = testCaseFinder.findTestCases(testCaseName);
+            // Alphabetical sort to have a well-defined order for matching the files
+            testCases.sort(TestCase::compareTo);
+
+            if (testCases.size() != files.length) {
+                System.err.println("The number of input files does not match the number of " +
+                        "selected test cases. " + files.length + " input files were provided, but" +
+                        " " + testCases.size() + " test cases were selected:");
+                testCases.forEach(innerTestCase -> System.err.println(innerTestCase.getName()));
+                System.exit(1);
+            }
 
             // TODO: do something with the test results
-            for (var singleCase : testCases) {
-                singleCase.test(files);
+            for (int i = 0; i < testCases.size(); i++) {
+                var inputFile = new String[]{files[i]};
+                testCases.get(i).test(inputFile);
             }
 
         } catch (ParseException e) {
