@@ -32,6 +32,10 @@ public abstract class GenerationTestCase implements TestCase {
     public TestResult test(String[] args) throws IOException, InvalidFileNameException,
             InvalidSPDXAnalysisException {
         var inputDoc = parseArgsAndGetInputDoc(args);
+        var filePath = args[0];
+        System.out.println(
+                "\n----------------------------------------------------------------------------------\n");
+        System.out.println("Running " + getName() + " against " + filePath);
         var referenceDoc = buildReferenceDocument();
         var differences = Comparisons.findDifferencesInSerializedJson(inputDoc, referenceDoc);
 
@@ -39,9 +43,9 @@ public abstract class GenerationTestCase implements TestCase {
             System.out.print(this.getClass().getSimpleName() + " succeeded!\n");
             return TestResult.builder().success(true).build();
         } else {
-            System.out.println("Test failure in " + this.getClass().getSimpleName() + ". " +
-                    "The input document did not meet the expectations. The following differences " +
-                    "were detected:");
+            System.out.println("Test failure in " + this.getClass().getSimpleName() + "!");
+            System.out.println("The input document " + filePath + " did not meet the expectations" +
+                    ". The following differences were detected:");
             var objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             System.out.println(objectMapper.writeValueAsString(differences));

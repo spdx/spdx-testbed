@@ -4,19 +4,29 @@
 
 package org.spdx.testbed;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.testbed.generationTestCases.*;
+import org.spdx.testbed.util.TestCaseFinder;
 import org.spdx.tools.InvalidFileNameException;
 
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException, InvalidFileNameException {
+    public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException,
+            InvalidFileNameException {
+        // TODO: Add support for providing multiple files
         var options = new Options();
-        options.addOption(Option.builder("t").longOpt("test_case").desc("For possible values see some website.").hasArg().argName("TESTCASE").required().build());
-        options.addOption(Option.builder("f").longOpt("input_files").desc("The files to be processed").hasArgs().argName("FILES").required().build());
-        options.addOption(Option.builder("h").longOpt("help").desc("Display usage").required(false).build());
+        options.addOption(Option.builder("t").longOpt("test_case")
+                .desc("For possible values see the readme.").hasArg().argName("TESTCASE")
+                .required().build());
+        options.addOption(Option.builder("f").longOpt("input_files")
+                .desc("The files to be processed").hasArgs().argName("FILES").required().build());
+        options.addOption(Option.builder("h").longOpt("help").desc("Display usage").required(false)
+                .build());
 
         var parser = new DefaultParser();
 
@@ -31,37 +41,14 @@ public class Main {
             var testCase = cmd.getOptionValue("t");
             String[] files = cmd.getOptionValues("f");
 
-            TestResult testResult = null;
             var testCaseName = TestCaseName.fromString(testCase);
+            var testCaseFinder = new TestCaseFinder();
+            var testCases = testCaseFinder.findTestCases(testCaseName);
 
-            switch (testCaseName) {
-                case GENERATION_MINIMAL:
-                    testResult = (new GenerationMinimalTestCase()).test(files);
-                    break;
-                case GENERATION_BASELINE_SBOM:
-                    testResult = (new GenerationBaselineSbomTestCase()).test(files);
-                    break;
-                case GENERATION_DOCUMENT:
-                    testResult = (new GenerationDocumentTestCase()).test(files);
-                    break;
-                case GENERATION_PACKAGE:
-                    testResult = (new GenerationPackageTestCase()).test(files);
-                    break;
-                case GENERATION_FILE:
-                    testResult = (new GenerationFileTestCase()).test(files);
-                    break;
-                case GENERATION_SNIPPET:
-                    testResult = (new GenerationSnippetTestCase()).test(files);
-                    break;
-                case GENERATION_LICENSE:
-                    testResult = (new GenerationLicenseTestCase()).test(files);
-                    break;
-                case GENERATION_RELATIONSHIP:
-                    testResult = (new GenerationRelationshipTestCase()).test(files);
-                    break;
+            // TODO: do something with the test results
+            for (var singleCase : testCases) {
+                singleCase.test(files);
             }
-
-            //TODO: do something with the testResult
 
         } catch (ParseException e) {
             System.err.println(e.getMessage());
@@ -73,7 +60,7 @@ public class Main {
 
     private static void printUsage(Options options) {
         var helper = new HelpFormatter();
-        var helpHeader = "Test if the input files solve the specified test case.\n\n";
+        var helpHeader = "Test if the input files solve the specified test cases.\n\n";
         var helpFooter = "\n";
         helper.printHelp("spdx-tools-java-solver.jar", helpHeader, options, helpFooter, true);
     }
