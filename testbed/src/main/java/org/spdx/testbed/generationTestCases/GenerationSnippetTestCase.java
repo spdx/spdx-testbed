@@ -11,9 +11,11 @@ import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
 import org.spdx.testbed.TestCaseName;
+import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
 
+@TestName("generationSnippetTest")
 public class GenerationSnippetTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {

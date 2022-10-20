@@ -14,9 +14,11 @@ import org.spdx.library.model.enumerations.FileType;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
 import org.spdx.testbed.TestCaseName;
+import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
 
+@TestName("generationFileTest")
 public class GenerationFileTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {

@@ -9,9 +9,11 @@ import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.license.ExtractedLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.testbed.TestCaseName;
+import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
 
+@TestName("generationLicenseTest")
 public class GenerationLicenseTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
