@@ -10,9 +10,11 @@ import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.storage.IModelStore;
 import org.spdx.testbed.TestCaseName;
+import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
 
+@TestName("generationDocumentTest")
 public class GenerationDocumentTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {

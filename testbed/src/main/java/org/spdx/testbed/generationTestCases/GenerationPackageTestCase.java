@@ -16,9 +16,11 @@ import org.spdx.library.model.enumerations.ReferenceCategory;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
 import org.spdx.testbed.TestCaseName;
+import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
 
+@TestName("generationPackageTest")
 public class GenerationPackageTestCase extends GenerationTestCase {
 
     public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
