@@ -9,7 +9,6 @@ import org.spdx.library.model.Annotation;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.enumerations.AnnotationType;
 import org.spdx.storage.IModelStore;
-import org.spdx.testbed.TestCaseName;
 import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
@@ -56,6 +55,6 @@ public class GenerationDocumentTestCase extends GenerationTestCase {
 
     @Override
     public String getName() {
-        return TestCaseName.GENERATION_DOCUMENT.getFullName();
+        return "generationDocumentTest";
     }
 }

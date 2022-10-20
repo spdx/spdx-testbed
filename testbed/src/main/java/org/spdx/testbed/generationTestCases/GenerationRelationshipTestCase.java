@@ -7,7 +7,6 @@ package org.spdx.testbed.generationTestCases;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.enumerations.RelationshipType;
-import org.spdx.testbed.TestCaseName;
 import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
@@ -62,6 +61,6 @@ public class GenerationRelationshipTestCase extends GenerationTestCase {
 
     @Override
     public String getName() {
-        return TestCaseName.GENERATION_RELATIONSHIP.getFullName();
+        return "generationRelationshipTest";
     }
 }

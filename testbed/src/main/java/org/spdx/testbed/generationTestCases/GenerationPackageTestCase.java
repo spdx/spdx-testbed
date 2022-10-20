@@ -15,7 +15,6 @@ import org.spdx.library.model.enumerations.Purpose;
 import org.spdx.library.model.enumerations.ReferenceCategory;
 import org.spdx.library.model.license.LicenseInfoFactory;
 import org.spdx.storage.IModelStore;
-import org.spdx.testbed.TestCaseName;
 import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class GenerationPackageTestCase extends GenerationTestCase {
                 .setAnnotationType(AnnotationType.OTHER);
 
         var sha1Checksum = createSha1Checksum(modelStore, documentUri);
-        var md5Checksum = document.createChecksum(ChecksumAlgorithm.MD5, 
+        var md5Checksum = document.createChecksum(ChecksumAlgorithm.MD5,
                 "624c1abb3664f4b35547e7c73864ad24");
 
         var gpl2_0only = LicenseInfoFactory.parseSPDXLicenseString("GPL-2.0-only");
@@ -87,6 +86,6 @@ public class GenerationPackageTestCase extends GenerationTestCase {
 
     @Override
     public String getName() {
-        return TestCaseName.GENERATION_PACKAGE.getFullName();
+        return "generationPackageTest";
     }
 }

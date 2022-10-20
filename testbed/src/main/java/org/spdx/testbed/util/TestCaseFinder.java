@@ -1,8 +1,7 @@
 package org.spdx.testbed.util;
 
 import org.spdx.testbed.TestCase;
-import org.spdx.testbed.TestCaseName;
-import org.spdx.testbed.util.testClassification.GenerationTest;
+import org.spdx.testbed.TestCaseCategory;
 import org.spdx.testbed.util.testClassification.TestName;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -11,7 +10,6 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -19,14 +17,12 @@ import java.util.stream.Collectors;
 
 public class TestCaseFinder {
 
-    public List<TestCase> findTestCases(TestCaseName testCaseName) {
-        if (Arrays.stream(TestCaseName.values()).noneMatch(testCaseName::equals)) {
-            throw new IllegalArgumentException("Unknown test case name: " + testCaseName);
+    public List<TestCase> findTestCasesByCategories(List<TestCaseCategory> categories) {
+        var foundCases = new ArrayList<TestCase>();
+        for (var category : categories) {
+            foundCases.addAll(determineTestCases(category.getAnnotationClass()));
         }
-        if (testCaseName == TestCaseName.GENERATION_ALL) {
-            return determineTestCases(GenerationTest.class);
-        }
-        return findTestCasesByNames(List.of(testCaseName.getFullName()));
+        return foundCases;
     }
 
     public List<TestCase> findTestCasesByNames(List<String> names) {
