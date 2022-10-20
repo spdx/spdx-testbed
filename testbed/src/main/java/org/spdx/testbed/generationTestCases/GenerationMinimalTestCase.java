@@ -6,7 +6,6 @@ package org.spdx.testbed.generationTestCases;
 
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
-import org.spdx.testbed.TestCaseName;
 import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
@@ -32,6 +31,6 @@ public class GenerationMinimalTestCase extends GenerationTestCase {
 
     @Override
     public String getName() {
-        return TestCaseName.GENERATION_MINIMAL.getFullName();
+        return "generationMinimalTest";
     }
 }

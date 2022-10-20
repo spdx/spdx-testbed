@@ -8,7 +8,6 @@ import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.library.model.license.ExtractedLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
-import org.spdx.testbed.TestCaseName;
 import org.spdx.testbed.util.testClassification.TestName;
 
 import java.util.List;
@@ -90,6 +89,6 @@ public class GenerationLicenseTestCase extends GenerationTestCase {
 
     @Override
     public String getName() {
-        return TestCaseName.GENERATION_LICENSE.getFullName();
+        return "generationLicenseTest";
     }
 }
