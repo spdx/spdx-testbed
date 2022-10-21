@@ -11,14 +11,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.testbed.util.TestCaseFinder;
+import org.spdx.testbed.util.TestCaseSelector;
 import org.spdx.tools.InvalidFileNameException;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException,
@@ -62,34 +59,19 @@ public class Main {
             System.exit(1);
         }
 
-        var testCaseFinder = new TestCaseFinder();
-
-        var testCasesByNamesOptional = Optional.ofNullable(cmd.getOptionValues("t"))
-                .map(namesArray -> Arrays.stream(namesArray)
-                        .collect(Collectors.toList()))
-                .map(testCaseFinder::findTestCasesByNames);
-        var testCasesByCategoriesOptional = Optional.ofNullable(cmd.getOptionValues("c"))
-                .map(categoriesArray -> Arrays.stream(categoriesArray)
-                        .map(TestCaseCategory::fromString)
-                        .collect(Collectors.toList()))
-                .map(testCaseFinder::findTestCasesByCategories);
-        var files = cmd.getOptionValues("f");
-
+        var testCaseSelector = new TestCaseSelector();
         List<TestCase> selectedTestCases;
-        if (testCasesByNamesOptional.isPresent()) {
-            // If test cases are specified by name, we retain the provided ordering
-            selectedTestCases = testCasesByNamesOptional.get();
-            testCasesByCategoriesOptional.ifPresent(selectedTestCases::retainAll);
-        } else if (testCasesByCategoriesOptional.isPresent()) {
-            selectedTestCases = testCasesByCategoriesOptional.get();
-            // If selecting only by category, sort alphabetically
-            selectedTestCases.sort(TestCase::compareTo);
-        } else {
-            // Just a safety/compiler check, this case is already covered above
+        try {
+            selectedTestCases = testCaseSelector.selectTestCases(cmd.getOptionValues("t"),
+                    cmd.getOptionValues("c"));
+        } catch (IllegalArgumentException ex) {
+            // Just a safety/compiler check, this should be covered above
             printUsage(options);
             System.exit(1);
             return;
         }
+
+        var files = cmd.getOptionValues("f");
 
         if (selectedTestCases.size() != files.length) {
             System.err.println("The number of input files does not match the number of " +
@@ -104,7 +86,6 @@ public class Main {
             var inputFile = new String[]{files[i]};
             selectedTestCases.get(i).test(inputFile);
         }
-
     }
 
     private static void printUsage(Options options) {

@@ -15,6 +15,11 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class to dynamically find test cases. Works by scanning the classpath for classes
+ * annotated with special marker annotations defined in the testClassification package. Can scan
+ * for specific attribute values on the annotations as well.
+ */
 public class TestCaseFinder {
 
     public List<TestCase> findTestCasesByCategories(List<TestCaseCategory> categories) {
