@@ -54,4 +54,15 @@ public class TestCaseFinderTest {
         assertThat(testCases.size()).isEqualTo(1);
         assertThat(testCases).allMatch(testCase -> testCase.getName().equals(testCaseNameAsString));
     }
+
+    @Test
+    public void findMultipleTestsByNames() {
+        var testCases = testCaseFinder.findTestCasesByNames(List.of(GENERATION_MINIMAL,
+                GENERATION_BASELINE_SBOM, GENERATION_DOCUMENT));
+        
+        assertThat(testCases.size()).isEqualTo(3);
+        assertThat(testCases.stream()
+                .map(TestCase::getName)).containsExactlyInAnyOrder(GENERATION_MINIMAL,
+                GENERATION_BASELINE_SBOM, GENERATION_DOCUMENT);
+    }
 }
