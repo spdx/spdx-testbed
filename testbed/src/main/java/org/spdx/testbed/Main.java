@@ -15,7 +15,6 @@ import org.spdx.testbed.util.TestCaseFinder;
 import org.spdx.tools.InvalidFileNameException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,11 +24,15 @@ public class Main {
     public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException,
             InvalidFileNameException {
         var options = new Options();
-        options.addOption(Option.builder("t").longOpt("test_case")
-                .desc("For possible values see the readme.").hasArg().argName("TEST_CASE")
+        options.addOption(Option.builder("t").longOpt("test_cases")
+                .desc("For possible values see the readme. At least one of -c or -t has to be " +
+                        "specified")
+                .hasArgs().argName("TEST_CASES")
                 .build());
         options.addOption(Option.builder("c").longOpt("test_categories")
-                .desc("For possible values see the readme.").hasArg().argName("TEST_CATEGORIES")
+                .desc("For possible values see the readme. At least one of -c or -t has to be " +
+                        "specified")
+                .hasArg().argName("TEST_CATEGORIES")
                 .build());
         options.addOption(Option.builder("f").longOpt("input_files")
                 .desc("The files to be processed").hasArgs().argName("FILES").required().build());
@@ -55,16 +58,16 @@ public class Main {
         }
 
         if (!cmd.hasOption("t") && !cmd.hasOption("c")) {
-            // TODO: Customize help message to mention that at least one of t or c is 
-            //  required (but specifying both is possible!)
             printUsage(options);
             System.exit(1);
         }
 
         var testCaseFinder = new TestCaseFinder();
 
-        var testCasesByNameOptional = Optional.ofNullable(cmd.getOptionValue("t"))
-                .map(testcaseName -> testCaseFinder.findTestCasesByNames(List.of(testcaseName)));
+        var testCasesByNamesOptional = Optional.ofNullable(cmd.getOptionValues("t"))
+                .map(namesArray -> Arrays.stream(namesArray)
+                        .collect(Collectors.toList()))
+                .map(testCaseFinder::findTestCasesByNames);
         var testCasesByCategoriesOptional = Optional.ofNullable(cmd.getOptionValues("c"))
                 .map(categoriesArray -> Arrays.stream(categoriesArray)
                         .map(TestCaseCategory::fromString)
@@ -72,18 +75,21 @@ public class Main {
                 .map(testCaseFinder::findTestCasesByCategories);
         var files = cmd.getOptionValues("f");
 
-        var selectedTestCases = new ArrayList<TestCase>();
-        if (testCasesByNameOptional.isPresent() && testCasesByCategoriesOptional.isPresent()) {
-            selectedTestCases.addAll(testCasesByNameOptional.get());
-            selectedTestCases.retainAll(testCasesByCategoriesOptional.get());
-        } else if (testCasesByNameOptional.isPresent()) {
-            selectedTestCases.addAll(testCasesByNameOptional.get());
+        List<TestCase> selectedTestCases;
+        if (testCasesByNamesOptional.isPresent()) {
+            // If test cases are specified by name, we retain the provided ordering
+            selectedTestCases = testCasesByNamesOptional.get();
+            testCasesByCategoriesOptional.ifPresent(selectedTestCases::retainAll);
+        } else if (testCasesByCategoriesOptional.isPresent()) {
+            selectedTestCases = testCasesByCategoriesOptional.get();
+            // If selecting only by category, sort alphabetically
+            selectedTestCases.sort(TestCase::compareTo);
         } else {
-            testCasesByCategoriesOptional.ifPresent(selectedTestCases::addAll);
+            // Just a safety/compiler check, this case is already covered above
+            printUsage(options);
+            System.exit(1);
+            return;
         }
-
-        // Alphabetical sort to have a well-defined order for matching the files
-        selectedTestCases.sort(TestCase::compareTo);
 
         if (selectedTestCases.size() != files.length) {
             System.err.println("The number of input files does not match the number of " +
