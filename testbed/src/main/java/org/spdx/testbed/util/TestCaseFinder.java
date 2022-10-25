@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static org.spdx.testbed.util.TestCaseUtils.filterForMatchingNames;
+
 /**
  * Utility class to dynamically find test cases. Works by scanning the classpath for classes
  * annotated with special marker annotations defined in the testClassification package. Can scan
@@ -23,11 +25,10 @@ import java.util.stream.Collectors;
 public class TestCaseFinder {
 
     public List<TestCase> findTestCasesByCategories(List<TestCaseCategory> categories) {
-        var foundCases = new ArrayList<TestCase>();
-        for (var category : categories) {
-            foundCases.addAll(determineTestCases(category.getAnnotationClass()));
-        }
-        return foundCases;
+        var casesOptional = categories.stream()
+                .map(category -> determineTestCases(category.getAnnotationClass()))
+                .reduce(this::intersectByName);
+        return casesOptional.orElse(new ArrayList<>());
     }
 
     public List<TestCase> findTestCasesByNames(List<String> names) {
@@ -42,6 +43,12 @@ public class TestCaseFinder {
         return foundTestCases;
     }
 
+    private List<TestCase> intersectByName(List<TestCase> accumulatedList,
+                                           List<TestCase> nextList) {
+        filterForMatchingNames(accumulatedList).accept(nextList);
+        return accumulatedList;
+    }
+
     private List<TestCase> determineTestCases(Class<? extends Annotation> annotationClass) {
         return determineTestCases(annotationClass, Map.of());
     }
@@ -51,7 +58,7 @@ public class TestCaseFinder {
      * specific annotation that carries the prescribed attributes.
      *
      * @param annotationClass    annotation class to look for
-     * @param requiredAttributes attributes on the annotation that are required. Can be an empty 
+     * @param requiredAttributes attributes on the annotation that are required. Can be an empty
      *                           map in case no attributes are required
      * @return one instance of each class satisfying the search criteria, constructed via no-args
      * constructor
