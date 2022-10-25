@@ -42,6 +42,10 @@ public class TestCaseFinder {
         }
         return foundTestCases;
     }
+    
+    public List<TestCase> findAllTestCases() {
+        return determineTestCases(TestName.class, Map.of());
+    }
 
     private List<TestCase> intersectByName(List<TestCase> accumulatedList,
                                            List<TestCase> nextList) {

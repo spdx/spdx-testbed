@@ -11,11 +11,13 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.testbed.util.TestCaseFinder;
 import org.spdx.testbed.util.TestCaseSelector;
 import org.spdx.tools.InvalidFileNameException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException,
@@ -73,7 +75,17 @@ public class Main {
 
         var files = cmd.getOptionValues("f");
 
-        if (selectedTestCases.size() != files.length) {
+        if (selectedTestCases.size() == 0) {
+            var allTestCaseNames = new TestCaseFinder().findAllTestCases().stream()
+                    .map(TestCase::getName)
+                    .sorted()
+                    .collect(Collectors.toList());
+            System.err.println("No test cases found that fit the input parameters! Available test" +
+                    " cases are listed below. Please check out the readme for further information" +
+                    ".");
+            allTestCaseNames.forEach(System.err::println);
+            System.exit(1);
+        } else if (selectedTestCases.size() != files.length) {
             System.err.println("The number of input files does not match the number of " +
                     "selected test cases. " + files.length + " input files were provided, but" +
                     " " + selectedTestCases.size() + " test cases were selected:");

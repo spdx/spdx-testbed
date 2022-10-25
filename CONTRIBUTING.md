@@ -71,4 +71,5 @@ Each case should:
 
 - extend [TestCase](testbed/src/main/java/org/spdx/testbed/TestCase.java)
 - have a no args constructor (used in the reflection logic mentioned above)
-- be annotated with the appropriate annotations
+- be annotated with [TestName](testbed/src/main/java/org/spdx/testbed/util/testClassification/TestName.java)
+- be annotated with further annotations as appropriate
