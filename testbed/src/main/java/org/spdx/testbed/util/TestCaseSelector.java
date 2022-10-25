@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.spdx.testbed.util.TestCaseUtils.filterForMatchingNames;
 
 public class TestCaseSelector {
     private final TestCaseFinder testCaseFinder;
@@ -44,18 +45,6 @@ public class TestCaseSelector {
             throw new IllegalArgumentException("Must provide either names or categories or both");
         }
         return selectedTestCases;
-    }
-
-    private Consumer<List<TestCase>> filterForMatchingNames(List<TestCase> listToFilter) {
-        return filterList -> {
-            var allowedNames = filterList.stream()
-                    .map(TestCase::getName)
-                    .collect(Collectors.toList());
-            var allowedElements = listToFilter.stream()
-                    .filter(testCase -> allowedNames.contains(testCase.getName()))
-                    .collect(Collectors.toList());
-            listToFilter.retainAll(allowedElements);
-        };
     }
 
     private <T> List<T> arrayToList(T[] inputArray) {

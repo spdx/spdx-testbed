@@ -48,7 +48,7 @@ public class TestCaseFinderTest {
     @ValueSource(strings = {GENERATION_MINIMAL, GENERATION_BASELINE_SBOM,
             GENERATION_DOCUMENT, GENERATION_PACKAGE, GENERATION_FILE,
             GENERATION_SNIPPET, GENERATION_LICENSE, GENERATION_RELATIONSHIP})
-    public void findSpecificTestCase(String testCaseNameAsString) {
+    public void findSpecificTestCaseByName(String testCaseNameAsString) {
         var testCases = testCaseFinder.findTestCasesByNames(List.of(testCaseNameAsString));
 
         assertThat(testCases.size()).isEqualTo(1);
