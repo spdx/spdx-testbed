@@ -29,13 +29,12 @@ import java.util.List;
 @GenerationTest
 public abstract class GenerationTestCase implements TestCase {
 
-    public TestResult test(String[] args) throws IOException, InvalidFileNameException,
+    public TestResult test(String inputFilePath) throws IOException, InvalidFileNameException,
             InvalidSPDXAnalysisException {
-        var inputDoc = parseArgsAndGetInputDoc(args);
-        var filePath = args[0];
+        var inputDoc = getInputDoc(inputFilePath);
         System.out.println(
                 "\n----------------------------------------------------------------------------------\n");
-        System.out.println("Running " + getName() + " against " + filePath);
+        System.out.println("Running " + getName() + " against " + inputFilePath);
         var referenceDoc = buildReferenceDocument();
         var differences = Comparisons.findDifferencesInSerializedJson(inputDoc, referenceDoc);
 
@@ -44,7 +43,7 @@ public abstract class GenerationTestCase implements TestCase {
             return TestResult.builder().success(true).build();
         } else {
             System.out.println("Test failure in " + this.getClass().getSimpleName() + "!");
-            System.out.println("The input document " + filePath + " did not meet the expectations" +
+            System.out.println("The input document " + inputFilePath + " did not meet the expectations" +
                     ". The following differences were detected:");
             var objectMapper = new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -53,13 +52,10 @@ public abstract class GenerationTestCase implements TestCase {
         }
     }
 
-    protected SpdxDocument parseArgsAndGetInputDoc(String[] args) throws IOException,
+    protected SpdxDocument getInputDoc(String filePath) throws IOException,
             InvalidFileNameException, InvalidSPDXAnalysisException {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("Expected 1 input file path, but got " + args.length);
-        }
         try {
-            return SpdxToolsHelper.deserializeDocument(new File(args[0]));
+            return SpdxToolsHelper.deserializeDocument(new File(filePath));
         } catch (InvalidSPDXAnalysisException e) {
             throw new InvalidSPDXAnalysisException("The input file does not seem to be a valid " +
                     "SPDX document: " + e.getMessage(), e);

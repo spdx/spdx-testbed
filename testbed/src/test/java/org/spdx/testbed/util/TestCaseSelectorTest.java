@@ -84,7 +84,7 @@ public class TestCaseSelectorTest {
     // What a great name!
     private static class TestTestCase1 implements TestCase {
         @Override
-        public TestResult test(String[] args) throws InvalidSPDXAnalysisException, IOException,
+        public TestResult test(String inputFile) throws InvalidSPDXAnalysisException, IOException,
                 InvalidFileNameException {
             throw new UnsupportedOperationException("Not implemented!");
         }
@@ -98,7 +98,7 @@ public class TestCaseSelectorTest {
     private static class TestTestCase2 implements TestCase {
 
         @Override
-        public TestResult test(String[] args) throws InvalidSPDXAnalysisException, IOException,
+        public TestResult test(String inputFile) throws InvalidSPDXAnalysisException, IOException,
                 InvalidFileNameException {
             throw new UnsupportedOperationException("Not implemented!");
         }
@@ -111,7 +111,7 @@ public class TestCaseSelectorTest {
 
     private static class TestTestCase3 implements TestCase {
         @Override
-        public TestResult test(String[] args) throws InvalidSPDXAnalysisException, IOException,
+        public TestResult test(String inputFile) throws InvalidSPDXAnalysisException, IOException,
                 InvalidFileNameException {
             throw new UnsupportedOperationException("Not implemented!");
         }
