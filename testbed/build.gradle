@@ -15,7 +15,6 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    implementation('com.flipkart.zjsonpatch:zjsonpatch:0.4.12')
 }
 
 test {
