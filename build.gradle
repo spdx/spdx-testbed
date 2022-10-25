@@ -5,6 +5,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'checkstyle'
 }
 
 group 'com.tngtech.spdx'
@@ -17,8 +18,20 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'checkstyle'
     
     group = rootProject.group
+
+    checkstyle {
+        toolVersion = '9.3'
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        configProperties = [
+                'checkstyle.cache.file': "${buildDir}/checkstyle.cache",
+        ]
+        ignoreFailures = false
+        showViolations = true
+        maxWarnings = 0
+    }
 
     dependencies {
         implementation('org.spdx:tools-java:1.1.0')
