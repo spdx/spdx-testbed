@@ -1,6 +1,12 @@
-# Part 1: Generation of SPDX documents (category: `generation`)
+# Test categories
 
-## Minimal information
+The following test categories are currently available:
+
+* [generation](#generation): Covers all test cases concerned with the generation of valid SPDX documents.
+
+## <a id="generation"></a> Part 1: Generation of SPDX documents (category: `generation`)
+
+### Minimal information
 The following tasks will contain some repeating information that is necessary overhead for a valid SPDX document. These cases are marked with the keyphrase "minimal information".
 
 A document with minimal information contains the following:
@@ -20,10 +26,10 @@ A file with minimal information contains the following:
     - algorithm: `SHA1`
     - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
 
-## Task 1: `generationMinimalTest`
+### Task 1: `generationMinimalTest`
 Generate an SPDX document with the minimum requirements for a valid document. That is, it should contain a document with minimal information describing a file with minimal information.
 
-## Task 2: `generationBaselineSbomTest`
+### Task 2: `generationBaselineSbomTest`
 Generate an SPDX document containing the baseline requirements for an SBOM as specified by NTIA. That is, it should contain a document with minimal information,
 describing one package with the following information:
 - Package SPDX identifier: `SPDXRef-somepackage`
@@ -35,7 +41,7 @@ describing one package with the following information:
     - algorithm: `SHA1`
     - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
 
-## Task 3: `generationDocumentTest`
+### Task 3: `generationDocumentTest`
 Generate an SPDX document with all the specification fields. That is, the document should contain the following information:
 - SPDX version: `SPDX-2.3`
 - Data license: `CC0-1.0`
@@ -62,7 +68,7 @@ Generate an SPDX document with all the specification fields. That is, the docume
 
 Add one file with minimal information, described by the document.
 
-## Task 4: `generationFileTest`
+### Task 4: `generationFileTest`
 Generate an SPDX document with minimal information, describing a file with all the fields from the specification. That is, the file should contain the following information:
 - File name: `./package/foo.c`
 - File SPDX identifier: `SPDXRef-somefile`
@@ -86,7 +92,7 @@ Generate an SPDX document with minimal information, describing a file with all t
     - Annotation type: `OTHER`
     - Annotation comment: `File level annotation`
 
-## Task 5: `generationPackageTest`
+### Task 5: `generationPackageTest`
 Generate an SPDX document with minimal information, describing a package with all the fields from the specification. That is, the package should contain the following information:
 - Package name: `package name`
 - Package SPDX identifier: `SPDXRef-somepackage`
@@ -132,7 +138,7 @@ Generate an SPDX document with minimal information, describing a package with al
 
 The package should contain a file `SPDXRef-somefile` with minimal information.
 
-## Task 6: `generationSnippetTest`
+### Task 6: `generationSnippetTest`
 Generate an SPDX document with minimal information, describing a snippet with all the fields from the specification. That is, the snippet should contain the following information:
 - Snippet SPDX identifier: `SPDXRef-somesnippet`
 - Snippet from file SPDX identifier: `SPDXRef-somefile`
@@ -153,7 +159,7 @@ Generate an SPDX document with minimal information, describing a snippet with al
 
 Add a file `SPDXRef-somefile` with minimal information.
 
-## Task 7: `generationRelationshipTest`
+### Task 7: `generationRelationshipTest`
 Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA` and `SPDXRef-fileB` with minimal information each (TODO: wait for issue #30, then update....).  
 Create the following relationships:
 
@@ -162,7 +168,7 @@ Create the following relationships:
 - `SPDXRef-fileB` DESCRIBED_BY `SPDXRef-Document`
 - `SPDXRef-fileB` DEPENDENCY_OF `SPDXRef-fileA`, comment: `comment on DEPENDENCY_OF`
 
-## Task 8: `generationLicenseTest`
+### Task 8: `generationLicenseTest`
 Generate an SPDX document with minimal information and add two external references:
 - License identifier: `LicenseRef-1`
     - extracted text: `extracted license text`

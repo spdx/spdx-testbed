@@ -27,7 +27,7 @@ java -jar testbed-*-all.jar -h
 ```
 
 The most important parameters are `-t` and `-c` for selecting which test cases to run, and `-f` for specifying the input
-files provided by your tool. For example,
+files provided by the external SPDX tool. For example,
 
 ```
 java -jar testbed-*-all.jar -t generationMinimalTest generationDocumentTest -f minimalFile.xml documentFile.xml
@@ -39,8 +39,6 @@ with `documentFile.xml` as input. The input files are expected to be created usi
 A list of available test cases can be found [here](docs/TEST_CASES.md).
 
 Currently, the following categories are available:
-
-* `generation`: Covers all test cases concerned with the generation of valid SPDX documents.
 
 ## How to integrate
 
