@@ -83,7 +83,7 @@ public class Main {
 
         // TODO: do something with the test results
         for (int i = 0; i < selectedTestCases.size(); i++) {
-            var inputFile = new String[]{files[i]};
+            var inputFile = files[i];
             selectedTestCases.get(i).test(inputFile);
         }
     }

@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public interface TestCase extends Comparable<TestCase> {
-    TestResult test(String[] args) throws InvalidSPDXAnalysisException, IOException,
+    TestResult test(String inputFile) throws InvalidSPDXAnalysisException, IOException,
             InvalidFileNameException;
 
     String getName();
