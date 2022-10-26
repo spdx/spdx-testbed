@@ -42,7 +42,9 @@ public class TestCaseSelector {
             // If selecting only by category, sort alphabetically
             selectedTestCases.sort(TestCase::compareTo);
         } else {
-            throw new IllegalArgumentException("Must provide either names or categories or both");
+            // Just a safety check at the moment. CLI argument parsing should already catch this 
+            // case
+            throw new IllegalArgumentException("Must provide either names or categories or both!");
         }
         return selectedTestCases;
     }
