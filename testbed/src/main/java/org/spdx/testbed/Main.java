@@ -67,8 +67,8 @@ public class Main {
             selectedTestCases = testCaseSelector.selectTestCases(cmd.getOptionValues("t"),
                     cmd.getOptionValues("c"));
         } catch (IllegalArgumentException ex) {
-            // Just a safety/compiler check, this should be covered above
-            printUsage(options);
+            System.err.println(ex.getMessage());
+            System.err.println("Use the -h option to see general usage instructions");
             System.exit(1);
             return;
         }
