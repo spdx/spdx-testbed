@@ -60,7 +60,7 @@ public class Main {
 
     private static void printUsage(Options options) {
         var helper = new HelpFormatter();
-        var helpHeader = "Test if the input files solve the specified test case.\n\n";
+        var helpHeader = "Test if the input files solve the specified test cases.\n\n";
         var helpFooter = "\n";
         helper.printHelp("spdx-tools-java-solver.jar", helpHeader, options, helpFooter, true);
     }
