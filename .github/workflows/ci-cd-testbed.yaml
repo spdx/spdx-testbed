@@ -27,7 +27,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Test
-        run: ./gradlew :testbed:test
+        run: ./gradlew :testbed:check
   
   build-deploy:
     name: "Build and deploy fat jar for testbed"
