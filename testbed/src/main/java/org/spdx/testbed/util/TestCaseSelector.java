@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 import org.spdx.testbed.TestCase;
 import org.spdx.testbed.TestCaseCategory;
 
+/**
+ * Helps resolving all matching test cases based on CLI input parameters.
+ */
 public class TestCaseSelector {
 
   private final TestCaseFinder testCaseFinder;
@@ -24,6 +27,9 @@ public class TestCaseSelector {
     this.testCaseFinder = testCaseFinder;
   }
 
+  /**
+   * Return all test cases matching one of the provided names and all the provided categories.
+   */
   public List<TestCase> selectTestCases(String[] nameParameters, String[] categoriesParameters) {
     var casesByNamesOptional = Optional.ofNullable(nameParameters)
         .map(this::arrayToList)

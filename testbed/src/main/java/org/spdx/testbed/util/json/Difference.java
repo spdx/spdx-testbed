@@ -72,6 +72,9 @@ public class Difference {
       return this;
     }
 
+    /**
+     * Build a {@link Difference} or {@link ListDifference} instance, based on the property values.
+     */
     public Difference build() {
       if (pathInReferenceDoc == null) {
         return new Difference(actualValue, expectedValue, path, comment);
@@ -81,10 +84,10 @@ public class Difference {
       }
     }
 
+    @Override
     public String toString() {
-      return "Difference.DifferenceBuilder(actualValue=" + this.actualValue + ", " +
-          "expectedValue" +
-          "=" + this.expectedValue + ", path=" + this.path + ", pathInReferenceDoc="
+      return "Difference.DifferenceBuilder(actualValue=" + this.actualValue + ", expectedValue="
+          + this.expectedValue + ", path=" + this.path + ", pathInReferenceDoc="
           + this.pathInReferenceDoc + ", comment=" + this.comment + ")";
     }
   }

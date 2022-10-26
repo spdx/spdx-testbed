@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.spdx.testbed.TestCase;
 import org.spdx.testbed.TestCaseCategory;
-import org.spdx.testbed.util.testClassification.TestName;
+import org.spdx.testbed.util.testclassification.TestName;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -23,6 +23,9 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  */
 public class TestCaseFinder {
 
+  /**
+   * Find all test cases that match all the provided categories.
+   */
   public List<TestCase> findTestCasesByCategories(List<TestCaseCategory> categories) {
     var casesOptional = categories.stream()
         .map(category -> determineTestCases(category.getAnnotationClass()))
@@ -30,6 +33,9 @@ public class TestCaseFinder {
     return casesOptional.orElse(new ArrayList<>());
   }
 
+  /**
+   * Find all test cases matching any of the provided names.
+   */
   public List<TestCase> findTestCasesByNames(List<String> names) {
     var foundTestCases = new ArrayList<TestCase>();
     for (var name : names) {
@@ -57,15 +63,14 @@ public class TestCaseFinder {
   }
 
   /**
-   * Scans classes in package org.spdx.testbed for all candidates that are annotated with a 
-   * specific
+   * Scans classes in package org.spdx.testbed for all candidates that are annotated with a specific
    * annotation that carries the prescribed attributes.
    *
    * @param annotationClass    annotation class to look for
    * @param requiredAttributes attributes on the annotation that are required. Can be an empty map
    *                           in case no attributes are required
    * @return one instance of each class satisfying the search criteria, constructed via no-args
-   * constructor
+   *     constructor
    */
   private List<TestCase> determineTestCases(Class<? extends Annotation> annotationClass,
       Map<String, Object> requiredAttributes) {
@@ -88,8 +93,8 @@ public class TestCaseFinder {
           var constructor = (clazz).getDeclaredConstructor();
           testCases.add((TestCase) constructor.newInstance());
         }
-      } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
-               InstantiationException | IllegalAccessException e) {
+      } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException
+               | InstantiationException | IllegalAccessException e) {
         // If this happens, something is wrong with the setup. No clear-cut solution I 
         // can think of, so generic RuntimeException seems "okay".
         throw new RuntimeException(e);

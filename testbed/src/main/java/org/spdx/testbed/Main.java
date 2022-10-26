@@ -18,19 +18,23 @@ import org.spdx.testbed.util.TestCaseFinder;
 import org.spdx.testbed.util.TestCaseSelector;
 import org.spdx.tools.InvalidFileNameException;
 
+/**
+ * CLI entrypoint class for the testbed.
+ */
 public class Main {
 
+  /**
+   * Main entrypoint method.
+   */
   public static void main(String[] args) throws IOException, InvalidSPDXAnalysisException,
       InvalidFileNameException {
     var options = new Options();
     options.addOption(Option.builder("t").longOpt("test_cases")
-        .desc("For possible values see the readme. At least one of -c or -t has to be " +
-            "specified")
+        .desc("For possible values see the readme. At least one of -c or -t has to be specified")
         .hasArgs().argName("TEST_CASES")
         .build());
     options.addOption(Option.builder("c").longOpt("test_categories")
-        .desc("For possible values see the readme. At least one of -c or -t has to be " +
-            "specified")
+        .desc("For possible values see the readme. At least one of -c or -t has to be specified")
         .hasArg().argName("TEST_CATEGORIES")
         .build());
     options.addOption(Option.builder("f").longOpt("input_files")
@@ -80,15 +84,16 @@ public class Main {
           .map(TestCase::getName)
           .sorted()
           .collect(Collectors.toList());
-      System.err.println("No test cases found that fit the input parameters! Available test" +
-          " cases are listed below. Please check out the readme for further information" +
-          ".");
+      System.err.println(
+          "No test cases found that fit the input parameters! Available test cases are listed " 
+              + "below. Please check out the readme for further information.");
       allTestCaseNames.forEach(System.err::println);
       System.exit(1);
     } else if (selectedTestCases.size() != files.length) {
-      System.err.println("The number of input files does not match the number of " +
-          "selected test cases. " + files.length + " input files were provided, but" +
-          " " + selectedTestCases.size() + " test cases were selected:");
+      System.err.println(
+          "The number of input files does not match the number of selected test cases. "
+              + files.length + " input files were provided, but " + selectedTestCases.size()
+              + " test cases were selected:");
       selectedTestCases.forEach(innerTestCase -> System.err.println(innerTestCase.getName()));
       System.exit(1);
     }

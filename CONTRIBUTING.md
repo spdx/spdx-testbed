@@ -68,13 +68,13 @@ The process for making changes is as follows:
 The testbed was designed to make adding and integrating new test cases as easy as possible. To
 achieve this, annotations
 on the test case classes are used to "tag" a test. Possible tags should reside
-in [the testClassification package](testbed/src/main/java/org/spdx/testbed/util/testClassification)
+in [the testClassification package](testbed/src/main/java/org/spdx/testbed/util/testclassification)
 and are:
 
 - the name of the
-  test ([TestName](testbed/src/main/java/org/spdx/testbed/util/testClassification/TestName.java))
+  test ([TestName](testbed/src/main/java/org/spdx/testbed/util/testclassification/TestName.java))
 - the category of the test (so far,
-  only [GenerationTest](testbed/src/main/java/org/spdx/testbed/util/testClassification/GenerationTest.java))
+  only [GenerationTest](testbed/src/main/java/org/spdx/testbed/util/testclassification/GenerationTest.java))
 - the formats the test applies to (not yet implemented)
 - the SPDX versions the test applies to (not yet implemented)
 
@@ -88,5 +88,5 @@ Each case should:
 - extend [TestCase](testbed/src/main/java/org/spdx/testbed/TestCase.java)
 - have a no args constructor (used in the reflection logic mentioned above)
 - be annotated
-  with [TestName](testbed/src/main/java/org/spdx/testbed/util/testClassification/TestName.java)
+  with [TestName](testbed/src/main/java/org/spdx/testbed/util/testclassification/TestName.java)
 - be annotated with further annotations as appropriate

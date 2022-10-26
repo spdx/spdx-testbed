@@ -4,8 +4,12 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.spdx.testbed.util.testClassification.GenerationTest;
+import org.spdx.testbed.util.testclassification.GenerationTest;
 
+/**
+ * Lists all available test categories, and encapsulates the mapping between the CLI names and the
+ * corresponding annotation class that is used internally to mark matching test cases.
+ */
 public enum TestCaseCategory {
   GENERATION("generation", GenerationTest.class);
 
@@ -17,14 +21,20 @@ public enum TestCaseCategory {
     this.annotationClass = annotationClass;
   }
 
+  /**
+   * Resolve a TestCaseCategory from the provided string.
+   *
+   * @throws IllegalArgumentException in case no match is found
+   */
   public static TestCaseCategory fromString(String categoryAsString) {
     for (var testCaseCategory : TestCaseCategory.values()) {
       if (testCaseCategory.getCategoryName().equals(categoryAsString)) {
         return testCaseCategory;
       }
     }
-    throw new IllegalArgumentException("Unknown test case category: " + categoryAsString +
-        "\nKnown categories are: " + categoryNames());
+    throw new IllegalArgumentException(
+        "Unknown test case category: " + categoryAsString + "\nKnown categories are: "
+            + categoryNames());
   }
 
   public String getCategoryName() {
