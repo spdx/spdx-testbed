@@ -20,6 +20,11 @@ import org.spdx.tools.SpdxConverter;
 import org.spdx.tools.SpdxConverterException;
 import org.spdx.tools.SpdxToolsHelper;
 
+/**
+ * Tests for conversion between different formats. Note: This is a prototype version that should be
+ * converted into actual test cases. See
+ * <a href="https://github.com/TNG/spdx-testbed/issues/43">...</a>
+ */
 public class TestConversion {
 
   /**
@@ -35,16 +40,16 @@ public class TestConversion {
 
     var convertedFile = new File(outputFilePath);
         
-        /*
-         This is temporary; in the final version, the output file should be provided by a user 
-         script running as part of the CI pipeline.
-         */
+    /*
+     This is temporary; in the final version, the output file should be provided by a user 
+     script running as part of the CI pipeline.
+     */
     convertedFile.delete();
     convertedFile.getParentFile().mkdirs();
     SpdxConverter.convert(inputFile.getPath(), convertedFile.getPath());
-        /*
-         End of temporary conversion code
-         */
+    /*
+     End of temporary conversion code
+     */
 
     var inputDocument = SpdxToolsHelper.deserializeDocument(inputFile);
     var outputDocument = SpdxToolsHelper.deserializeDocument(convertedFile);
@@ -57,12 +62,10 @@ public class TestConversion {
 
   private static Stream<Arguments> provideFileNames() {
     var xmlInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXXMLExample-v2.3.spdx.xml";
-    var rdfInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXRdfExample-v2.3.spdx.rdf" +
-        ".xml";
+    var rdfInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXRdfExample-v2.3.spdx.rdf.xml";
     var jsonInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXJSONExample-v2.3.spdx.json";
     var xlsInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3.xls";
-    var xlsxInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3" +
-        ".xlsx";
+    var xlsxInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXSpreadsheetExample-v2.3.xlsx";
     var tagInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXTagExample-v2.3.spdx";
     var yamlInputFile = "../SPDXDocumentExamples/spdx-spec-v2.3/SPDXYAMLExample-2.3.spdx.yaml";
     var inputFiles = Set.of(xmlInputFile, rdfInputFile, jsonInputFile, xlsInputFile,

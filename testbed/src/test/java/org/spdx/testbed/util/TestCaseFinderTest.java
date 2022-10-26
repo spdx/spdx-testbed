@@ -10,9 +10,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.spdx.testbed.TestCase;
 import org.spdx.testbed.TestCaseCategory;
-import org.spdx.testbed.generationTestCases.GenerationTestCase;
+import org.spdx.testbed.generationtestcases.GenerationTestCase;
 
-
+/**
+ * Tests for dynamic test case filtering.
+ */
 public class TestCaseFinderTest {
 
   private static final String GENERATION_MINIMAL = "generationMinimalTest";
@@ -33,7 +35,6 @@ public class TestCaseFinderTest {
     testCaseFinder = new TestCaseFinder();
   }
 
-
   @Test
   public void findGenerationTestCases() {
     var testCases =
@@ -44,6 +45,9 @@ public class TestCaseFinderTest {
     assertThat(testCaseNames).containsExactlyInAnyOrderElementsOf(generationTestCaseNames);
   }
 
+  /**
+   * This apparently requires a Javadoc.
+   */
   @ParameterizedTest
   @ValueSource(strings = {GENERATION_MINIMAL, GENERATION_BASELINE_SBOM,
       GENERATION_DOCUMENT, GENERATION_PACKAGE, GENERATION_FILE,

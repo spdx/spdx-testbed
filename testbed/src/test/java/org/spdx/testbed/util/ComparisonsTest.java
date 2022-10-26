@@ -29,6 +29,9 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.testbed.util.json.Difference;
 
+/**
+ * Tests for methods comparing SPDX documents.
+ */
 public class ComparisonsTest {
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -69,8 +72,7 @@ public class ComparisonsTest {
         .actualValue(new TextNode("fileContributor"))
         .path("/files/0/fileContributors/0")
         .pathInReferenceDoc("/files/0/fileContributors")
-        .comment("No element in expected list with a matching Spdx id or no Spdx id " +
-            "present.")
+        .comment("No element in expected list with a matching Spdx id or no Spdx id present.")
         .build();
     var secondExpectedDifference = Difference.builder()
         .expectedValue(new TextNode("newContributor"))
@@ -140,8 +142,8 @@ public class ComparisonsTest {
 
   @Test
   public void detectAdditionalProperty() throws InvalidSPDXAnalysisException {
-    var firstDoc = buildMinimalDocumentWithFile();
-    var secondDoc = buildMinimalDocumentWithFile();
+    final var firstDoc = buildMinimalDocumentWithFile();
+    final var secondDoc = buildMinimalDocumentWithFile();
     var annotationComment = "Completely new annotation!";
     var annotation = new Annotation("annotationId").setComment(annotationComment);
     firstDoc.addAnnotation(annotation);
@@ -163,8 +165,8 @@ public class ComparisonsTest {
 
   @Test
   public void detectMissingProperty() throws InvalidSPDXAnalysisException {
-    var firstDoc = buildMinimalDocumentWithFile();
-    var secondDoc = buildMinimalDocumentWithFile();
+    final var firstDoc = buildMinimalDocumentWithFile();
+    final var secondDoc = buildMinimalDocumentWithFile();
     var annotationComment = "Completely new annotation!";
     var annotation = new Annotation("annotationId").setComment(annotationComment);
     secondDoc.addAnnotation(annotation);
@@ -288,8 +290,8 @@ public class ComparisonsTest {
     var document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
 
     document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-    document.setCreationInfo(document.createCreationInfo(List.of("Tool: spdx-testbed"), "2022" +
-        "-01-01T00:00:00Z"));
+    document.setCreationInfo(
+        document.createCreationInfo(List.of("Tool: spdx-testbed"), "2022-01-01T00:00:00Z"));
     document.setName("SPDX-test-doc");
 
     var sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1,

@@ -21,6 +21,9 @@ import org.spdx.testbed.TestCaseCategory;
 import org.spdx.testbed.TestResult;
 import org.spdx.tools.InvalidFileNameException;
 
+/**
+ * Tests for test case selection logic.
+ */
 @ExtendWith(MockitoExtension.class)
 public class TestCaseSelectorTest {
 
@@ -49,9 +52,9 @@ public class TestCaseSelectorTest {
     var categoriesList = List.of(TestCaseCategory.GENERATION);
     var casesReturnedByFinder = List.of(new TestTestCase2(), new TestTestCase1());
     // selector should order alphabetically
-    var expectedCases = casesReturnedByFinder.stream().sorted().collect(Collectors.toList());
     when(testCaseFinder.findTestCasesByCategories(categoriesList)).thenReturn(
         casesReturnedByFinder);
+    var expectedCases = casesReturnedByFinder.stream().sorted().collect(Collectors.toList());
 
     var cases = selector.selectTestCases(null, categoriesParameter);
 
@@ -73,7 +76,7 @@ public class TestCaseSelectorTest {
     when(testCaseFinder.findTestCasesByCategories(categoriesList)).thenReturn(
         returnedCategoryCases);
 
-    var cases = selector.selectTestCases(namesParameter, categoriesParameter);
+    final var cases = selector.selectTestCases(namesParameter, categoriesParameter);
 
     verify(testCaseFinder).findTestCasesByNames(namesList);
     verify(testCaseFinder).findTestCasesByCategories(categoriesList);

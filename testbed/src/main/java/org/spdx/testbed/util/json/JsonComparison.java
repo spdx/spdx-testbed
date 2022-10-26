@@ -171,26 +171,6 @@ public class JsonComparison {
     return differences;
   }
 
-  private static String addPathComponent(@Nullable String currentPath, String newComponent) {
-    return currentPath + "/" + newComponent;
-  }
-
-  private static boolean isEquivalentToNull(JsonNode node) {
-    // TODO: there may be edge cases here, like an array or object that only contains 
-    //  NOASSERTIONS. Not sure whether such cases would be relevant
-    if (node.isArray() || node.isObject()) {
-      return node.isEmpty();
-    }
-    if (node.isMissingNode()) {
-      return true;
-    }
-    if (node.isValueNode()) {
-      return SpdxConstants.NOASSERTION_VALUE.equals(node.asText())
-          || SpdxConstants.URI_VALUE_NOASSERTION.equals(node.asText());
-    }
-    return node.isNull();
-  }
-
   /**
    * Compares the two provided ArrayNodes and returns a list of detected differences.
    *
@@ -237,9 +217,9 @@ public class JsonComparison {
       var expectedListPath = referencePathPrefix == null ? pathPrefix : referencePathPrefix;
 
       if (idMatches.size() != 1) {
-        var comment = idMatches.isEmpty() ? "No element in expected list with a matching " +
-            "Spdx id or no Spdx id present." : "Multiple items in expected list with " +
-            "the same Spdx id.";
+        var comment = idMatches.isEmpty()
+            ? "No element in expected list with a matching Spdx id or no Spdx id present."
+            : "Multiple items in expected list with the same Spdx id.";
         differences.add(Difference.builder()
             .actualValue(currentActualNodeElement)
             .path(actualElementPath)
@@ -274,10 +254,9 @@ public class JsonComparison {
           currentExpectedNodeElement);
 
       if (idMatches.size() != 1) {
-        var comment = idMatches.isEmpty() ? "No element in actual list with a matching " +
-            "Spdx id or no Spdx id present." : "Multiple items in actual list with " +
-            "the" +
-            " same Spdx id.";
+        var comment = idMatches.isEmpty()
+            ? "No element in actual list with a matching Spdx id or no Spdx id present."
+            : "Multiple items in actual list with the same Spdx id.";
         differences.add(Difference.builder()
             .expectedValue(currentExpectedNodeElement)
             .pathInReferenceDoc(expectedElementPath)
@@ -298,6 +277,26 @@ public class JsonComparison {
     }
 
     return differences;
+  }
+
+  private static String addPathComponent(@Nullable String currentPath, String newComponent) {
+    return currentPath + "/" + newComponent;
+  }
+
+  private static boolean isEquivalentToNull(JsonNode node) {
+    // TODO: there may be edge cases here, like an array or object that only contains 
+    //  NOASSERTIONS. Not sure whether such cases would be relevant
+    if (node.isArray() || node.isObject()) {
+      return node.isEmpty();
+    }
+    if (node.isMissingNode()) {
+      return true;
+    }
+    if (node.isValueNode()) {
+      return SpdxConstants.NOASSERTION_VALUE.equals(node.asText())
+          || SpdxConstants.URI_VALUE_NOASSERTION.equals(node.asText());
+    }
+    return node.isNull();
   }
 
   private static Optional<JsonNode> findExactMatch(List<JsonNode> elementsToCheck,
