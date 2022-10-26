@@ -27,7 +27,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Test
-        run: ./gradlew :spdx-tools-java-solver:test
+        run: ./gradlew :spdx-tools-java-solver:check
   
   build-deploy:
     name: "Build and deploy fat jar for spdx-tools-java-solver"
