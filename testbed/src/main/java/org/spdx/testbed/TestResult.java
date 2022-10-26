@@ -4,16 +4,16 @@
 
 package org.spdx.testbed;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import org.spdx.testbed.util.json.Difference;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Builder
 public class TestResult {
-    Boolean success;
 
-    @Builder.Default
-    List<Difference> differences = new ArrayList<>();
+  Boolean success;
+
+  @Builder.Default
+  List<Difference> differences = new ArrayList<>();
 }

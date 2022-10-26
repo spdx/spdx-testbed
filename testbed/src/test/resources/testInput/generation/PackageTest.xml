@@ -49,7 +49,8 @@
     <packageFileName>./foo.bar</packageFileName>
     <packageVerificationCode>
       <packageVerificationCodeExcludedFiles>./some.file</packageVerificationCodeExcludedFiles>
-      <packageVerificationCodeValue>d6a770ba38583ed4bb4525bd96e50461655d2758</packageVerificationCodeValue>
+      <packageVerificationCodeValue>d6a770ba38583ed4bb4525bd96e50461655d2758
+      </packageVerificationCodeValue>
     </packageVerificationCode>
     <primaryPackagePurpose>LIBRARY</primaryPackagePurpose>
     <hasFiles>SPDXRef-somefile</hasFiles>
