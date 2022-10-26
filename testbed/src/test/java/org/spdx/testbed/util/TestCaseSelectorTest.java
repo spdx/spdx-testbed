@@ -48,8 +48,10 @@ public class TestCaseSelectorTest {
     public void selectOnlyByCategories() {
         var categoriesParameter = new String[]{"generation"};
         var categoriesList = List.of(TestCaseCategory.GENERATION);
-        var expectedCases = new ArrayList<TestCase>(List.of(new TestTestCase1()));
-        when(testCaseFinder.findTestCasesByCategories(categoriesList)).thenReturn(expectedCases);
+        var casesReturnedByFinder = List.of(new TestTestCase2(), new TestTestCase1());
+        // selector should order alphabetically
+        var expectedCases = casesReturnedByFinder.stream().sorted().collect(Collectors.toList());
+        when(testCaseFinder.findTestCasesByCategories(categoriesList)).thenReturn(casesReturnedByFinder);
 
         var cases = selector.selectTestCases(null, categoriesParameter);
 

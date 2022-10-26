@@ -3,6 +3,7 @@ package org.spdx.testbed.util;
 import org.spdx.testbed.TestCase;
 import org.spdx.testbed.TestCaseCategory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +34,10 @@ public class TestCaseSelector {
         List<TestCase> selectedTestCases;
         if (casesByNamesOptional.isPresent()) {
             // If test cases are specified by name, we retain the provided ordering
-            selectedTestCases = casesByNamesOptional.get();
+            selectedTestCases = new ArrayList<>(casesByNamesOptional.get());
             casesByCategoriesOptional.ifPresent(filterForMatchingNames(selectedTestCases));
         } else if (casesByCategoriesOptional.isPresent()) {
-            selectedTestCases = casesByCategoriesOptional.get();
+            selectedTestCases = new ArrayList<>(casesByCategoriesOptional.get());
             // If selecting only by category, sort alphabetically
             selectedTestCases.sort(TestCase::compareTo);
         } else {
