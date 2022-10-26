@@ -28,13 +28,17 @@
   <packages>
     <SPDXID>SPDXRef-somepackage</SPDXID>
     <filesAnalyzed>true</filesAnalyzed>
-    <licenseConcluded>((LicenseRef-1 WITH u-boot-exception-2.0 OR LicenseRef-two) AND Aladdin WITH Classpath-exception-2.0)</licenseConcluded>
-    <licenseDeclared>((LicenseRef-1 OR LicenseRef-two) AND Aladdin WITH Classpath-exception-2.0)</licenseDeclared>
+    <licenseConcluded>((LicenseRef-1 WITH u-boot-exception-2.0 OR LicenseRef-two) AND Aladdin WITH
+      Classpath-exception-2.0)
+    </licenseConcluded>
+    <licenseDeclared>((LicenseRef-1 OR LicenseRef-two) AND Aladdin WITH Classpath-exception-2.0)
+    </licenseDeclared>
     <licenseInfoFromFiles>(LicenseRef-1 OR LicenseRef-two)</licenseInfoFromFiles>
     <licenseInfoFromFiles>Aladdin WITH Classpath-exception-2.0</licenseInfoFromFiles>
     <name>package name</name>
     <packageVerificationCode>
-      <packageVerificationCodeValue>d6a770ba38583ed4bb4525bd96e50461655d2758</packageVerificationCodeValue>
+      <packageVerificationCodeValue>d6a770ba38583ed4bb4525bd96e50461655d2758
+      </packageVerificationCodeValue>
     </packageVerificationCode>
     <hasFiles>SPDXRef-fileA</hasFiles>
     <hasFiles>SPDXRef-fileA</hasFiles>

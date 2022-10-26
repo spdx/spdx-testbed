@@ -20,8 +20,8 @@ jobs:
         with:
           java-version: '11'
           distribution: temurin
-
-# user tool specific section starts here
+      
+      # user tool specific section starts here
 
       - name: Download spdx-tools-java-solver fat jar
         id: download-spdx-tools-java-solver-artifact
@@ -40,8 +40,8 @@ jobs:
           java -jar spdx-tools-java-solver-*-all.jar -t generationDocumentTest -f generationDocument.xml
           java -jar spdx-tools-java-solver-*-all.jar -t generationLicenseTest -f generationLicense.xml
           java -jar spdx-tools-java-solver-*-all.jar -t generationRelationshipTest -f generationRelationship.xml
-
-# user tool specific section ends here
+      
+      # user tool specific section ends here
 
       - name: Download testbed fat jar
         id: download-testbed-artifact

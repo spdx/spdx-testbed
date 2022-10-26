@@ -4,38 +4,37 @@
 
 package org.spdx.testbed.generationTestCases;
 
+import java.util.List;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
 import org.spdx.testbed.util.testClassification.TestName;
 
-import java.util.List;
-
 @TestName("generationBaselineSbomTest")
 public class GenerationBaselineSbomTestCase extends GenerationTestCase {
 
-    public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
-        var document = createSpdxDocumentWithBasicInfo();
+  public SpdxDocument buildReferenceDocument() throws InvalidSPDXAnalysisException {
+    var document = createSpdxDocumentWithBasicInfo();
 
-        var modelStore = document.getModelStore();
-        var documentUri = document.getDocumentUri();
+    var modelStore = document.getModelStore();
+    var documentUri = document.getDocumentUri();
 
-        var sha1Checksum = createSha1Checksum(modelStore, documentUri);
+    var sha1Checksum = createSha1Checksum(modelStore, documentUri);
 
-        var spdxPackage = document.createPackage("SPDXRef-somepackage", "package name", null,
-                        null, null)
-                .setFilesAnalyzed(false)
-                .setVersionInfo("2.2.1")
-                .setSupplier("Person: Jane Doe (jane.doe@example.com)")
-                .setChecksums(List.of(sha1Checksum))
-                .build();
+    var spdxPackage = document.createPackage("SPDXRef-somepackage", "package name", null,
+            null, null)
+        .setFilesAnalyzed(false)
+        .setVersionInfo("2.2.1")
+        .setSupplier("Person: Jane Doe (jane.doe@example.com)")
+        .setChecksums(List.of(sha1Checksum))
+        .build();
 
-        document.getDocumentDescribes().add(spdxPackage);
+    document.getDocumentDescribes().add(spdxPackage);
 
-        return document;
-    }
+    return document;
+  }
 
-    @Override
-    public String getName() {
-        return "generationBaselineSbomTest";
-    }
+  @Override
+  public String getName() {
+    return "generationBaselineSbomTest";
+  }
 }

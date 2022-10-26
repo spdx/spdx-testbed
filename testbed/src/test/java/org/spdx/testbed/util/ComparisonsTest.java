@@ -5,8 +5,12 @@
 package org.spdx.testbed.util;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.spdx.testbed.util.Comparisons.findDifferencesInSerializedJson;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.spdx.library.InvalidSPDXAnalysisException;
@@ -25,282 +29,278 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.simple.InMemSpdxStore;
 import org.spdx.testbed.util.json.Difference;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.spdx.testbed.util.Comparisons.findDifferencesInSerializedJson;
-
 public class ComparisonsTest {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private IModelStore modelStore;
 
-    @BeforeEach
-    public void setup() {
-        modelStore = new InMemSpdxStore();
-    }
+  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private IModelStore modelStore;
 
-    @Test
-    public void detectRootLevelDifference() throws InvalidSPDXAnalysisException {
-        var minimalDocument = buildMinimalDocumentWithFile();
-        var secondDocument = buildMinimalDocumentWithFile();
-        secondDocument.setName("newName");
-        var expectedNameDifference = Difference.builder()
-                .actualValue(new TextNode(minimalDocument.getName().get()))
-                .expectedValue(new TextNode(secondDocument.getName().get()))
-                .path("/name")
-                .build();
+  @BeforeEach
+  public void setup() {
+    modelStore = new InMemSpdxStore();
+  }
 
-        var differences = findDifferencesInSerializedJson(minimalDocument, secondDocument);
+  @Test
+  public void detectRootLevelDifference() throws InvalidSPDXAnalysisException {
+    var minimalDocument = buildMinimalDocumentWithFile();
+    var secondDocument = buildMinimalDocumentWithFile();
+    secondDocument.setName("newName");
+    var expectedNameDifference = Difference.builder()
+        .actualValue(new TextNode(minimalDocument.getName().get()))
+        .expectedValue(new TextNode(secondDocument.getName().get()))
+        .path("/name")
+        .build();
 
-        assertThat(differences).containsExactly(expectedNameDifference);
-    }
+    var differences = findDifferencesInSerializedJson(minimalDocument, secondDocument);
 
-    @Test
-    public void detectNestedDifferenceInList() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).containsExactly(expectedNameDifference);
+  }
 
-        var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
-        firstFile.getFileContributors().add("fileContributor");
-        var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
-        secondFile.getFileContributors().add("newContributor");
+  @Test
+  public void detectNestedDifferenceInList() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var firstExpectedDifference = Difference.builder()
-                .actualValue(new TextNode("fileContributor"))
-                .path("/files/0/fileContributors/0")
-                .pathInReferenceDoc("/files/0/fileContributors")
-                .comment("No element in expected list with a matching Spdx id or no Spdx id " +
-                        "present.")
-                .build();
-        var secondExpectedDifference = Difference.builder()
-                .expectedValue(new TextNode("newContributor"))
-                .pathInReferenceDoc("/files/0/fileContributors/0")
-                .path("/files/0/fileContributors")
-                .comment("No element in actual list with a matching Spdx id or no Spdx id present.")
-                .build();
+    var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
+    firstFile.getFileContributors().add("fileContributor");
+    var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
+    secondFile.getFileContributors().add("newContributor");
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    var firstExpectedDifference = Difference.builder()
+        .actualValue(new TextNode("fileContributor"))
+        .path("/files/0/fileContributors/0")
+        .pathInReferenceDoc("/files/0/fileContributors")
+        .comment("No element in expected list with a matching Spdx id or no Spdx id " +
+            "present.")
+        .build();
+    var secondExpectedDifference = Difference.builder()
+        .expectedValue(new TextNode("newContributor"))
+        .pathInReferenceDoc("/files/0/fileContributors/0")
+        .path("/files/0/fileContributors")
+        .comment("No element in actual list with a matching Spdx id or no Spdx id present.")
+        .build();
 
-        assertThat(differences).containsExactlyInAnyOrder(firstExpectedDifference,
-                secondExpectedDifference);
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void showDifferencesOfListElementsMatchedById() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).containsExactlyInAnyOrder(firstExpectedDifference,
+        secondExpectedDifference);
+  }
 
-        var sha1Checksum = Checksum.create(modelStore, firstDoc.getDocumentUri(),
-                ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
-        var file = firstDoc.createSpdxFile("SPDXRef-different", "./foo.txt", null,
-                        List.of(), null, sha1Checksum)
-                .build();
-        var fileWithSameIdButDifferentProperties = secondDoc.createSpdxFile("SPDXRef-different",
-                        "./bar.txt", null, List.of(), null, sha1Checksum)
-                .build();
-        var identicalFileInBothDocs = firstDoc.createSpdxFile("SPDXRef-identical", "./foo.txt",
-                null, List.of(), null, sha1Checksum).build();
+  @Test
+  public void showDifferencesOfListElementsMatchedById() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        // It looks like these are reordered somewhere in the serialization process that we use 
-        // during comparison, so putting them in reverse order doesn't really matter at the moment.
-        firstDoc.setDocumentDescribes(List.of(file, identicalFileInBothDocs));
-        secondDoc.setDocumentDescribes(List.of(identicalFileInBothDocs,
-                fileWithSameIdButDifferentProperties));
+    var sha1Checksum = Checksum.create(modelStore, firstDoc.getDocumentUri(),
+        ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
+    var file = firstDoc.createSpdxFile("SPDXRef-different", "./foo.txt", null,
+            List.of(), null, sha1Checksum)
+        .build();
+    var fileWithSameIdButDifferentProperties = secondDoc.createSpdxFile("SPDXRef-different",
+            "./bar.txt", null, List.of(), null, sha1Checksum)
+        .build();
+    var identicalFileInBothDocs = firstDoc.createSpdxFile("SPDXRef-identical", "./foo.txt",
+        null, List.of(), null, sha1Checksum).build();
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    // It looks like these are reordered somewhere in the serialization process that we use 
+    // during comparison, so putting them in reverse order doesn't really matter at the moment.
+    firstDoc.setDocumentDescribes(List.of(file, identicalFileInBothDocs));
+    secondDoc.setDocumentDescribes(List.of(identicalFileInBothDocs,
+        fileWithSameIdButDifferentProperties));
 
-        assertThat(differences.size()).isEqualTo(1);
-        var difference = differences.get(0);
-        assertThat(difference.getActualValue()).isEqualTo(new TextNode("./foo.txt"));
-        assertThat(difference.getExpectedValue()).isEqualTo(new TextNode("./bar.txt"));
-        // Because of the reordering mentioned above, we avoid asserting on the exact index in 
-        // the list
-        assertThat(difference.getPath()).startsWith("/files/");
-        assertThat(difference.getPath()).endsWith("fileName");
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void detectNestedDifference() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences.size()).isEqualTo(1);
+    var difference = differences.get(0);
+    assertThat(difference.getActualValue()).isEqualTo(new TextNode("./foo.txt"));
+    assertThat(difference.getExpectedValue()).isEqualTo(new TextNode("./bar.txt"));
+    // Because of the reordering mentioned above, we avoid asserting on the exact index in 
+    // the list
+    assertThat(difference.getPath()).startsWith("/files/");
+    assertThat(difference.getPath()).endsWith("fileName");
+  }
 
-        firstDoc.getCreationInfo().setComment("firstComment");
-        secondDoc.getCreationInfo().setComment("secondComment");
+  @Test
+  public void detectNestedDifference() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var expectedDifference = Difference.builder()
-                .actualValue(new TextNode("firstComment"))
-                .expectedValue(new TextNode("secondComment"))
-                .path("/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment")
-                .build();
+    firstDoc.getCreationInfo().setComment("firstComment");
+    secondDoc.getCreationInfo().setComment("secondComment");
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    var expectedDifference = Difference.builder()
+        .actualValue(new TextNode("firstComment"))
+        .expectedValue(new TextNode("secondComment"))
+        .path("/" + SpdxConstants.PROP_SPDX_CREATION_INFO + "/comment")
+        .build();
 
-        assertThat(differences).containsExactly(expectedDifference);
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void detectAdditionalProperty() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-        var annotationComment = "Completely new annotation!";
-        var annotation = new Annotation("annotationId").setComment(annotationComment);
-        firstDoc.addAnnotation(annotation);
+    assertThat(differences).containsExactly(expectedDifference);
+  }
 
-        var expectedAnnotationsNode = MAPPER.createArrayNode();
-        var annotationNode = MAPPER.createObjectNode();
-        annotationNode.put("comment", annotationComment);
-        expectedAnnotationsNode.add(annotationNode);
+  @Test
+  public void detectAdditionalProperty() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
+    var annotationComment = "Completely new annotation!";
+    var annotation = new Annotation("annotationId").setComment(annotationComment);
+    firstDoc.addAnnotation(annotation);
 
-        var expectedDifference = Difference.builder()
-                .actualValue(expectedAnnotationsNode)
-                .path("/annotations")
-                .build();
+    var expectedAnnotationsNode = MAPPER.createArrayNode();
+    var annotationNode = MAPPER.createObjectNode();
+    annotationNode.put("comment", annotationComment);
+    expectedAnnotationsNode.add(annotationNode);
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    var expectedDifference = Difference.builder()
+        .actualValue(expectedAnnotationsNode)
+        .path("/annotations")
+        .build();
 
-        assertThat(differences).containsExactly(expectedDifference);
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void detectMissingProperty() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
-        var annotationComment = "Completely new annotation!";
-        var annotation = new Annotation("annotationId").setComment(annotationComment);
-        secondDoc.addAnnotation(annotation);
+    assertThat(differences).containsExactly(expectedDifference);
+  }
 
-        var expectedAnnotationsNode = MAPPER.createArrayNode();
-        var annotationNode = MAPPER.createObjectNode();
-        annotationNode.put("comment", annotationComment);
-        expectedAnnotationsNode.add(annotationNode);
-        var expectedDifference = Difference.builder()
-                .expectedValue(expectedAnnotationsNode)
-                .path("/annotations")
-                .build();
+  @Test
+  public void detectMissingProperty() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
+    var annotationComment = "Completely new annotation!";
+    var annotation = new Annotation("annotationId").setComment(annotationComment);
+    secondDoc.addAnnotation(annotation);
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    var expectedAnnotationsNode = MAPPER.createArrayNode();
+    var annotationNode = MAPPER.createObjectNode();
+    annotationNode.put("comment", annotationComment);
+    expectedAnnotationsNode.add(annotationNode);
+    var expectedDifference = Difference.builder()
+        .expectedValue(expectedAnnotationsNode)
+        .path("/annotations")
+        .build();
 
-        assertThat(differences).containsExactly(expectedDifference);
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void ignoreReorderedLists() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).containsExactly(expectedDifference);
+  }
 
-        var firstAnnotation = new Annotation("firstAnnotationId").setComment("first annotation");
-        var secondAnnotation = new Annotation("secondAnnotationId").setComment("second annotation");
+  @Test
+  public void ignoreReorderedLists() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        // annotations are added in different orders
-        firstDoc.addAnnotation(firstAnnotation);
-        firstDoc.addAnnotation(secondAnnotation);
-        secondDoc.addAnnotation(secondAnnotation);
-        secondDoc.addAnnotation(firstAnnotation);
+    var firstAnnotation = new Annotation("firstAnnotationId").setComment("first annotation");
+    var secondAnnotation = new Annotation("secondAnnotationId").setComment("second annotation");
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    // annotations are added in different orders
+    firstDoc.addAnnotation(firstAnnotation);
+    firstDoc.addAnnotation(secondAnnotation);
+    secondDoc.addAnnotation(secondAnnotation);
+    secondDoc.addAnnotation(firstAnnotation);
 
-        assertThat(differences).isEmpty();
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void ignoreNoAssertionLicense() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).isEmpty();
+  }
 
-        var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
-        firstFile.setLicenseConcluded(new SpdxNoAssertionLicense());
-        var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
-        secondFile.setLicenseConcluded(null);
+  @Test
+  public void ignoreNoAssertionLicense() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    var firstFile = (SpdxFile) firstDoc.getDocumentDescribes().stream().findFirst().get();
+    firstFile.setLicenseConcluded(new SpdxNoAssertionLicense());
+    var secondFile = (SpdxFile) secondDoc.getDocumentDescribes().stream().findFirst().get();
+    secondFile.setLicenseConcluded(null);
 
-        assertThat(differences).isEmpty();
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void ignoreNoAssertionValue() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).isEmpty();
+  }
 
-        // a no assertion comment doesn't make that much sense, but it's the easiest optional 
-        // property...
-        firstDoc.setComment(SpdxConstants.NOASSERTION_VALUE);
+  @Test
+  public void ignoreNoAssertionValue() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    // a no assertion comment doesn't make that much sense, but it's the easiest optional 
+    // property...
+    firstDoc.setComment(SpdxConstants.NOASSERTION_VALUE);
 
-        assertThat(differences).isEmpty();
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void ignoreEmptyList() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).isEmpty();
+  }
 
-        // Adding and removing a value leaves an empty list
-        var sha1Checksum = Checksum.create(secondDoc.getModelStore(), secondDoc.getDocumentUri(),
-                ChecksumAlgorithm.SHA1,
-                "d6a770ba38583ed4bb4525bd96e50461655d2758");
-        var externalDocumentRef = secondDoc.createExternalDocumentRef("DocumentRef-1", "uri",
-                sha1Checksum);
-        secondDoc.setExternalDocumentRefs(List.of(externalDocumentRef));
-        secondDoc.getExternalDocumentRefs().remove(externalDocumentRef);
+  @Test
+  public void ignoreEmptyList() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    // Adding and removing a value leaves an empty list
+    var sha1Checksum = Checksum.create(secondDoc.getModelStore(), secondDoc.getDocumentUri(),
+        ChecksumAlgorithm.SHA1,
+        "d6a770ba38583ed4bb4525bd96e50461655d2758");
+    var externalDocumentRef = secondDoc.createExternalDocumentRef("DocumentRef-1", "uri",
+        sha1Checksum);
+    secondDoc.setExternalDocumentRefs(List.of(externalDocumentRef));
+    secondDoc.getExternalDocumentRefs().remove(externalDocumentRef);
 
-        assertThat(differences).isEmpty();
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void stringsAreNormalizedBeforeComparison() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).isEmpty();
+  }
 
-        firstDoc.setName(" " + firstDoc.getName() + "\r\n" + " ");
-        secondDoc.setName(secondDoc.getName() + "\n");
+  @Test
+  public void stringsAreNormalizedBeforeComparison() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    firstDoc.setName(" " + firstDoc.getName() + "\r\n" + " ");
+    secondDoc.setName(secondDoc.getName() + "\n");
 
-        assertThat(differences).isEmpty();
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    @Test
-    public void noneAndNoAssertionIsEquivalentForStringAndUri() throws InvalidSPDXAnalysisException {
-        var firstDoc = buildMinimalDocumentWithFile();
-        var secondDoc = buildMinimalDocumentWithFile();
+    assertThat(differences).isEmpty();
+  }
 
-        // While putting these values in comments does not really make sense, handling 
-        // should be identical for all string-valued fields, so it shouldn't matter.
-        firstDoc.setComment(SpdxConstants.URI_VALUE_NONE);
-        secondDoc.setComment(SpdxConstants.NONE_VALUE);
-        firstDoc.getCreationInfo().setComment(SpdxConstants.URI_VALUE_NOASSERTION);
-        secondDoc.getCreationInfo().setComment(SpdxConstants.NOASSERTION_VALUE);
+  @Test
+  public void noneAndNoAssertionIsEquivalentForStringAndUri() throws InvalidSPDXAnalysisException {
+    var firstDoc = buildMinimalDocumentWithFile();
+    var secondDoc = buildMinimalDocumentWithFile();
 
-        var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
+    // While putting these values in comments does not really make sense, handling 
+    // should be identical for all string-valued fields, so it shouldn't matter.
+    firstDoc.setComment(SpdxConstants.URI_VALUE_NONE);
+    secondDoc.setComment(SpdxConstants.NONE_VALUE);
+    firstDoc.getCreationInfo().setComment(SpdxConstants.URI_VALUE_NOASSERTION);
+    secondDoc.getCreationInfo().setComment(SpdxConstants.NOASSERTION_VALUE);
 
-        assertThat(differences).isEmpty();
-    }
+    var differences = findDifferencesInSerializedJson(firstDoc, secondDoc);
 
-    private static SpdxDocument buildMinimalDocumentWithFile() throws InvalidSPDXAnalysisException {
-        var modelStore = new InMemSpdxStore();
-        var documentUri = "documentUri";
-        var copyManager = new ModelCopyManager();
+    assertThat(differences).isEmpty();
+  }
 
-        var document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
+  private static SpdxDocument buildMinimalDocumentWithFile() throws InvalidSPDXAnalysisException {
+    var modelStore = new InMemSpdxStore();
+    var documentUri = "documentUri";
+    var copyManager = new ModelCopyManager();
 
-        document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-        document.setCreationInfo(document.createCreationInfo(List.of("Tool: spdx-testbed"), "2022" +
-                "-01-01T00:00:00Z"));
-        document.setName("SPDX-test-doc");
+    var document = SpdxModelFactory.createSpdxDocument(modelStore, documentUri, copyManager);
 
-        var sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1,
-                "d6a770ba38583ed4bb4525bd96e50461655d2758");
-        var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
-        var file = document.createSpdxFile("SPDXRef-file", "./foo.txt", concludedLicense,
-                        List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum)
-                .build();
+    document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
+    document.setCreationInfo(document.createCreationInfo(List.of("Tool: spdx-testbed"), "2022" +
+        "-01-01T00:00:00Z"));
+    document.setName("SPDX-test-doc");
 
-        document.getDocumentDescribes().add(file);
+    var sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1,
+        "d6a770ba38583ed4bb4525bd96e50461655d2758");
+    var concludedLicense = LicenseInfoFactory.parseSPDXLicenseString("LGPL-3.0-only");
+    var file = document.createSpdxFile("SPDXRef-file", "./foo.txt", concludedLicense,
+            List.of(), "Copyright 2022 Anonymous Developer", sha1Checksum)
+        .build();
 
-        return document;
-    }
+    document.getDocumentDescribes().add(file);
+
+    return document;
+  }
 }
