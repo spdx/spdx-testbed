@@ -15,7 +15,7 @@ This is currently under development and not yet stable.
 
 ## How to build
 
-You can build the tool locally using `./gradlew :testbed:shadowJar` and then find `testbed-*-all.jar`
+You can build the testbed locally using `./gradlew :testbed:shadowJar` and then find `testbed-*-all.jar`
 in `testbed/build/libs/`.
 
 ## How to use
@@ -34,7 +34,7 @@ java -jar testbed-*-all.jar -t generationMinimalTest generationDocumentTest -f m
 ```
 
 will execute `generationMinimalTest` with `minimalFile.xml` as input and `generationDocumentTest`
-with `documentFile.xml` as input. The input files are expected to be created using your tool.
+with `documentFile.xml` as input. The input files are expected to be created using the external SPDX tool.
 
 A list of available test cases can be found [here](docs/TEST_CASES.md).
 
@@ -42,8 +42,8 @@ Currently, the following categories are available:
 
 ## How to integrate
 
-In order to submit a tool, a GitHub Actions workflow should be added at `.github/workflows/[name of your tool].yaml`.
-This workflow should download and use your tool in order to generate the desired solution, and then check it via the
+In order to submit a tool, a GitHub Actions workflow should be added at `.github/workflows/[name of the external SPDX tool].yaml`.
+This workflow should download and use the external SPDX tool in order to generate the desired solution, and then check it via the
 testbed application.
 
 As an example, have a look at `.github/workflows/tools-java.yaml` that uses the `spdx-tools-java-solver` to generate an
@@ -56,4 +56,4 @@ codebase.
 
 # License
 
-This Projet is licensed under [Apache-2.0](LICENSE)
+This project is licensed under [Apache-2.0](LICENSE)
