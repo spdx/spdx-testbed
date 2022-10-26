@@ -32,7 +32,11 @@ public class TestCaseFinder {
     public List<TestCase> findTestCasesByNames(List<String> names) {
         var foundTestCases = new ArrayList<TestCase>();
         for (var name : names) {
-            foundTestCases.addAll(determineTestCases(TestName.class, Map.of("value", name)));
+            var cases = determineTestCases(TestName.class, Map.of("value", name));
+            if (cases.isEmpty()) {
+                System.out.println("No test case found for name " + name + "!");
+            }
+            foundTestCases.addAll(cases);
         }
         return foundTestCases;
     }
