@@ -160,7 +160,7 @@ Generate an SPDX document with minimal information, describing a snippet with al
 Add a file `SPDXRef-somefile` with minimal information.
 
 ### Task 7: `generationRelationshipTest`
-Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA` and `SPDXRef-fileB` with minimal information each (TODO: wait for issue #30, then update....).  
+Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA` and `SPDXRef-fileB` with minimal information each.  
 Create the following relationships:
 
 - `SPDXRef-fileA` DESCRIBED_BY `SPDXRef-Document`, comment: `comment on DESCRIBED_BY`
