@@ -85,7 +85,7 @@ public class Main {
           .sorted()
           .collect(Collectors.toList());
       System.err.println(
-          "No test cases found that fit the input parameters! Available test cases are listed " 
+          "No test cases found that fit the input parameters! Available test cases are listed "
               + "below. Please check out the readme for further information.");
       allTestCaseNames.forEach(System.err::println);
       System.exit(1);

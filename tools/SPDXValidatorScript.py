@@ -26,7 +26,7 @@ def call_process_and_get_output(args):
 def erase_unnecessary_warnings_in_output(output):
   try:
     output.remove(
-      "WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.")
+        "WARNING: sun.reflect.Reflection.getCallerClass is not supported. This will impact performance.")
   except ValueError:
     pass
 
@@ -36,7 +36,7 @@ def validate_file(path_of_file_to_validate, tools_with_arguments_intern):
 
   for tool, args in tools_with_arguments_intern.items():
     validation_output = call_process_and_get_output(
-      args + [path_of_file_to_validate])
+        args + [path_of_file_to_validate])
     print('\n### ' + tool + ':\n')
 
     erase_unnecessary_warnings_in_output(validation_output)
