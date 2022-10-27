@@ -28,8 +28,8 @@ import org.spdx.tools.SpdxToolsHelper;
 public class TestConversion {
 
   /**
-   * Test that conversion between all the supported formats works. The converted file is 
-   * expected to be provided by the user
+   * Test that conversion between all the supported formats works. The converted file is expected to
+   * be provided by the user
    */
   @ParameterizedTest
   @MethodSource("provideFileNames")

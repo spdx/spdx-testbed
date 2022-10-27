@@ -86,7 +86,7 @@ public class Main {
         default:
           //TODO: add info about supported test cases
           System.err.print("Error: " + testCase
-              + " is an unrecognized or unimplemented test case. Here is a list of possible test " 
+              + " is an unrecognized or unimplemented test case. Here is a list of possible test "
               + "cases: (work in progress)\n");
           System.exit(1);
           return;
