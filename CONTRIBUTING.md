@@ -1,24 +1,21 @@
 # Contributing
 
 Thank you for your interest in `spdx-testbed`. The project is open-source software, and bug reports,
-suggestions, and
-most especially patches and additions are welcome.
+suggestions, and most especially patches and additions are welcome.
 
 ## Issues
 
 We try to track all bug reports, suggestions, agreed-on improvements and questions as issues on
 the [project page](https://github.com/TNG/spdx-testbed/issues). In case of larger changes, you may
-also wish to contact
-the SPDX working group technical team through its mailing
+also wish to contact the SPDX working group technical team through its mailing
 list, [spdx-tech@lists.spdx.org](mailto:spdx-tech@lists.spdx.org).
 
 If you would like to ask a question or suggest an improvement, please check for open issues first.
-If no matching issue
-exists, feel free to open a new one.
+If no matching issue exists, feel free to open a new one.
 
 If you would like to work on an issue, please assign the issue to yourself (or write a comment
-indicating your intention
-if it was created by someone else) so we avoid having multiple people working on the same issue.
+indicating your intention if it was created by someone else) so we avoid having multiple people
+working on the same issue.
 
 ## Development process
 
@@ -39,35 +36,48 @@ The process for making changes is as follows:
 3. Fork the repo or update your fork (see above), then create a branch from `main`.
 
 4. Make the desired changes and commit them to the branch. Commits should be reasonably small
-   logical units, and each
-   commit should pass CI. Ideally, each commit message should be prefixed with `[issue-xyz]`, so
-   finding all commits
-   associated with a specific issue is easy.
+   logical units, and each commit should pass CI. Ideally, each commit message should be prefixed
+   with `[issue-xyz]`, so finding all commits associated with a specific issue is easy.
 
-   **Licensing**: Please sign off in each of your commits that you license your contributions under
-   the terms
-   of [the Developer Certificate of Origin](https://developercertificate.org/). Git has utilities
-   for signing off on
-   commits: `git commit -s` or `--signoff` signs a current commit,
-   and `git rebase --signoff <revision-range>`
-   retroactively signs a range of past commits.
+    - **Licensing**: Please sign off in each of your commits that you license your contributions
+      under the terms of [the Developer Certificate of Origin](https://developercertificate.org/).
+      Git has utilities for signing off on commits: `git commit -s` or `--signoff` signs a current
+      commit, and `git rebase --signoff <revision-range>` retroactively signs a range of past
+      commits.
 
-5. Verify that the tests pass:
+    - **Code style**: This project follows
+      the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). We use
+      checkstyle to verify that contributors adhere to this style. The checkstyle configuration can
+      be found in [checkstyle.xml](config/checkstyle/checkstyle.xml). If using IntelliJ, you can
+      import [this settings file](config/IntelliJ/intellij-java-google-style.xml) so autoformat
+      formats the code accordingly (see also some remarks below).
+
+5. Verify that the tests pass and code style settings are respected:
    ```
-   ./gradlew test
+   ./gradlew check
    ```
 
 6. Create a pull request on GitHub against the `spdx-testbed` repo.
 
 7. A collaborator will review the changes and merge them once all comments are resolved. Merges
-   should be done
-   using `rebase` if possible to avoid unnecessary merge commits and keep the git history clean.
+   should be done using `rebase` if possible to avoid unnecessary merge commits and keep the git
+   history clean.
+
+### Remarks on code style
+
+- Currently, we only include an
+  importable [code style settings file for IntelliJ](config/IntelliJ/intellij-java-google-style.xml)
+  . A similar file for Eclipse [is available](https://github.com/google/styleguide) and could be
+  added if desired. If contributors want to use other IDEs, we could consider switching to the
+  Gradle spotless plugin to make formatting IDE-independent.
+- In case of IntelliJ, it seems like "Ensure right margin is not exceeded" has to be checked
+  manually under Settings -> Editor -> Code Style -> Java -> Wrapping and Braces
 
 ## Adding new test cases
 
 The testbed was designed to make adding and integrating new test cases as easy as possible. To
-achieve this, annotations
-on the test case classes are used to "tag" a test. Possible tags should reside
+achieve this, annotations on the test case classes are used to "tag" a test. Possible tags should
+reside
 in [the testClassification package](testbed/src/main/java/org/spdx/testbed/util/testclassification)
 and are:
 
@@ -79,8 +89,8 @@ and are:
 - the SPDX versions the test applies to (not yet implemented)
 
 These annotations are scanned at runtime in order to select the cases matching the given CLI input.
-The gory details can
-be found in [TestCaseSelector](testbed/src/main/java/org/spdx/testbed/util/TestCaseSelector.java)
+The gory details can be found
+in [TestCaseSelector](testbed/src/main/java/org/spdx/testbed/util/TestCaseSelector.java)
 and [TestCaseFinder](testbed/src/main/java/org/spdx/testbed/util/TestCaseFinder.java).
 
 Each case should:
