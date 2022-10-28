@@ -34,22 +34,7 @@ subprojects {
     }
 
     dependencies {
-        implementation('org.spdx:tools-java:1.1.0')
-
-        constraints {
-            implementation("org.spdx:java-spdx-library") {
-                version {
-                    require "1.1.1"
-                }
-                because 'Important bugfixes'
-            }
-            implementation("org.spdx:spdx-jackson-store") {
-                version {
-                    require "1.1.1"
-                }
-                because 'Important bugfixes'
-            }
-        }
+        implementation('org.spdx:tools-java:1.1.1')
     }
 }
 
