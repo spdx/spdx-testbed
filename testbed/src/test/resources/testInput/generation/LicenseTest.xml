@@ -28,6 +28,7 @@
   <packages>
     <SPDXID>SPDXRef-somepackage</SPDXID>
     <filesAnalyzed>true</filesAnalyzed>
+    <downloadLocation>NONE</downloadLocation>
     <licenseConcluded>((LicenseRef-1 WITH u-boot-exception-2.0 OR LicenseRef-two) AND Aladdin WITH
       Classpath-exception-2.0)
     </licenseConcluded>

@@ -7,6 +7,7 @@ package org.spdx.toolsjavasolver.generationtestcases;
 import java.util.List;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.library.model.SpdxNoneElement;
 import org.spdx.library.model.license.ExtractedLicenseInfo;
 import org.spdx.library.model.license.LicenseInfoFactory;
 
@@ -79,6 +80,7 @@ public class GenerationLicenseTestCase {
         .setLicenseInfosFromFile(List.of(licenseRef1or2, alladinWithException))
         .setPackageVerificationCode(spdxPackageVerificationCode)
         .setFiles(List.of(fileA, fileB))
+            .setDownloadLocation(String.valueOf(new SpdxNoneElement()))
         .build();
     document.getDocumentDescribes().add(spdxPackage);
 

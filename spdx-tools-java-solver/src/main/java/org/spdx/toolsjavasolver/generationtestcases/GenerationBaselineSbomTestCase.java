@@ -7,6 +7,7 @@ package org.spdx.toolsjavasolver.generationtestcases;
 import java.util.List;
 import org.spdx.library.InvalidSPDXAnalysisException;
 import org.spdx.library.model.SpdxDocument;
+import org.spdx.library.model.SpdxNoneElement;
 
 /**
  * Test case covering baseline sbom requirements.
@@ -30,6 +31,7 @@ public class GenerationBaselineSbomTestCase {
         .setVersionInfo("2.2.1")
         .setSupplier("Person: Jane Doe (jane.doe@example.com)")
         .setChecksums(List.of(sha1Checksum))
+            .setDownloadLocation(String.valueOf(new SpdxNoneElement()))
         .build();
 
     document.getDocumentDescribes().add(spdxPackage);
