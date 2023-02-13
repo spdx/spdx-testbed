@@ -184,8 +184,8 @@ Add a file `SPDXRef-somefile` with minimal information.
 
 ### Task 7: `generationRelationshipTest`
 
-Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA`
-and `SPDXRef-fileB` with minimal information each.  
+Generate an SPDX document with minimal information, describing two files `SPDXRef-fileA` (name: `./fileA.c`)
+and `SPDXRef-fileB` (name: `./fileB.c`) with minimal information each.  
 Create the following relationships:
 
 - `SPDXRef-fileA` DESCRIBED_BY `SPDXRef-Document`, comment: `comment on DESCRIBED_BY`
