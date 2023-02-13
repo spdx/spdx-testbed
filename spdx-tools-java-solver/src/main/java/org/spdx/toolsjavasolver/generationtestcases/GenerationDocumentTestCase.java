@@ -34,7 +34,7 @@ public class GenerationDocumentTestCase {
 
     var annotation = new Annotation(modelStore, documentUri,
         modelStore.getNextId(IModelStore.IdType.Anonymous, documentUri), null, true)
-        .setAnnotator("Person: Document Commenter (mail@mail.com)")
+        .setAnnotator("Person: Document Reviewer (mail@mail.com)")
         .setAnnotationDate("2022-01-01T00:00:00Z")
         .setComment("Document level annotation")
         .setAnnotationType(AnnotationType.REVIEW);
