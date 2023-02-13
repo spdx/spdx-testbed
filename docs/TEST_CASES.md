@@ -45,7 +45,7 @@ describing one package with the following information:
 
 - Package SPDX identifier: `SPDXRef-somepackage`
 - Package version: `2.2.1`
-- Package name: `./foo.bar`
+- Package name: `package name`
 - Package supplier: `Person: Jane Doe (jane.doe@example.com)`
 - Files Analyzed: `false`
 - Package checksum:
