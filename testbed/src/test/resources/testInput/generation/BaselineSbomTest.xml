@@ -20,5 +20,6 @@
     <name>package name</name>
     <supplier>Person: Jane Doe (jane.doe@example.com)</supplier>
     <versionInfo>2.2.1</versionInfo>
+    <downloadLocation>NONE</downloadLocation>
   </packages>
 </Document>
