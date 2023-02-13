@@ -23,7 +23,7 @@
   <annotations>
     <annotationDate>2022-01-01T00:00:00Z</annotationDate>
     <annotationType>REVIEW</annotationType>
-    <annotator>Person: Document Commenter (mail@mail.com)</annotator>
+    <annotator>Person: Document Reviewer (mail@mail.com)</annotator>
     <comment>Document level annotation</comment>
   </annotations>
   <documentDescribes>SPDXRef-somefile</documentDescribes>

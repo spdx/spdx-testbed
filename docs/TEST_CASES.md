@@ -75,7 +75,7 @@ the following information:
 - Creator comment: `creation comment`
 - Document comment: `document comment`
 - Annotation:
-    - Annotator: `Person: Document Annotator (mail@mail.com)`
+    - Annotator: `Person: Document Reviewer (mail@mail.com)`
     - Annotation date: `2022-01-01T00:00:00Z`
     - Annotation type: `REVIEW`
     - Annotation comment: `Document level annotation`
