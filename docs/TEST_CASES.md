@@ -60,7 +60,7 @@ the following information:
 - SPDX version: `SPDX-2.3`
 - Data license: `CC0-1.0`
 - SPDX identifier: `SPDXRef-DOCUMENT`
-- Document name: `Document test document`
+- Document name: `document name`
 - SPDX document namespace: `https://some.namespace`
 - External document references:
     - ID: `DocumentRef-externaldocumentid`
