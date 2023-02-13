@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: SPDX Contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+name: "Testcases for tools-python"
+
+on:
+ workflow_dispatch:
+
+jobs:
+  run-testcases:
+    name: "Run Testcases"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Java Environment
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: temurin
+
+      # user tool specific section starts here
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Installation
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools wheel setuptools_scm build
+          python -m pip install git+https://github.com/spdx/tools-python.git@refactor-python-tools
+        shell: bash
+      - name: Run python scripts that use tools-python to create input file
+        id: generate-input
+        run: |
+          python spdx-tools-python-solver/testcase_generationMinimal.py -t generationMinimal.xml
+          python spdx-tools-python-solver/testcase_generationBaselineSbom.py -t generationBaselineSbom.xml
+          python spdx-tools-python-solver/testcase_generationDocument.py -t generationDocument.xml
+          python spdx-tools-python-solver/testcase_generationFile.py -t generationFile.xml
+          python spdx-tools-python-solver/testcase_generationPackage.py -t generationPackage.xml
+          python spdx-tools-python-solver/testcase_generationSnippet.py -t generationSnippet.xml
+          python spdx-tools-python-solver/testcase_generationLicense.py -t generationLicense.xml
+
+      # user tool specific section ends here
+      - name: Download testbed fat jar
+        id: download-testbed-artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ci-cd-testbed.yaml
+          branch: main
+          name: testbed-artifact
+
+      - name: Run test case
+        # provide the -t flag with the name of the test case that the input file (-f) attempts to solve
+        # look up the README for a list of possible test case names
+        run: |
+          java -jar testbed-*-all.jar -t generationMinimalTest -f generationMinimal.xml
+          java -jar testbed-*-all.jar -t generationBaselineSbomTest -f generationBaselineSbom.xml
+          java -jar testbed-*-all.jar -t generationDocumentTest -f generationDocument.xml
+          java -jar testbed-*-all.jar -t generationFileTest -f generationFile.xml
+          java -jar testbed-*-all.jar -t generationPackageTest -f generationPackage.xml
+          java -jar testbed-*-all.jar -t generationSnippetTest -f generationSnippet.xml
+          java -jar testbed-*-all.jar -t generationLicenseTest -f generationLicense.xml
