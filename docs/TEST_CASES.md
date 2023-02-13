@@ -224,14 +224,14 @@ Add a package, described by the document, with the following information:
 Let the package contain the following two files:
 
 - File SPDX identifier: `SPDXRef-fileA`
-    - File name: `./faa.txt`
+    - File name: `./package/faa.txt`
     - File checksum:
         - algorithm: `SHA1`
         - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
     - Concluded license: `LicenseRef-1 OR LicenseRef-two`
     - License information in file: `LicenseRef-1` and `LicenseRef-two`
 - File SPDX identifier: `SPDXRef-fileB`
-    - File name: `./fbb.txt`
+    - File name: `./package/fbb.txt`
     - File checksum:
         - algorithm: `SHA1`
         - value: `d6a770ba38583ed4bb4525bd96e50461655d2758`
@@ -242,6 +242,7 @@ Add a snippet with the following information:
 
 - Snippet SPDX identifier: `SPDXRef-somesnippet`
 - Snippet from file SPDX identifier: `SPDXRef-fileB`
+- Snippet name: `snippet name`
 - Snippet byte range: `100:200`
 - Snippet concluded license: `Aladdin`
 - License information in snippet: `Aladdin` and `DL-DE-BY-2.0`
