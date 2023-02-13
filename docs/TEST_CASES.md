@@ -188,9 +188,9 @@ Generate an SPDX document with minimal information, describing two files `SPDXRe
 and `SPDXRef-fileB` (name: `./fileB.c`) with minimal information each.  
 Create the following relationships:
 
-- `SPDXRef-fileA` DESCRIBED_BY `SPDXRef-Document`, comment: `comment on DESCRIBED_BY`
+- `SPDXRef-fileA` DESCRIBED_BY `SPDXRef-DOCUMENT`, comment: `comment on DESCRIBED_BY`
 - `SPDXRef-fileA` DEPENDS_ON `SPDXRef-fileB`
-- `SPDXRef-fileB` DESCRIBED_BY `SPDXRef-Document`
+- `SPDXRef-fileB` DESCRIBED_BY `SPDXRef-DOCUMENT`
 - `SPDXRef-fileB` DEPENDENCY_OF `SPDXRef-fileA`, comment: `comment on DEPENDENCY_OF`
 
 ### Task 8: `generationLicenseTest`
