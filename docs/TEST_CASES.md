@@ -19,8 +19,8 @@ A document with minimal information contains the following:
 - SPDX identifier: `SPDXRef-DOCUMENT`
 - Document name: `document name`
 - SPDX document namespace: `https://some.namespace`
-- Creator: arbitrary
-- Created: arbitrary
+- Creator: `Tool: test-tool`
+- Created: `2022-01-01T00:00:00Z`
 
 An SPDX document always requires at least one SPDX element to describe. If this is not the focus of
 the test case, it refers to using files with "minimal information".
@@ -153,7 +153,7 @@ the specification. That is, the package should contain the following information
 - Annotation:
     - Annotator: `Person: Package Annotator`
     - Annotation date: `2022-01-01T00:00:00Z`
-    - Annotation type: `REVIEW`
+    - Annotation type: `OTHER`
     - Annotation comment: `Package level annotation`
 
 The package should contain a file `SPDXRef-somefile` with minimal information.
