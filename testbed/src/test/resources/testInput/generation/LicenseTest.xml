@@ -11,16 +11,16 @@
   <hasExtractedLicensingInfos>
     <licenseId>LicenseRef-1</licenseId>
     <comment>extracted license info comment</comment>
-    <extractedText>extracted text</extractedText>
-    <name>extracted license info name</name>
+    <extractedText>extracted license text</extractedText>
+    <name>extracted license 1</name>
     <seeAlsos>http://see.also</seeAlsos>
     <seeAlsos>http://extracted.license</seeAlsos>
   </hasExtractedLicensingInfos>
   <hasExtractedLicensingInfos>
     <licenseId>LicenseRef-two</licenseId>
     <comment>extracted license info comment</comment>
-    <extractedText>extracted text</extractedText>
-    <name>extracted license info name</name>
+    <extractedText>extracted license text</extractedText>
+    <name>extracted license 2</name>
     <seeAlsos>http://another.license</seeAlsos>
   </hasExtractedLicensingInfos>
   <documentDescribes>SPDXRef-somepackage</documentDescribes>

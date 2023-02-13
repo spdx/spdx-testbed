@@ -27,15 +27,15 @@ public class GenerationLicenseTestCase extends GenerationTestCase {
 
     var extractedLicenseInfo1 = new ExtractedLicenseInfo(modelStore, documentUri, "LicenseRef-1",
         copyManager, true);
-    extractedLicenseInfo1.setExtractedText("extracted text");
-    extractedLicenseInfo1.setName("extracted license info name");
+    extractedLicenseInfo1.setExtractedText("extracted license text");
+    extractedLicenseInfo1.setName("extracted license 1");
     extractedLicenseInfo1.setComment("extracted license info comment");
     extractedLicenseInfo1.setSeeAlso(List.of("http://see.also", "http://extracted.license"));
 
     var extractedLicenseInfo2 = new ExtractedLicenseInfo(modelStore, documentUri, "LicenseRef-two",
         copyManager, true);
-    extractedLicenseInfo2.setExtractedText("extracted text");
-    extractedLicenseInfo2.setName("extracted license info name");
+    extractedLicenseInfo2.setExtractedText("extracted license text");
+    extractedLicenseInfo2.setName("extracted license 2");
     extractedLicenseInfo2.setComment("extracted license info comment");
     extractedLicenseInfo2.setSeeAlso(List.of("http://another.license"));
 
