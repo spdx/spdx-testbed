@@ -32,7 +32,7 @@ jobs:
   build-deploy:
     name: "Build and deploy fat jar for testbed"
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: test
     steps:
       - uses: actions/checkout@v3
