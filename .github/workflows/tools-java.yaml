@@ -29,7 +29,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: ci-cd-tools-java-solver.yaml
-          branch: master
+          branch: main
           name: tools-java-solver-artifact
 
       - name: Run spdx-tools-java-solver to create input file
