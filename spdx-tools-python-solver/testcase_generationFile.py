@@ -24,7 +24,7 @@ def main(target: str):
     annotation = Annotation(spdx_id="SPDXRef-somefile", annotation_type=AnnotationType.OTHER,
                             annotation_date=datetime(2022, 1, 1), annotation_comment="File level annotation",
                             annotator=Actor(ActorType.PERSON, "File Annotator"))
-    file = File(name="./package/foo.c", spdx_id="SPDXRef-somefile", file_type=[FileType.SOURCE],
+    file = File(name="./package/foo.c", spdx_id="SPDXRef-somefile", file_types=[FileType.SOURCE],
                 checksums=[Checksum(ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758"),
                            Checksum(ChecksumAlgorithm.MD5, "624c1abb3664f4b35547e7c73864ad24")],
                 license_concluded=get_spdx_licensing().parse("GPL-2.0-only"),
